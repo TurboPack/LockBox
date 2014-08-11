@@ -1,0 +1,54 @@
+#------------------------------------------------------------------------------
+VERSION = BWS.01
+#------------------------------------------------------------------------------
+!ifndef ROOT
+ROOT = $(MAKEDIR)\..
+!endif
+#------------------------------------------------------------------------------
+MAKE = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f$**
+DCC = $(ROOT)\bin\dcc32.exe $**
+BRCC = $(ROOT)\bin\brcc32.exe $**
+#------------------------------------------------------------------------------
+PROJECTS = DSACmp.exe ExFile.exe ExHash.exe ExRSAKey.exe ExString.exe \
+  HashCmp.exe RDLCmp.exe RSACmp.exe RSAKeys.exe RSASSA.exe DSAKeys.exe DSASig.exe
+#------------------------------------------------------------------------------
+default: $(PROJECTS)
+#------------------------------------------------------------------------------
+
+DSACmp.exe: DSACmp.dpr
+  $(DCC)
+
+ExFile.exe: ExFile.dpr
+  $(DCC)
+
+ExHash.exe: ExHash.dpr
+  $(DCC)
+
+ExRSAKey.exe: ExRSAKey.dpr
+  $(DCC)
+
+ExString.exe: ExString.dpr
+  $(DCC)
+
+HashCmp.exe: HashCmp.dpr
+  $(DCC)
+
+RDLCmp.exe: RDLCmp.dpr
+  $(DCC)
+
+RSACmp.exe: RSACmp.dpr
+  $(DCC)
+
+RSAKeys.exe: RSAKeys.dpr
+  $(DCC)
+
+RSASSA.exe: RSASSA.dpr
+  $(DCC)
+
+DSAKeys.exe: DSAKeys.dpr
+  $(DCC)
+
+DSASig.exe: DSASig.dpr
+  $(DCC)
+
+
