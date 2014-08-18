@@ -20,6 +20,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s): Sebastian Zierer
+ * Contributor(s): Roman Kassebaum
  *
  * ***** END LICENSE BLOCK ***** *)
 {*********************************************************}
@@ -36,30 +37,16 @@ unit LbCipher;
 interface
 
 uses
-{$IFDEF MSWINDOWS}
-  Windows,
-{$ENDIF}
-{$IFDEF POSIX}
-  Types,
-{$ENDIF}
-{$IFDEF UsingCLX}
-  Types,
-{$ENDIF}
-  Classes;
+  System.Types, System.SysUtils, System.Classes;
+
 const
   { largest structure that can be created }
   MaxStructSize = 1024 * 2000000; {2G}
-
 
 { TLbBase - used to force this unit to be added to uses clause }
 type
   TLBBase = class(TComponent)
   end;
-
-{$IFDEF LINUX}
-  pDword = ^dword;
-{$ENDIF}
-
 
 { general structures }
 type
@@ -203,177 +190,140 @@ type
     sdBuf   : array [0..63] of Byte;
   end;
 
-
 { Blowfish Cipher }
-procedure InitEncryptBF(Key : TKey128;
-            var Context : TBFContext);
-procedure EncryptBF(const Context : TBFContext;
-            var Block : TBFBlock; Encrypt : Boolean);
-procedure EncryptBFCBC(const Context : TBFContext;
-            const Prev : TBFBlock; var Block : TBFBlock; Encrypt : Boolean);
+  TBlowfish = record
+  public
+    class procedure EncryptBF(const Context : TBFContext; var Block : TBFBlock; Encrypt : Boolean); static;
+    class procedure EncryptBFCBC(const Context : TBFContext; const Prev : TBFBlock; var Block : TBFBlock; Encrypt : Boolean); static;
+    class procedure InitEncryptBF(Key : TKey128; var Context : TBFContext); static;
+  end;
 
 { DES Cipher }
-procedure InitEncryptDES(const Key : TKey64;
-            var Context : TDESContext;  Encrypt : Boolean); 
-procedure EncryptDES(const Context : TDESContext;
-            var Block : TDESBlock); 
-procedure EncryptDESCBC(const Context : TDESContext;
-            const Prev : TDESBlock;  var Block : TDESBlock); 
+  TDES = record
+  public
+    class procedure EncryptDES(const Context : TDESContext; var Block : TDESBlock); static;
+    class procedure EncryptDESCBC(const Context : TDESContext; const Prev : TDESBlock; var Block : TDESBlock); static;
+    class procedure EncryptTripleDES(const Context : TTripleDESContext; var Block : TDESBlock); static;
+    class procedure EncryptTripleDES3Key(const Context : TTripleDESContext3Key; var Block : TDESBlock); static;
+    class procedure EncryptTripleDESCBC(const Context : TTripleDESContext; const Prev : TDESBlock; var Block : TDESBlock); static;
+    class procedure EncryptTripleDESCBC3Key(const Context : TTripleDESContext3Key; const Prev : TDESBlock; var Block : TDESBlock); static;
+    class procedure InitEncryptDES(const Key : TKey64; var Context : TDESContext; Encrypt : Boolean); static;
+    class procedure InitEncryptTripleDES(const Key : TKey128; var Context : TTripleDESContext; Encrypt : Boolean); static;
+    class procedure InitEncryptTripleDES3Key(const Key1, Key2, Key3 : TKey64; var Context : TTripleDESContext3Key; Encrypt : Boolean); static;
+    class procedure ShrinkDESKey(var Key : TKey64); static;
+  end;
 
-{ Triple DES Cipher }
-procedure InitEncryptTripleDES(const Key : TKey128;
-            var Context : TTripleDESContext; Encrypt : Boolean);
-procedure EncryptTripleDES(const Context : TTripleDESContext;
-            var Block : TDESBlock);
-procedure EncryptTripleDESCBC(const Context : TTripleDESContext;
-            const Prev : TDESBlock; var Block : TDESBlock);
-
-{!!.01}
-{ Triple DES Cipher 3 Key }
-procedure InitEncryptTripleDES3Key(const Key1, Key2, Key3 : TKey64;
-            var Context : TTripleDESContext3Key; Encrypt : Boolean);
-procedure EncryptTripleDES3Key(const Context : TTripleDESContext3Key;
-            var Block : TDESBlock);
-procedure EncryptTripleDESCBC3Key(const Context : TTripleDESContext3Key;
-            const Prev : TDESBlock; var Block : TDESBlock);
-{!!.01}
+{ SHA1 Cipher }
+  TSHA1 = record
+  strict private
+    class procedure SHA1Clear(var Context : TSHA1Context); static;
+    class procedure SHA1Hash(var Context : TSHA1Context); static;
+    class function SHA1SwapByteOrder(n : DWORD): DWORD; static;
+    class procedure SHA1UpdateLen(var Context : TSHA1Context; Len : DWord); static;
+  public
+    class procedure FinalizeSHA1(var Context: TSHA1Context; var Digest : TSHA1Digest); static;
+    class procedure HashSHA1(var Digest : TSHA1Digest; const Buf; BufSize : Longint); static;
+    class procedure InitSHA1(var Context: TSHA1Context); static;
+    class procedure StringHashSHA1(var Digest : TSHA1Digest; const ABytes: TBytes); static;
+    class procedure UpdateSHA1(var Context : TSHA1Context; const Buf; BufSize: Longint); static;
+  end;
 
 { LockBox Cipher }
-procedure InitEncryptLBC(const Key : TKey128;
-            var Context : TLBCContext; Rounds : LongInt; Encrypt : Boolean); 
-procedure EncryptLBC(const Context : TLBCContext;
-            var Block : TLBCBlock); 
-procedure EncryptLBCCBC(const Context : TLBCContext;
-            const Prev : TLBCBlock; var Block : TLBCBlock); 
+  TLBC = record
+  public
+    class procedure EncryptLBC(const Context : TLBCContext; var Block : TLBCBlock); static;
+    class procedure EncryptLBCCBC(const Context : TLBCContext; const Prev : TLBCBlock; var Block : TLBCBlock); static;
+    class procedure EncryptLQC(const Key : TKey128; var Block : TLQCBlock; Encrypt : Boolean); static;
+    class procedure EncryptLQCCBC(const Key : TKey128; const Prev : TLQCBlock; var Block : TLQCBlock; Encrypt : Boolean); static;
+    class procedure InitEncryptLBC(const Key : TKey128; var Context : TLBCContext; Rounds : LongInt; Encrypt : Boolean); static;
+  end;
 
-{ LockBox Quick Cipher }
-procedure EncryptLQC(const Key : TKey128;
-            var Block : TLQCBlock; Encrypt : Boolean); 
-procedure EncryptLQCCBC(const Key : TKey128;
-            const Prev : TLQCBlock; var Block : TLQCBlock; Encrypt : Boolean); 
-
-{ LockBox Stream Cipher }
-procedure InitEncryptLSC(const Key; KeySize : Integer;
-            var Context : TLSCContext); 
-procedure EncryptLSC(var Context : TLSCContext;
-            var Buf; BufSize : LongInt); 
-
-{ Random Number Cipher }
-procedure InitEncryptRNG64(KeyHi, KeyLo : LongInt;
-            var Context : TRNG64Context); 
-procedure EncryptRNG32(var Context : TRNG32Context;
-            var Buf; BufSize : LongInt); 
-procedure EncryptRNG64(var Context : TRNG64Context;
-            var Buf; BufSize : LongInt); 
-procedure InitEncryptRNG32(Key : LongInt;
-            var Context : TRNG32Context); 
+{ MD5 Cipher }
+  TMD5 = record
+  public
+    class procedure FinalizeMD5(var Context : TMD5Context; var Digest : TMD5Digest); static;
+    class procedure GenerateMD5Key(var Key : TKey128; const ABytes: TBytes); static;
+    class procedure HashMD5(var Digest : TMD5Digest; const Buf; BufSize : LongInt); static;
+    class procedure InitMD5(var Context : TMD5Context); static;
+    class procedure StringHashMD5(var Digest : TMD5Digest; const ABytes: TBytes); static;
+    class procedure UpdateMD5(var Context : TMD5Context; const Buf; BufSize : LongInt); static;
+  end;
 
 { Rijndael Cipher }
-procedure InitEncryptRDL(const Key; KeySize : Longint;
-            var Context : TRDLContext; Encrypt : Boolean);
-procedure EncryptRDL(const Context : TRDLContext;
-            var Block : TRDLBlock); 
-procedure EncryptRDLCBC(const Context : TRDLContext;
-            const Prev : TRDLBlock; var Block : TRDLBlock); 
-
-{ MD5 message digest }
-procedure InitMD5(var Context : TMD5Context); 
-procedure HashMD5(var Digest : TMD5Digest;
-            const Buf; BufSize : LongInt); 
-procedure FinalizeMD5(var Context : TMD5Context;
-            var Digest : TMD5Digest); 
-procedure UpdateMD5(var Context : TMD5Context;
-            const Buf;  BufSize : LongInt); 
+  TRDL = record
+  strict private
+    class procedure RdlInvRound(const RoundKey : TRDLBlock; var State : TRDLBlock; First : Boolean); static;
+    class function RdlRotateVector(v : TRDLVector; Count : Byte): TRDLVector; static;
+    class procedure RdlRound(const RoundKey : TRDLBlock; var State : TRDLBlock; AFinal : Boolean); static;
+    class function RdlSubVector(v : TRDLVector): TRDLVector; static;
+  private
+  public
+    class procedure EncryptRDL(const Context : TRDLContext; var Block : TRDLBlock); static;
+    class procedure EncryptRDLCBC(const Context : TRDLContext; const Prev : TRDLBlock; var Block : TRDLBlock); static;
+    class procedure InitEncryptRDL(const Key; KeySize : Longint; var Context : TRDLContext; Encrypt : Boolean); static;
+  end;
 
 { LockBox message digest }
-procedure InitLMD(var Context : TLMDContext); 
-procedure HashLMD(var Digest; DigestSize : LongInt;
-            const Buf; BufSize : LongInt); 
-procedure FinalizeLMD(var Context : TLMDContext;
-            var Digest; DigestSize : LongInt); 
-procedure UpdateLMD(var Context : TLMDContext;
-            const Buf; BufSize : LongInt); 
+  TLMD = record
+  public
+    class procedure FinalizeLMD(var Context : TLMDContext; var Digest; DigestSize : LongInt); static;
+    class procedure GenerateLMDKey(var Key; KeySize : Integer; const ABytes: TBytes); static;
+    class procedure HashLMD(var Digest; DigestSize : LongInt; const Buf; BufSize : LongInt); static;
+    class procedure InitLMD(var Context : TLMDContext); static;
+    class procedure StringHashLMD(var Digest; DigestSize : LongInt; const ABytes: TBytes); static;
+    class procedure UpdateLMD(var Context : TLMDContext; const Buf; BufSize : LongInt); static;
+  end;
 
-{ SHA-1 message digest }
-procedure InitSHA1(var Context: TSHA1Context); 
-procedure HashSHA1(var Digest : TSHA1Digest;
-            const Buf; BufSize : Longint); 
-procedure UpdateSHA1(var Context : TSHA1Context;
-            const Buf; BufSize: Longint); 
-procedure FinalizeSHA1(var Context: TSHA1Context;
-            var Digest : TSHA1Digest);
+{ Random Number Cipher }
+  TRNG = record
+  public
+    class procedure EncryptRNG32(var Context : TRNG32Context; var Buf; BufSize : LongInt); static;
+    class procedure EncryptRNG64(var Context : TRNG64Context; var Buf; BufSize : LongInt); static;
+    class procedure InitEncryptRNG32(Key : LongInt; var Context : TRNG32Context); static;
+    class procedure InitEncryptRNG64(KeyHi, KeyLo : LongInt; var Context : TRNG64Context); static;
+  end;
+
+{ LockBox Stream Cipher }
+  TLSC = record
+  public
+    class procedure EncryptLSC(var Context : TLSCContext; var Buf; BufSize : LongInt); static;
+    class procedure InitEncryptLSC(const Key; KeySize : Integer; var Context : TLSCContext); static;
+   end;
+
+type
+  {bit mixing types}
+  T128Bit     = array [0..3] of DWord;
+  T256Bit     = array [0..7] of DWord;
 
 { Miscellaneous hash algorithms }
-procedure HashELF(var Digest : LongInt;
-            const Buf;  BufSize : LongInt);
-procedure HashMix128(var Digest : LongInt;
-            const Buf;  BufSize : LongInt);
-
-{ String hashing }
-procedure StringHashELF(var Digest : LongInt;
-            const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-procedure StringHashLMD(var Digest; DigestSize : LongInt;
-            const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-procedure StringHashMD5(var Digest : TMD5Digest;
-            const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-procedure StringHashMix128(var Digest : LongInt;
-            const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-procedure StringHashSHA1(var Digest : TSHA1Digest;
-            const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-
-{$IFDEF UNICODE} // only for Tiburon
-procedure StringHashELFW(var Digest : LongInt;
-            const Str : UnicodeString);
-procedure StringHashLMDW(var Digest; DigestSize : LongInt;
-            const Str : UnicodeString);
-procedure StringHashMD5W(var Digest : TMD5Digest;
-            const Str : UnicodeString);
-procedure StringHashMix128W(var Digest : LongInt;
-            const Str : UnicodeString);
-procedure StringHashSHA1W(var Digest : TSHA1Digest;
-            const Str : UnicodeString);
-{$ENDIF}
-
-procedure StringHashELFA(var Digest : LongInt;
-            const Str : AnsiString);
-procedure StringHashLMDA(var Digest; DigestSize : LongInt;
-            const Str : AnsiString);
-procedure StringHashMD5A(var Digest : TMD5Digest;
-            const Str : AnsiString);
-procedure StringHashMix128A(var Digest : LongInt;
-            const Str : AnsiString);
-procedure StringHashSHA1A(var Digest : TSHA1Digest;
-            const Str : AnsiString);
-
-{ Key generation }
-procedure GenerateLMDKey(var Key; KeySize : Integer;
-            const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-procedure GenerateMD5Key(var Key : TKey128;
-            const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-procedure GenerateRandomKey(var Key; KeySize : Integer);
-
-{$IFDEF UNICODE}
-procedure GenerateLMDKeyW(var Key; KeySize : Integer; const Str : UnicodeString);
-procedure GenerateMD5KeyW(var Key : TKey128; const Str : UnicodeString);
-{$ENDIF}
-procedure GenerateLMDKeyA(var Key; KeySize : Integer; const Str : AnsiString);
-procedure GenerateMD5KeyA(var Key : TKey128; const Str : AnsiString);
-
 { Misc public utilities }
-function Ran01(var Seed : LongInt) : LongInt;
-function Ran02(var Seed : LongInt) : LongInt; 
-function Ran03(var Seed : LongInt) : LongInt; 
-function Random32Byte(var Seed : LongInt) : Byte; 
-function Random64Byte(var Seed : TInt64) : Byte; 
-procedure ShrinkDESKey(var Key : TKey64); 
-procedure XorMem(var Mem1;  const Mem2;  Count : Cardinal); 
-function RolX(I, C : DWord) : DWord; register;
+  TMISC = record
+  strict private
+    class procedure Mix128(var X : T128Bit); static;
+    class function Ran0Prim(var Seed : LongInt; IA, IQ, IR : LongInt): LongInt; static;
+    class function Random64(var Seed : TInt64): LongInt; static;
+  private
+    class procedure Transform(var Buffer : array of DWord; const InBuf : array of DWord); static;
+    class procedure XorMemPrim(var Mem1; const Mem2; Count : Cardinal); static; register;
+  public
+    class procedure GenerateRandomKey(var Key; KeySize : Integer); static;
+    class procedure HashELF(var Digest : LongInt; const Buf; BufSize : LongInt); static;
+    class procedure HashMix128(var Digest : LongInt; const Buf; BufSize : LongInt); static;
+    class function Ran01(var Seed : LongInt): LongInt; static;
+    class function Ran02(var Seed : LongInt): LongInt; static;
+    class function Ran03(var Seed : LongInt): LongInt; static;
+    class function Random32Byte(var Seed : LongInt): Byte; static;
+    class function Random64Byte(var Seed : TInt64): Byte; static;
+    class function RolX(I, C : DWord): DWord; static; register;
+    class procedure StringHashELF(var Digest: LongInt; const ABytes: TBytes); static;
+    class procedure StringHashMix128(var Digest : LongInt; const ABytes: TBytes); static;
+    class procedure XorMem(var Mem1; const Mem2; Count : Cardinal); static;
+  end;
 
 implementation
 
 uses
-  LbUtils, SysUtils;
-
+  {$IFDEF MSWINDOWS}Winapi.Windows, {$ENDIF}LbUtils;
 
 {first 2048 bits of Pi in hexadecimal, low to high, without the leading "3"}
 const
@@ -396,7 +346,7 @@ const
     $B4, $CC, $5C, $34, $11, $41, $E8, $CE, $A1, $54, $86, $AF, $7C, $72, $E9, $93);
 
 type
-  pMD5ContextEx = ^TMD5ContextEx;
+  PMD5ContextEx = ^TMD5ContextEx;
   TMD5ContextEx = packed record
     Count : array [0..1] of DWord;  {number of bits handled mod 2^64}  
     State : array [0..3] of DWord;  {scratch buffer}                   
@@ -412,11 +362,6 @@ type
       1: (Key     : TKey128);
   end;
   TBlock2048 = array [0..255] of Byte;
-
-type
-  {bit mixing types}
-  T128Bit     = array [0..3] of DWord;
-  T256Bit     = array [0..7] of DWord;                                 
 
 const
   BCSalts: array [0..3] of DWord =                                     
@@ -469,206 +414,123 @@ type
 { Rijndael tables }
 {$I LbRDL.inc}                                                       {!!.01}
 
+{ TBlowfish }
 
-{ ========================================================================== }
-procedure EncryptLBC(const Context : TLBCContext; var Block : TLBCBlock);
+class procedure TBlowfish.EncryptBF(const Context : TBFContext; var Block : TBFBlock; Encrypt : Boolean);
 var
-  Blocks    : array[0..1] of TBCHalfBlock;                           {!!.01}
-  Work      : TBCHalfBlock;
-  Right     : TBCHalfBlock;
-  Left      : TBCHalfBlock;
-  AA, BB    : LongInt;
-  CC, DD    : LongInt;
-  R, T      : LongInt;
+  I : Integer;
+  TmpBlock : TBFBlockEx;                                             {!!.01}
 begin
-  Move(Block, Blocks, SizeOf(Blocks));                               {!!.01}
-  Right := Blocks[0];
-  Left := Blocks[1];
+  Move(Block, TmpBlock, SizeOf(TmpBlock));                           {!!.01}
+  if Encrypt then begin
+    Block[0] := Block[0] xor Context.PBox[0];
 
-  for R := 0 to Context.Rounds - 1 do begin
-    {transform the right side}
-    AA := Right[0];
-    BB := TBCHalfBlock(Context.SubKeys64[R])[0];
-    CC := Right[1];
-    DD := TBCHalfBlock(Context.SubKeys64[R])[1];
-
-    {mix it once...}
-    AA := AA + DD; DD := DD + AA; AA := AA xor (AA shr 7);
-    BB := BB + AA; AA := AA + BB; BB := BB xor (BB shl 13);
-    CC := CC + BB; BB := BB + CC; CC := CC xor (CC shr 17);
-    DD := DD + CC; CC := CC + DD; DD := DD xor (DD shl 9);
-    AA := AA + DD; DD := DD + AA; AA := AA xor (AA shr 3);
-    BB := BB + AA; AA := AA + BB; BB := BB xor (BB shl 7);
-    CC := CC + BB; BB := BB + CC; CC := CC xor (DD shr 15);
-    DD := DD + CC; CC := CC + DD; DD := DD xor (DD shl 11);
-
-    {swap sets...}
-    T := AA; AA := CC; CC := T;
-    T := BB; BB := DD; DD := T;
-
-    {mix it twice}
-    AA := AA + DD; DD := DD + AA; AA := AA xor (AA shr 7);
-    BB := BB + AA; AA := AA + BB; BB := BB xor (BB shl 13);
-    CC := CC + BB; BB := BB + CC; CC := CC xor (CC shr 17);
-    DD := DD + CC; CC := CC + DD; DD := DD xor (DD shl 9);
-    AA := AA + DD; DD := DD + AA; AA := AA xor (AA shr 3);
-    BB := BB + AA; AA := AA + BB; BB := BB xor (BB shl 7);
-    CC := CC + BB; BB := BB + CC; CC := CC xor (DD shr 15);
-    DD := DD + CC; CC := CC + DD; DD := DD xor (DD shl 11);
-
-    Work[0] := Left[0] xor AA xor BB;
-    Work[1] := Left[1] xor CC xor DD;
-
-    Left := Right;
-    Right := Work;
-  end;
-
-  Blocks[0] := Left;
-  Blocks[1] := Right;
-  Move(Blocks, Block, SizeOf(Block));                                {!!.01}
-end;
-{ -------------------------------------------------------------------------- }
-procedure EncryptLBCCBC(const Context : TLBCContext; const Prev : TLBCBlock; var Block : TLBCBlock);
-begin
-  if Context.Encrypt then begin
-    XorMem(Block, Prev, SizeOf(Block));
-    EncryptLBC(Context, Block);
+    {16 Rounds to go (8 double rounds to avoid swaps)}
+    I := 1;
+    repeat
+      {first half round }
+      Block[1] := Block[1] xor Context.PBox[I] xor (((
+                  Context.SBox[0, TmpBlock.Xl[3]] + Context.SBox[1, TmpBlock.Xl[2]])
+                  xor Context.SBox[2, TmpBlock.Xl[1]]) + Context.SBox[3, TmpBlock.Xl[0]]);
+      {second half round }
+      Block[0] := Block[0] xor Context.PBox[I+1] xor (((
+                  Context.SBox[0, TmpBlock.Xr[3]] + Context.SBox[1, TmpBlock.Xr[2]])
+                  xor Context.SBox[2, TmpBlock.Xr[1]]) + Context.SBox[3, TmpBlock.Xr[0]]);
+      Inc(I, 2);
+    until I > BFRounds;
+    Block[1] := Block[1] xor Context.PBox[(BFRounds+1)];
   end else begin
-    EncryptLBC(Context, Block);
-    XorMem(Block, Prev, SizeOf(Block));
+    Block[1] := Block[1] xor Context.PBox[(BFRounds+1)];
+
+    {16 Rounds to go (8 double rounds to avoid swaps)}
+    I := BFRounds;
+    repeat
+      {first half round }
+      Block[0] := Block[0] xor Context.PBox[I] xor (((
+                  Context.SBox[0, TmpBlock.Xr[3]] + Context.SBox[1, TmpBlock.Xr[2]])
+                  xor Context.SBox[2, TmpBlock.Xr[1]]) + Context.SBox[3, TmpBlock.Xr[0]]);
+      {second half round }
+      Block[1] := Block[1] xor Context.PBox[i-1] xor (((
+                  Context.SBox[0, TmpBlock.Xl[3]] + Context.SBox[1, TmpBlock.Xl[2]])
+                  xor Context.SBox[2, TmpBlock.Xl[1]]) + Context.SBox[3, TmpBlock.Xl[0]]);
+       Dec (I, 2);
+     until I < 1;
+     Block[0] := Block[0] xor Context.PBox[0];
   end;
 end;
-{ -------------------------------------------------------------------------- }
-procedure InitEncryptDES(const Key : TKey64; var Context : TDESContext;  Encrypt : Boolean);
-const
-  PC1        : array [0..55] of Byte =
-    (56, 48, 40, 32, 24, 16, 8, 0, 57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26,
-     18, 10, 2, 59, 51, 43, 35, 62, 54, 46, 38, 30, 22, 14, 6, 61, 53, 45, 37, 29, 21,
-     13, 5, 60, 52, 44, 36, 28, 20, 12, 4, 27, 19, 11, 3);
-  PC2        : array [0..47] of Byte =
-    (13, 16, 10, 23, 0, 4, 2, 27, 14, 5, 20, 9, 22, 18, 11, 3, 25, 7,
-     15, 6, 26, 19, 12, 1, 40, 51, 30, 36, 46, 54, 29, 39, 50, 44, 32, 47,
-     43, 48, 38, 55, 33, 52, 45, 41, 49, 35, 28, 31);
-  CTotRot    : array [0..15] of Byte = (1, 2, 4, 6, 8, 10, 12, 14, 15, 17, 19, 21, 23, 25, 27, 28);
-  CBitMask   : array [0..7] of Byte = (128, 64, 32, 16, 8, 4, 2, 1);
-var
-  PC1M       : array [0..55] of Byte;
-  PC1R       : array [0..55] of Byte;
-  KS         : array [0..7] of Byte;
-  I, J, L, M : LongInt;
+
+
+class procedure TBlowfish.EncryptBFCBC(const Context : TBFContext; const Prev : TBFBlock; var Block : TBFBlock; Encrypt : Boolean);
 begin
-  {convert PC1 to bits of key}
-  for J := 0 to 55 do begin
-    L := PC1[J];
-    M := L mod 8;
-    PC1M[J] := Ord((Key[L div 8] and CBitMask[M]) <> 0);
+  if Encrypt then begin
+    TMISC.XorMem(Block, Prev, SizeOf(Block));
+    EncryptBF(Context, Block, Encrypt);
+  end else begin
+    EncryptBF(Context, Block, Encrypt);
+    TMISC.XorMem(Block, Prev, SizeOf(Block));
   end;
-
-  {key chunk for each iteration}
-  for I := 0 to 15 do begin
-    {rotate PC1 the right amount}
-    for J := 0 to 27 do begin
-      L := J + CTotRot[I];
-      if (L < 28) then begin
-        PC1R[J] := PC1M[L];
-        PC1R[J + 28] := PC1M[L + 28];
-      end else begin
-        PC1R[J] := PC1M[L - 28];
-        PC1R[J + 28] := PC1M[L];
-      end;
-    end;
-
-    {select bits individually}
-    FillChar(KS, SizeOf(KS), 0);
-    for J := 0 to 47 do
-      if Boolean(PC1R[PC2[J]]) then begin
-        L := J div 6;
-        KS[L] := KS[L] or CBitMask[J mod 6] shr 2;
-      end;
-
-    {now convert to odd/even interleaved form for use in F}
-    if Encrypt then begin
-      Context.TransformedKey[I * 2] := (LongInt(KS[0]) shl 24) or (LongInt(KS[2]) shl 16) or
-        (LongInt(KS[4]) shl 8) or (LongInt(KS[6]));
-      Context.TransformedKey[I * 2 + 1] := (LongInt(KS[1]) shl 24) or (LongInt(KS[3]) shl 16) or
-        (LongInt(KS[5]) shl 8) or (LongInt(KS[7]));
-    end else begin
-      Context.TransformedKey[31 - (I * 2 + 1)] := (LongInt(KS[0]) shl 24) or (LongInt(KS[2]) shl 16) or
-        (LongInt(KS[4]) shl 8) or (LongInt(KS[6]));
-      Context.TransformedKey[31 - (I * 2)] := (LongInt(KS[1]) shl 24) or (LongInt(KS[3]) shl 16) or
-        (LongInt(KS[5]) shl 8) or (LongInt(KS[7]));
-    end;
-  end;
-
-  Context.Encrypt := Encrypt;
 end;
-{ -------------------------------------------------------------------------- }
-procedure InitEncryptLBC(const Key : TKey128; var Context : TLBCContext; Rounds: LongInt; Encrypt : Boolean);
-type
-  TSubKeys = packed record
-    case Byte of
-      0: (SubKeys64 : array [0..15] of TKey64);
-      1: (SubKeysInts : array [0..3, 0..7] of LongInt);
-  end;
+
+class procedure TBlowfish.InitEncryptBF(Key : TKey128; var Context : TBFContext);
 var
-  KeyArray  : pLongIntArray;
-  AA, BB    : LongInt;
-  CC, DD    : LongInt;
-  EE, FF    : LongInt;
-  GG, HH    : LongInt;
-  I, R      : LongInt;
-  Temp      : TSubKeys;
+  I     : Integer;
+  J     : Integer;
+  K     : Integer;
+  Data  : LongInt;
+  Block : TBFBlock;
 begin
-  KeyArray := @Key;
-  Context.Encrypt := Encrypt;
-  Context.Rounds := Max(4, Min(16, Rounds));
+  {initialize PArray}
+  Move(bf_P, Context.PBox, SizeOf(Context.PBox));
+  {initialize SBox}
+  Move(bf_S, Context.SBox, SizeOf(Context.SBox));
 
-
-  {fill subkeys by propagating seed}
-  for I := 0 to 3 do begin
-    {interleave the key with the salt}
-
-    AA := KeyArray^[0]; BB := BCSalts[I];
-    CC := KeyArray^[1]; DD := BCSalts[I];
-    EE := KeyArray^[2]; FF := BCSalts[I];
-    GG := KeyArray^[3]; HH := BCSalts[I];
-
-    {mix all the bits around for 8 rounds}
-    {achieves avalanche and eliminates funnels}
-    for R := 0 to 7 do begin
-      AA := AA xor (BB shl 11); DD := DD + AA; BB := BB + CC;
-      BB := BB xor (CC shr 2);  EE := EE + BB; CC := CC + DD;
-      CC := CC xor (DD shl 8);  FF := FF + CC; DD := DD + EE;
-      DD := DD xor (EE shr 16); GG := GG + DD; EE := EE + FF;
-      EE := EE xor (FF shl 10); HH := HH + EE; FF := FF + GG;
-      FF := FF xor (GG shr 4);  AA := AA + FF; GG := GG + HH;
-      GG := GG xor (HH shl 8);  BB := BB + GG; HH := HH + AA;
-      HH := HH xor (AA shr 9);  CC := CC + HH; AA := AA + BB;
+  {update PArray with the key bits}
+  J := 0;
+  for I := 0 to (BFRounds+1) do begin
+    Data := 0;
+    for K := 0 to 3 do begin
+      Data := (Data shl 8) or Key[J];
+      Inc(J);
+      if J >= SizeOf(Key) then
+        J := 0;
     end;
-
-    {assign value to subkey}
-    Context.SubKeysInts[I, 0] := AA;
-    Context.SubKeysInts[I, 1] := BB;
-    Context.SubKeysInts[I, 2] := CC;
-    Context.SubKeysInts[I, 3] := DD;
-    Context.SubKeysInts[I, 4] := EE;
-    Context.SubKeysInts[I, 5] := FF;
-    Context.SubKeysInts[I, 6] := GG;
-    Context.SubKeysInts[I, 7] := HH;
+    Context.PBox[I] := Context.PBox[I] xor Data;
   end;
 
-  {reverse subkeys if decrypting - easier for EncryptLBC routine}
-  if not Encrypt then begin
-    for I := 0 to Context.Rounds - 1 do
-        Temp.SubKeys64[(Context.Rounds - 1) - I] := Context.SubKeys64[I];
-    for I := 0 to Context.Rounds - 1 do
-        Context.SubKeys64[I] := Temp.SubKeys64[I];
+  {encrypt an all-zero string using the Blowfish algorithm and}
+  {replace the elements of the P-array with the output of this process}
+
+  Block[0] := 0;
+  Block[1] := 0;
+  I := 0;
+  repeat
+    EncryptBF(Context, Block, True);
+    Context.PBox[I] := Block[0];
+    Context.PBox[I+1] := Block[1];
+    Inc(I, 2);
+  until I > BFRounds+1;
+
+  {continue the process, replacing the elements of the four S-boxes in}
+  {order, with the output of the continuously changing Blowfish algorithm}
+
+  for J := 0 to 3 do begin
+    I := 0;
+    repeat
+      EncryptBF(Context, Block, True);
+      Context.SBox[J, I] := Block[0];
+      Context.SBox[J, I+1] := Block[1];
+      Inc(I, 2);
+    until I > 255;
   end;
+
+  {in total, 521 iterations are required to generate all required subkeys. }
 end;
-{ -------------------------------------------------------------------------- }
-procedure EncryptDES(const Context : TDESContext;  var Block : TDESBlock);
+
+{ TDES }
+
+class procedure TDES.EncryptDES(const Context : TDESContext; var Block : TDESBlock);
 const
-  SPBox : array [0..7, 0..63] of DWord =                               
+  SPBox : array [0..7, 0..63] of DWord =
     (($01010400, $00000000, $00010000, $01010404, $01010004, $00010404, $00000004, $00010000,
       $00000400, $01010400, $01010404, $00000400, $01000404, $01010004, $01000000, $00000004,
       $00000404, $01000400, $01000400, $00010400, $00010400, $01010000, $01010000, $01000404,
@@ -781,9 +643,9 @@ var
     pop  ebx
   end;
 
-  procedure IPerm(var L, R : DWord);                                   
+  procedure IPerm(var L, R : DWord);
   var
-    Work : DWord;                                                      
+    Work : DWord;
   begin
     Work := ((L shr 4) xor R) and $0F0F0F0F;
     R := R xor Work;
@@ -808,9 +670,9 @@ var
     L := (L shl 1) or (L shr 31);
   end;
 
-  procedure FPerm(var L, R : DWord);                                   
+  procedure FPerm(var L, R : DWord);
   var
-    Work : DWord;                                                      
+    Work : DWord;
   begin
     L := L;
 
@@ -875,19 +737,133 @@ begin
   FPerm(L, R);
   JoinBlock(L, R, Block);
 end;
-{ -------------------------------------------------------------------------- }
-procedure EncryptDESCBC(const Context : TDESContext;  const Prev : TDESBlock;  var Block : TDESBlock);
+
+class procedure TDES.EncryptDESCBC(const Context : TDESContext; const Prev : TDESBlock; var Block : TDESBlock);
 begin
   if Context.Encrypt then begin
-    XorMem(Block, Prev, SizeOf(Block));
+    TMISC.XorMem(Block, Prev, SizeOf(Block));
     EncryptDES(Context, Block);
   end else begin
     EncryptDES(Context, Block);
-    XorMem(Block, Prev, SizeOf(Block));
+    TMISC.XorMem(Block, Prev, SizeOf(Block));
   end;
 end;
-{ -------------------------------------------------------------------------- }
-procedure InitEncryptTripleDES(const Key : TKey128;  var Context : TTripleDESContext; Encrypt : Boolean);
+
+
+class procedure TDES.EncryptTripleDES(const Context : TTripleDESContext; var Block : TDESBlock);
+begin
+  EncryptDES(Context[0], Block);
+  EncryptDES(Context[1], Block);
+  EncryptDES(Context[0], Block);
+end;
+
+
+{!!.01}
+class procedure TDES.EncryptTripleDES3Key(const Context : TTripleDESContext3Key; var Block : TDESBlock);
+begin
+  EncryptDES(Context[2], Block);
+  EncryptDES(Context[1], Block);
+  EncryptDES(Context[0], Block);
+end;
+
+
+class procedure TDES.EncryptTripleDESCBC(const Context : TTripleDESContext; const Prev : TDESBlock; var Block : TDESBlock);
+begin
+  if Context[0].Encrypt then begin
+    TMISC.XorMem(Block, Prev, SizeOf(Block));
+    EncryptDES(Context[0], Block);
+    EncryptDES(Context[1], Block);
+    EncryptDES(Context[0], Block);
+  end else begin
+    EncryptDES(Context[0], Block);
+    EncryptDES(Context[1], Block);
+    EncryptDES(Context[0], Block);
+    TMISC.XorMem(Block, Prev, SizeOf(Block));
+  end;
+end;
+
+
+{!!.01}
+class procedure TDES.EncryptTripleDESCBC3Key(const Context : TTripleDESContext3Key; const Prev : TDESBlock; var Block : TDESBlock);
+begin
+  if Context[0].Encrypt then begin
+    TMISC.XorMem(Block, Prev, SizeOf(Block));
+    EncryptDES(Context[0], Block);
+    EncryptDES(Context[1], Block);
+    EncryptDES(Context[2], Block);
+  end else begin
+    EncryptDES(Context[0], Block);
+    EncryptDES(Context[1], Block);
+    EncryptDES(Context[2], Block);
+    TMISC.XorMem(Block, Prev, SizeOf(Block));
+  end;
+end;
+
+class procedure TDES.InitEncryptDES(const Key : TKey64; var Context : TDESContext; Encrypt : Boolean);
+const
+  PC1        : array [0..55] of Byte =
+    (56, 48, 40, 32, 24, 16, 8, 0, 57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26,
+     18, 10, 2, 59, 51, 43, 35, 62, 54, 46, 38, 30, 22, 14, 6, 61, 53, 45, 37, 29, 21,
+     13, 5, 60, 52, 44, 36, 28, 20, 12, 4, 27, 19, 11, 3);
+  PC2        : array [0..47] of Byte =
+    (13, 16, 10, 23, 0, 4, 2, 27, 14, 5, 20, 9, 22, 18, 11, 3, 25, 7,
+     15, 6, 26, 19, 12, 1, 40, 51, 30, 36, 46, 54, 29, 39, 50, 44, 32, 47,
+     43, 48, 38, 55, 33, 52, 45, 41, 49, 35, 28, 31);
+  CTotRot    : array [0..15] of Byte = (1, 2, 4, 6, 8, 10, 12, 14, 15, 17, 19, 21, 23, 25, 27, 28);
+  CBitMask   : array [0..7] of Byte = (128, 64, 32, 16, 8, 4, 2, 1);
+var
+  PC1M       : array [0..55] of Byte;
+  PC1R       : array [0..55] of Byte;
+  KS         : array [0..7] of Byte;
+  I, J, L, M : LongInt;
+begin
+  {convert PC1 to bits of key}
+  for J := 0 to 55 do begin
+    L := PC1[J];
+    M := L mod 8;
+    PC1M[J] := Ord((Key[L div 8] and CBitMask[M]) <> 0);
+  end;
+
+  {key chunk for each iteration}
+  for I := 0 to 15 do begin
+    {rotate PC1 the right amount}
+    for J := 0 to 27 do begin
+      L := J + CTotRot[I];
+      if (L < 28) then begin
+        PC1R[J] := PC1M[L];
+        PC1R[J + 28] := PC1M[L + 28];
+      end else begin
+        PC1R[J] := PC1M[L - 28];
+        PC1R[J + 28] := PC1M[L];
+      end;
+    end;
+
+    {select bits individually}
+    FillChar(KS, SizeOf(KS), 0);
+    for J := 0 to 47 do
+      if Boolean(PC1R[PC2[J]]) then begin
+        L := J div 6;
+        KS[L] := KS[L] or CBitMask[J mod 6] shr 2;
+      end;
+
+    {now convert to odd/even interleaved form for use in F}
+    if Encrypt then begin
+      Context.TransformedKey[I * 2] := (LongInt(KS[0]) shl 24) or (LongInt(KS[2]) shl 16) or
+        (LongInt(KS[4]) shl 8) or (LongInt(KS[6]));
+      Context.TransformedKey[I * 2 + 1] := (LongInt(KS[1]) shl 24) or (LongInt(KS[3]) shl 16) or
+        (LongInt(KS[5]) shl 8) or (LongInt(KS[7]));
+    end else begin
+      Context.TransformedKey[31 - (I * 2 + 1)] := (LongInt(KS[0]) shl 24) or (LongInt(KS[2]) shl 16) or
+        (LongInt(KS[4]) shl 8) or (LongInt(KS[6]));
+      Context.TransformedKey[31 - (I * 2)] := (LongInt(KS[1]) shl 24) or (LongInt(KS[3]) shl 16) or
+        (LongInt(KS[5]) shl 8) or (LongInt(KS[7]));
+    end;
+  end;
+
+  Context.Encrypt := Encrypt;
+end;
+
+class procedure TDES.InitEncryptTripleDES(const Key : TKey128; var Context : TTripleDESContext; Encrypt : Boolean);
 var
   KeyArray : array [0..1] of TKey64;
 begin
@@ -900,32 +876,9 @@ begin
     InitEncryptDES(KeyArray[1], Context[1], True);
   end;
 end;
-{ -------------------------------------------------------------------------- }
-procedure EncryptTripleDES(const Context : TTripleDESContext;  var Block : TDESBlock);
-begin
-  EncryptDES(Context[0], Block);
-  EncryptDES(Context[1], Block);
-  EncryptDES(Context[0], Block);
-end;
-{ -------------------------------------------------------------------------- }
-procedure EncryptTripleDESCBC(const Context : TTripleDESContext;  const Prev : TDESBlock; var Block : TDESBlock);
-begin
-  if Context[0].Encrypt then begin
-    XorMem(Block, Prev, SizeOf(Block));
-    EncryptDES(Context[0], Block);
-    EncryptDES(Context[1], Block);
-    EncryptDES(Context[0], Block);
-  end else begin
-    EncryptDES(Context[0], Block);
-    EncryptDES(Context[1], Block);
-    EncryptDES(Context[0], Block);
-    XorMem(Block, Prev, SizeOf(Block));
-  end;
-end;
-{ -------------------------------------------------------------------------- }
+
 {!!.01}
-procedure InitEncryptTripleDES3Key(const Key1, Key2, Key3 : TKey64;
-            var Context : TTripleDESContext3Key; Encrypt : Boolean);
+class procedure TDES.InitEncryptTripleDES3Key(const Key1, Key2, Key3 : TKey64; var Context : TTripleDESContext3Key; Encrypt : Boolean);
 begin
   if Encrypt then begin
     InitEncryptDES(Key1, Context[0], True);
@@ -937,34 +890,287 @@ begin
     InitEncryptDES(Key3, Context[0], False);
   end;
 end;
-{ -------------------------------------------------------------------------- }
-{!!.01}
-procedure EncryptTripleDES3Key(const Context : TTripleDESContext3Key;
-            var Block : TDESBlock);
+
+
+class procedure TDES.ShrinkDESKey(var Key : TKey64);
+const
+  SK1 : TKey64 = ($C4,$08,$B0,$54,$0B,$A1,$E0,$AE);
+  SK2 : TKey64 = ($EF,$2C,$04,$1C,$E6,$38,$2F,$E6);
+var
+  I       : Integer;
+  Work1   : TKey64;
+  Work2   : TKey64;
+  Context : TDESContext;
 begin
-  EncryptDES(Context[2], Block);
-  EncryptDES(Context[1], Block);
-  EncryptDES(Context[0], Block);
+  {step #1 zero the parity bits - 8, 16, 24, ..., 64}
+  for I := 0 to 7 do
+    Work1[I] := Key[I] and $FE;
+
+  {step #2 encrypt output of #1 with SK1 and xor with output of #1}
+  InitEncryptDES(SK1, Context, True);
+  Work2 := Work1; {make copy}
+  EncryptDES(Context, TDESBlock(Work2));
+  for I := 0 to 7 do
+    Work1[I] := Work1[I] xor Work2[I];
+
+  {step #3 zero bits 1,2,3,4,8,16,17,18,19,20,24,32,33,34,35,36,40,48,49,50,51,52,56,64}
+  TInt64(Work1).Lo := TInt64(Work1).Lo and $F101F101;
+  TInt64(Work1).Hi := TInt64(Work1).Hi and $F101F101;
+
+  {step #4 encrypt output of #3 with SK2}
+  InitEncryptDES(SK2, Context, True);
+  EncryptDES(Context, TDESBlock(Work1));
+
+  Key := Work1;
 end;
-{ -------------------------------------------------------------------------- }
-{!!.01}
-procedure EncryptTripleDESCBC3Key(const Context : TTripleDESContext3Key;
-            const Prev : TDESBlock; var Block : TDESBlock);
+
+{ TSHA1 }
+
+class procedure TSHA1.FinalizeSHA1(var Context: TSHA1Context; var Digest : TSHA1Digest);
 begin
-  if Context[0].Encrypt then begin
-    XorMem(Block, Prev, SizeOf(Block));
-    EncryptDES(Context[0], Block);
-    EncryptDES(Context[1], Block);
-    EncryptDES(Context[2], Block);
-  end else begin
-    EncryptDES(Context[0], Block);
-    EncryptDES(Context[1], Block);
-    EncryptDES(Context[2], Block);
-    XorMem(Block, Prev, SizeOf(Block));
+  with Context do begin
+    sdBuf[ sdIndex ] := $80;
+
+    if sdIndex >= 56 then
+      SHA1Hash( Context );
+
+    PDWord( @sdBuf[ 56 ])^ := SHA1SwapByteOrder( sdHi );
+    PDWord( @sdBuf[ 60 ])^ := SHA1SwapByteOrder( sdLo );
+
+    SHA1Hash( Context );
+
+    sdHash[ 0 ] := SHA1SwapByteOrder( sdHash[ 0 ]);
+    sdHash[ 1 ] := SHA1SwapByteOrder( sdHash[ 1 ]);
+    sdHash[ 2 ] := SHA1SwapByteOrder( sdHash[ 2 ]);
+    sdHash[ 3 ] := SHA1SwapByteOrder( sdHash[ 3 ]);
+    sdHash[ 4 ] := SHA1SwapByteOrder( sdHash[ 4 ]);
+
+    Move( sdHash, Digest, Sizeof( Digest ));
+    SHA1Clear( Context );
   end;
 end;
-{ -------------------------------------------------------------------------- }
-procedure EncryptLQC(const Key : TKey128; var Block : TLQCBlock; Encrypt : Boolean);
+
+class procedure TSHA1.HashSHA1(var Digest : TSHA1Digest; const Buf; BufSize : Longint);
+var
+  Context : TSHA1Context;
+begin
+  InitSHA1( Context );
+  UpdateSHA1( Context, Buf, BufSize );
+  FinalizeSHA1( Context, Digest );
+end;
+
+class procedure TSHA1.InitSHA1(var Context: TSHA1Context);
+begin
+  SHA1Clear( Context );
+  Context.sdHash[ 0 ] := SHA1_A;
+  Context.sdHash[ 1 ] := SHA1_B;
+  Context.sdHash[ 2 ] := SHA1_C;
+  Context.sdHash[ 3 ] := SHA1_D;
+  Context.sdHash[ 4 ] := SHA1_E;
+end;
+
+class procedure TSHA1.SHA1Clear(var Context : TSHA1Context);
+begin
+  fillchar( Context, SizeOf( Context ), $00 );
+end;
+
+class procedure TSHA1.SHA1Hash(var Context : TSHA1Context);
+var
+  A : DWord;
+  B : DWord;
+  C : DWord;
+  D : DWord;
+  E : DWord;
+
+  X : DWord;
+  W : array[ 0..79 ] of DWord;
+
+  i : Longint;
+begin
+  with Context do begin
+    sdIndex:= 0;
+    Move( sdBuf, W, Sizeof( W ));
+
+    // W := Mt, for t = 0 to 15 : Mt is M sub t
+    for i := 0 to 15 do
+      W[ i ]:= SHA1SwapByteOrder( W[ i ] );
+
+    // Transform Message block from 16 32 bit words to 80 32 bit words
+    // Wt, = ( Wt-3 xor Wt-8 xor Wt-13 xor Wt-16 ) rolL 1 : Wt is W sub t
+    for i:= 16 to 79 do
+      W[i]:= TMISC.RolX( W[ i - 3 ] xor W[ i - 8 ] xor W[ i - 14 ] xor W[ i - 16 ], 1 );
+
+    A := sdHash[ 0 ];
+    B := sdHash[ 1 ];
+    C := sdHash[ 2 ];
+    D := sdHash[ 3 ];
+    E := sdHash[ 4 ];
+
+    // the four rounds
+    for i:= 0 to 19 do begin
+      X := TMISC.RolX( A, 5 ) + ( D xor ( B and ( C xor D ))) + E + W[ i ] + SHA1_K1;
+      E := D;
+      D := C;
+      C := TMISC.RolX( B, 30 );
+      B := A;
+      A := X;
+    end;
+
+    for i:= 20 to 39 do begin
+      X := TMISC.RolX( A, 5 ) + ( B xor C xor D ) + E + W[ i ] + SHA1_K2;
+      E := D;
+      D := C;
+      C := TMISC.RolX( B, 30 );
+      B := A;
+      A := X;
+    end;
+
+    for i:= 40 to 59 do begin
+      X := TMISC.RolX( A, 5 ) + (( B and C ) or ( D and ( B or C ))) + E + W[ i ] + SHA1_K3;
+      E := D;
+      D := C;
+      C := TMISC.RolX( B, 30 );
+      B := A;
+      A := X;
+    end;
+
+    for i:= 60 to 79 do
+    begin
+      X := TMISC.RolX( A, 5 ) + ( B xor C xor D ) + E + W[ i ] + SHA1_K4;
+      E := D;
+      D := C;
+      C := TMISC.RolX( B, 30 );
+      B := A;
+      A := X;
+    end;
+
+    sdHash[ 0 ]:= sdHash[ 0 ] + A;
+    sdHash[ 1 ]:= sdHash[ 1 ] + B;
+    sdHash[ 2 ]:= sdHash[ 2 ] + C;
+    sdHash[ 3 ]:= sdHash[ 3 ] + D;
+    sdHash[ 4 ]:= sdHash[ 4 ] + E;
+
+    FillChar( W, Sizeof( W ), $00 );
+    FillChar( sdBuf, Sizeof( sdBuf ), $00 );
+  end;
+end;
+
+
+class function TSHA1.SHA1SwapByteOrder(n : DWORD): DWORD;
+begin
+  n := ( n shr 24 ) or (( n shr 8 ) and LBMASK_LO )
+       or (( n shl 8 ) and LBMASK_HI ) or ( n shl 24 );
+  Result := n;
+end;
+
+
+class procedure TSHA1.SHA1UpdateLen(var Context : TSHA1Context; Len : DWord);
+begin
+  Inc( Context.sdLo,( Len shl 3 ));
+  if Context.sdLo < ( Len shl 3 ) then
+    Inc( Context.sdHi );
+  Inc( Context.sdHi, Len shr 29 );
+end;
+
+class procedure TSHA1.StringHashSHA1(var Digest : TSHA1Digest; const ABytes: TBytes);
+begin
+  HashSHA1(Digest, ABytes[0], Length(ABytes));
+end;
+
+class procedure TSHA1.UpdateSHA1(var Context : TSHA1Context; const Buf; BufSize: Longint);
+var
+  PBuf: ^Byte;
+begin
+  with Context do begin
+    SHA1UpdateLen( Context, BufSize );
+    PBuf := @Buf;
+    while BufSize > 0 do begin
+      if ( Sizeof( sdBuf ) - sdIndex ) <= DWord( BufSize ) then begin
+        Move( PBuf^, sdBuf[ sdIndex ], Sizeof( sdBuf ) - sdIndex );
+        Dec( BufSize, Sizeof( sdBuf ) - sdIndex );
+        Inc( PBuf, Sizeof( sdBuf ) - sdIndex );
+        SHA1Hash( Context );
+      end else begin
+        Move( PBuf^, sdBuf[ sdIndex ], BufSize );
+        Inc( sdIndex, BufSize );
+        BufSize := 0;
+      end;
+    end;
+  end;
+end;
+
+{ TLBC }
+
+class procedure TLBC.EncryptLBC(const Context : TLBCContext; var Block : TLBCBlock);
+var
+  Blocks    : array[0..1] of TBCHalfBlock;                           {!!.01}
+  Work      : TBCHalfBlock;
+  Right     : TBCHalfBlock;
+  Left      : TBCHalfBlock;
+  AA, BB    : LongInt;
+  CC, DD    : LongInt;
+  R, T      : LongInt;
+begin
+  Move(Block, Blocks, SizeOf(Blocks));                               {!!.01}
+  Right := Blocks[0];
+  Left := Blocks[1];
+
+  for R := 0 to Context.Rounds - 1 do begin
+    {transform the right side}
+    AA := Right[0];
+    BB := TBCHalfBlock(Context.SubKeys64[R])[0];
+    CC := Right[1];
+    DD := TBCHalfBlock(Context.SubKeys64[R])[1];
+
+    {mix it once...}
+    AA := AA + DD; DD := DD + AA; AA := AA xor (AA shr 7);
+    BB := BB + AA; AA := AA + BB; BB := BB xor (BB shl 13);
+    CC := CC + BB; BB := BB + CC; CC := CC xor (CC shr 17);
+    DD := DD + CC; CC := CC + DD; DD := DD xor (DD shl 9);
+    AA := AA + DD; DD := DD + AA; AA := AA xor (AA shr 3);
+    BB := BB + AA; AA := AA + BB; BB := BB xor (BB shl 7);
+    CC := CC + BB; BB := BB + CC; CC := CC xor (DD shr 15);
+    DD := DD + CC; CC := CC + DD; DD := DD xor (DD shl 11);
+
+    {swap sets...}
+    T := AA; AA := CC; CC := T;
+    T := BB; BB := DD; DD := T;
+
+    {mix it twice}
+    AA := AA + DD; DD := DD + AA; AA := AA xor (AA shr 7);
+    BB := BB + AA; AA := AA + BB; BB := BB xor (BB shl 13);
+    CC := CC + BB; BB := BB + CC; CC := CC xor (CC shr 17);
+    DD := DD + CC; CC := CC + DD; DD := DD xor (DD shl 9);
+    AA := AA + DD; DD := DD + AA; AA := AA xor (AA shr 3);
+    BB := BB + AA; AA := AA + BB; BB := BB xor (BB shl 7);
+    CC := CC + BB; BB := BB + CC; CC := CC xor (DD shr 15);
+    DD := DD + CC; CC := CC + DD; DD := DD xor (DD shl 11);
+
+    Work[0] := Left[0] xor AA xor BB;
+    Work[1] := Left[1] xor CC xor DD;
+
+    Left := Right;
+    Right := Work;
+  end;
+
+  Blocks[0] := Left;
+  Blocks[1] := Right;
+  Move(Blocks, Block, SizeOf(Block));                                {!!.01}
+end;
+
+class procedure TLBC.EncryptLBCCBC(const Context : TLBCContext; const Prev : TLBCBlock; var Block : TLBCBlock);
+begin
+  if Context.Encrypt then begin
+    TMISC.XorMem(Block, Prev, SizeOf(Block));
+    EncryptLBC(Context, Block);
+  end else begin
+    EncryptLBC(Context, Block);
+    TMISC.XorMem(Block, Prev, SizeOf(Block));
+  end;
+end;
+
+
+class procedure TLBC.EncryptLQC(const Key : TKey128; var Block : TLQCBlock; Encrypt : Boolean);
 const
   CKeyBox : array [False..True, 0..3, 0..2] of LongInt =
     (((0, 3, 1), (2, 1, 3), (1, 0, 2), (3, 2, 0)),
@@ -1010,152 +1216,511 @@ begin
   Blocks[1] := Right;
   Move(Blocks, Block, SizeOf(Block));                                {!!.01}
 end;
-{ -------------------------------------------------------------------------- }
-procedure EncryptLQCCBC(const Key : TKey128; const Prev : TLQCBlock; var Block : TLQCBlock; Encrypt : Boolean);
+
+
+class procedure TLBC.EncryptLQCCBC(const Key : TKey128; const Prev : TLQCBlock; var Block : TLQCBlock; Encrypt : Boolean);
 begin
   if Encrypt then begin
-    XorMem(Block, Prev, SizeOf(Block));
+    TMISC.XorMem(Block, Prev, SizeOf(Block));
     EncryptLQC(Key, Block, Encrypt);
   end else begin
     EncryptLQC(Key, Block, Encrypt);
-    XorMem(Block, Prev, SizeOf(Block));
+    TMISC.XorMem(Block, Prev, SizeOf(Block));
   end;
 end;
-{ -------------------------------------------------------------------------- }
-procedure InitEncryptBF(Key : TKey128; var Context : TBFContext);
+
+class procedure TLBC.InitEncryptLBC(const Key : TKey128; var Context : TLBCContext; Rounds : LongInt; Encrypt : Boolean);
+type
+  TSubKeys = packed record
+    case Byte of
+      0: (SubKeys64 : array [0..15] of TKey64);
+      1: (SubKeysInts : array [0..3, 0..7] of LongInt);
+  end;
 var
-  I     : Integer;
-  J     : Integer;
-  K     : Integer;
-  Data  : LongInt;
-  Block : TBFBlock;
+  KeyArray  : pLongIntArray;
+  AA, BB    : LongInt;
+  CC, DD    : LongInt;
+  EE, FF    : LongInt;
+  GG, HH    : LongInt;
+  I, R      : LongInt;
+  Temp      : TSubKeys;
 begin
-  {initialize PArray}
-  Move(bf_P, Context.PBox, SizeOf(Context.PBox));
-  {initialize SBox}
-  Move(bf_S, Context.SBox, SizeOf(Context.SBox));
+  KeyArray := @Key;
+  Context.Encrypt := Encrypt;
+  Context.Rounds := Max(4, Min(16, Rounds));
 
-  {update PArray with the key bits}
-  J := 0;
-  for I := 0 to (BFRounds+1) do begin
-    Data := 0;
-    for K := 0 to 3 do begin
-      Data := (Data shl 8) or Key[J];
-      Inc(J);
-      if J >= SizeOf(Key) then
-        J := 0;
+
+  {fill subkeys by propagating seed}
+  for I := 0 to 3 do begin
+    {interleave the key with the salt}
+
+    AA := KeyArray^[0]; BB := BCSalts[I];
+    CC := KeyArray^[1]; DD := BCSalts[I];
+    EE := KeyArray^[2]; FF := BCSalts[I];
+    GG := KeyArray^[3]; HH := BCSalts[I];
+
+    {mix all the bits around for 8 rounds}
+    {achieves avalanche and eliminates funnels}
+    for R := 0 to 7 do begin
+      AA := AA xor (BB shl 11); DD := DD + AA; BB := BB + CC;
+      BB := BB xor (CC shr 2);  EE := EE + BB; CC := CC + DD;
+      CC := CC xor (DD shl 8);  FF := FF + CC; DD := DD + EE;
+      DD := DD xor (EE shr 16); GG := GG + DD; EE := EE + FF;
+      EE := EE xor (FF shl 10); HH := HH + EE; FF := FF + GG;
+      FF := FF xor (GG shr 4);  AA := AA + FF; GG := GG + HH;
+      GG := GG xor (HH shl 8);  BB := BB + GG; HH := HH + AA;
+      HH := HH xor (AA shr 9);  CC := CC + HH; AA := AA + BB;
     end;
-    Context.PBox[I] := Context.PBox[I] xor Data;
+
+    {assign value to subkey}
+    Context.SubKeysInts[I, 0] := AA;
+    Context.SubKeysInts[I, 1] := BB;
+    Context.SubKeysInts[I, 2] := CC;
+    Context.SubKeysInts[I, 3] := DD;
+    Context.SubKeysInts[I, 4] := EE;
+    Context.SubKeysInts[I, 5] := FF;
+    Context.SubKeysInts[I, 6] := GG;
+    Context.SubKeysInts[I, 7] := HH;
   end;
 
-  {encrypt an all-zero string using the Blowfish algorithm and}
-  {replace the elements of the P-array with the output of this process}
-
-  Block[0] := 0;
-  Block[1] := 0;
-  I := 0;
-  repeat
-    EncryptBF(Context, Block, True);
-    Context.PBox[I] := Block[0];
-    Context.PBox[I+1] := Block[1];
-    Inc(I, 2);
-  until I > BFRounds+1;
-
-  {continue the process, replacing the elements of the four S-boxes in}
-  {order, with the output of the continuously changing Blowfish algorithm}
-
-  for J := 0 to 3 do begin
-    I := 0;
-    repeat
-      EncryptBF(Context, Block, True);
-      Context.SBox[J, I] := Block[0];
-      Context.SBox[J, I+1] := Block[1];
-      Inc(I, 2);
-    until I > 255;
+  {reverse subkeys if decrypting - easier for EncryptLBC routine}
+  if not Encrypt then begin
+    for I := 0 to Context.Rounds - 1 do
+        Temp.SubKeys64[(Context.Rounds - 1) - I] := Context.SubKeys64[I];
+    for I := 0 to Context.Rounds - 1 do
+        Context.SubKeys64[I] := Temp.SubKeys64[I];
   end;
-
-  {in total, 521 iterations are required to generate all required subkeys. }
 end;
-{ -------------------------------------------------------------------------- }
-procedure EncryptBF(const Context : TBFContext;
-  var Block : TBFBlock; Encrypt : Boolean);
+
+{ TMD5 }
+
+class procedure TMD5.FinalizeMD5(var Context : TMD5Context; var Digest : TMD5Digest);
+const
+  Padding: array [0..63] of Byte = (
+    $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,
+    $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,
+    $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,
+    $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00);
+var
+  MD5    : TMD5ContextEx;
+  InBuf  : array [0..15] of DWord;
+  MDI    : LongInt;
+  I      : Word;
+  II     : Word;
+  PadLen : Word;
+begin
+  Move(Context, MD5, SizeOf(MD5));                                   {!!.01}
+  {save number of bits}
+  InBuf[14] := MD5.Count[0];
+  InBuf[15] := MD5.Count[1];
+  {compute number of bytes mod 64}
+  MDI := (MD5.Count[0] shr 3) and $3F;
+  {pad out to 56 mod 64}
+  if (MDI < 56) then
+    PadLen := 56 - MDI
+  else
+    PadLen := 120 - MDI;
+  UpdateMD5(Context, Padding, PadLen);
+
+  Move(Context, MD5, SizeOf(MD5));                                   {!!.01}
+
+  {append length in bits and transform}
+  II := 0;
+  for I := 0 to 13 do begin
+    InBuf[I] :=
+      ( LongInt( MD5.Buf[ II + 3 ]) shl 24 ) or
+      ( LongInt( MD5.Buf[ II + 2 ]) shl 16 ) or
+      ( LongInt( MD5.Buf[ II + 1 ]) shl 8  ) or
+        LongInt( MD5.Buf[ II     ]);
+    Inc(II, 4);
+  end;
+  TMISC.Transform(MD5.State, InBuf);
+  {store buffer in digest}
+  II := 0;
+  for I := 0 to 3 do begin
+    Digest[II] := Byte(MD5.State[I] and $FF);
+    Digest[II + 1] := Byte((MD5.State[I] shr 8) and $FF);
+    Digest[II + 2] := Byte((MD5.State[I] shr 16) and $FF);
+    Digest[II + 3] := Byte((MD5.State[I] shr 24) and $FF);
+    Inc(II, 4);
+  end;
+  Move(MD5, Context, SizeOf(Context));                               {!!.01}
+end;
+
+class procedure TMD5.GenerateMD5Key(var Key : TKey128; const ABytes: TBytes);
+var
+  D: TMD5Digest;
+begin
+  HashMD5(D, ABytes[0], Length(ABytes));
+end;
+
+class procedure TMD5.HashMD5(var Digest : TMD5Digest; const Buf; BufSize : LongInt);
+var
+  Context : TMD5Context;
+begin
+  fillchar( context, SizeOf( context ), $00 );
+  InitMD5(Context);
+  UpdateMD5(Context, Buf, BufSize);
+  FinalizeMD5(Context, Digest);
+end;
+
+class procedure TMD5.InitMD5(var Context : TMD5Context);
+var
+  MD5 : TMD5ContextEx;                                               {!!.01}
+begin
+  Move(Context, MD5, SizeOf(MD5));                                   {!!.01}
+  MD5.Count[0] := 0;
+  MD5.Count[1] := 0;
+
+  {load magic initialization constants}
+  MD5.State[0] := $67452301;
+  MD5.State[1] := $EFCDAB89;
+  MD5.State[2] := $98BADCFE;
+  MD5.State[3] := $10325476;
+  Move(MD5, Context, SizeOf(Context));                               {!!.01}
+end;
+
+class procedure TMD5.StringHashMD5(var Digest : TMD5Digest; const ABytes: TBytes);
+begin
+  HashMD5(Digest, ABytes[0], Length(ABytes));
+end;
+
+class procedure TMD5.UpdateMD5(var Context : TMD5Context; const Buf; BufSize : LongInt);
+var
+  MD5    : TMD5ContextEx;
+  InBuf  : array [0..15] of DWord;
+  BufOfs : LongInt;
+  MDI    : Word;
+  I      : Word;
+  II     : Word;
+begin
+  Move(Context, MD5, SizeOf(MD5));                                   {!!.01}
+
+  {compute number of bytes mod 64}
+  MDI := (MD5.Count[0] shr 3) and $3F;
+
+  {update number of bits}
+  if ((MD5.Count[0] + (DWord(BufSize) shl 3)) < MD5.Count[0]) then
+    Inc(MD5.Count[1]);
+  Inc(MD5.Count[0], BufSize shl 3);
+  Inc(MD5.Count[1], BufSize shr 29);
+
+  {add new byte acters to buffer}
+  BufOfs := 0;
+  while (BufSize > 0) do begin
+    Dec(BufSize);
+    MD5.Buf[MDI] := TByteArray(Buf)[BufOfs];                         {!!.01}
+    Inc(MDI);
+    Inc(BufOfs);
+    if (MDI = $40) then begin
+      II := 0;
+      for I := 0 to 15 do begin
+        InBuf[I] := LongInt(MD5.Buf[II + 3]) shl 24 or
+          LongInt(MD5.Buf[II + 2]) shl 16 or
+          LongInt(MD5.Buf[II + 1]) shl 8 or
+          LongInt(MD5.Buf[II]);
+        Inc(II, 4);
+      end;
+      TMISC.Transform(MD5.State, InBuf);
+      TMISC.Transform(TMD5ContextEx( Context ).State, InBuf);
+      MDI := 0;
+    end;
+  end;
+  Move(MD5, Context, SizeOf(Context));                               {!!.01}
+end;
+
+{ TRDL }
+
+class procedure TRDL.EncryptRDL(const Context : TRDLContext; var Block : TRDLBlock);
+  { encrypt/decrypt block ECB mode }
+var
+  i : Integer;
+begin
+  if Context.Encrypt then begin
+    TMISC.XorMemPrim(Block, Context.Rk[0], SizeOf(TRDLBlock));
+    for i := 1 to (Context.Rounds - 1) do
+      RdlRound(Context.Rk[i], Block, False);
+    RdlRound(Context.Rk[Context.Rounds], Block, True);
+  end else begin
+    RdlInvRound(Context.Rk[Context.Rounds], Block, True);
+    for i := (Context.Rounds - 1) downto 1 do
+      RdlInvRound(Context.Rk[i], Block, False);
+    TMISC.XorMemPrim(Block, Context.Rk[0], SizeOf(TRDLBlock));
+  end;
+end;
+
+class procedure TRDL.EncryptRDLCBC(const Context : TRDLContext; const Prev : TRDLBlock; var Block : TRDLBlock);
+  { encrypt/decrypt block CBC mode }
+begin
+  if Context.Encrypt then begin
+    TMISC.XorMemPrim(Block, Prev, SizeOf(Block));
+    EncryptRDL(Context, Block);
+  end else begin
+    EncryptRDL(Context, Block);
+    TMISC.XorMemPrim(Block, Prev, SizeOf(Block));
+  end;
+end;
+
+class procedure TRDL.InitEncryptRDL(const Key; KeySize : Longint; var Context : TRDLContext; Encrypt : Boolean);
+  { Rijndael key expansion }
+var
+  i : Integer;
+  Nk : Byte;
+  temp : TRDLVector;
+  Sk : Longint;
+begin
+  { prepare context }
+  FillChar(Context, SizeOf(Context), #0);
+  Context.Encrypt := Encrypt;
+  Sk := Min(KeySize, SizeOf(Context.Rk));
+  Move(Key, Context.Rk, Sk);
+  Nk := KeySize div 4;       { # key columns }
+  if (Nk > RDLNk256) then
+    Nk := RDLNk256
+  else if (Nk < RDLNk128) then
+    Nk := RDLNk128;
+  Context.Rounds := 6 + Nk;
+
+  { expand key into round keys }
+  for i := Nk to (4 * (Context.Rounds + 1)) do begin
+    temp := Context.W[i-1];
+    if (Nk in [RDLNk128, RDLNk192]) then
+      begin
+        if (i mod Nk) = 0 then
+          temp.dw := RdlSubVector(RdlRotateVector(temp, 1)).dw xor RCon[i div Nk];
+        Context.W[i].dw := Context.W[i - Nk].dw xor temp.dw;
+      end
+    else  { Nk = RDLNk256 }
+      begin
+        if (i mod Nk) = 0 then
+          temp.dw := RdlSubVector(RdlRotateVector(temp, 1)).dw xor RCon[i div Nk]
+        else if (i mod Nk) = 4 then
+          temp := RdlSubVector(Temp);
+        Context.W[i].dw := Context.W[i - Nk].dw xor temp.dw;
+      end;
+  end;
+end;
+
+class procedure TRDL.RdlInvRound(const RoundKey : TRDLBlock; var State : TRDLBlock; First : Boolean);
+  { Rijndael inverse round transformation }
+  { entire routine rewritten for optimization }                      {!!.01}
+var
+  i : Integer;
+  r : TRDLVectors;
+  e : TRDLVector;
+begin
+  TMISC.XorMemPrim(State, RoundKey, SizeOf(TRDLBlock));
+  for i := 0 to 3 do begin
+    if not First then begin
+      e.dw := RDL_InvT0[TRDlVectors(State)[i].bt[0]] xor
+              RDL_InvT1[TRDlVectors(State)[i].bt[1]] xor
+              RDL_InvT2[TRDlVectors(State)[i].bt[2]] xor
+              RDL_InvT3[TRDlVectors(State)[i].bt[3]];
+      r[(i+0) mod 4].bt[0] := RDLInvSBox[e.bt[0]];
+      r[(i+1) mod 4].bt[1] := RDLInvSBox[e.bt[1]];
+      r[(i+2) mod 4].bt[2] := RDLInvSBox[e.bt[2]];
+      r[(i+3) mod 4].bt[3] := RDLInvSBox[e.bt[3]];
+    end else begin
+      r[i].bt[0] := RDLInvSBox[TRDlVectors(State)[(i+0) mod 4].bt[0]];
+      r[i].bt[1] := RDLInvSBox[TRDlVectors(State)[(i+3) mod 4].bt[1]];
+      r[i].bt[2] := RDLInvSBox[TRDlVectors(State)[(i+2) mod 4].bt[2]];
+      r[i].bt[3] := RDLInvSBox[TRDlVectors(State)[(i+1) mod 4].bt[3]];
+    end;
+  end;
+  State := TRDLBlock(r);
+end;
+
+{ ------------------------------------------------------------------- }
+class function TRDL.RdlRotateVector(v : TRDLVector; Count : Byte): TRDLVector;
+  { rotate vector (count bytes) to the right, e.g. }
+  { |3 2 1 0| -> |0 3 2 1| for Count = 1 }
+var
+  i : Byte;
+begin
+  i := Count mod 4;
+  Result.bt[0] := v.bt[i];
+  Result.bt[1] := v.bt[(i+1) mod 4];
+  Result.bt[2] := v.bt[(i+2) mod 4];
+  Result.bt[3] := v.bt[(i+3) mod 4];
+end;
+
+class procedure TRDL.RdlRound(const RoundKey : TRDLBlock; var State : TRDLBlock; AFinal : Boolean);
+  { Rijndael round transformation }
+  { entire routine rewritten for optimization }                      {!!.01}
+var
+  i : Integer;
+  e : TRDLVectors;
+begin
+  for i := 0 to 3 do begin
+    if not AFinal then begin
+      e[i].dw := RDL_T0[TRDlVectors(State)[(i+0) mod 4].bt[0]] xor
+                 RDL_T1[TRDlVectors(State)[(i+1) mod 4].bt[1]] xor
+                 RDL_T2[TRDlVectors(State)[(i+2) mod 4].bt[2]] xor
+                 RDL_T3[TRDlVectors(State)[(i+3) mod 4].bt[3]]
+    end else begin
+      e[i].bt[0] := RDLSBox[TRDlVectors(State)[(i+0) mod 4].bt[0]];
+      e[i].bt[1] := RDLSBox[TRDlVectors(State)[(i+1) mod 4].bt[1]];
+      e[i].bt[2] := RDLSBox[TRDlVectors(State)[(i+2) mod 4].bt[2]];
+      e[i].bt[3] := RDLSBox[TRDlVectors(State)[(i+3) mod 4].bt[3]];
+    end;
+  end;
+  TMISC.XorMemPrim(e, RoundKey, SizeOf(TRDLBlock));
+  State := TRDLBlock(e);
+end;
+
+class function TRDL.RdlSubVector(v : TRDLVector): TRDLVector;
+  { S-Box substitution }
+begin
+  Result.bt[0] := RdlSBox[v.bt[0]];
+  Result.bt[1] := RdlSBox[v.bt[1]];
+  Result.bt[2] := RdlSBox[v.bt[2]];
+  Result.bt[3] := RdlSBox[v.bt[3]];
+end;
+
+{ TRNG }
+
+class procedure TRNG.EncryptRNG32(var Context : TRNG32Context; var Buf; BufSize : LongInt);
+var
+  I     : LongInt;
+begin
+  for I := 0 to BufSize - 1 do
+    TByteArray(Buf)[I] := TByteArray(Buf)[I] xor                     {!!.01}
+                            TMISC.Random32Byte(LongInt(Context));
+end;
+
+class procedure TRNG.EncryptRNG64(var Context : TRNG64Context; var Buf; BufSize : LongInt);
 var
   I : Integer;
-  TmpBlock : TBFBlockEx;                                             {!!.01}
 begin
-  Move(Block, TmpBlock, SizeOf(TmpBlock));                           {!!.01}
-  if Encrypt then begin
-    Block[0] := Block[0] xor Context.PBox[0];
-
-    {16 Rounds to go (8 double rounds to avoid swaps)}
-    I := 1;
-    repeat
-      {first half round }
-      Block[1] := Block[1] xor Context.PBox[I] xor (((
-                  Context.SBox[0, TmpBlock.Xl[3]] + Context.SBox[1, TmpBlock.Xl[2]])
-                  xor Context.SBox[2, TmpBlock.Xl[1]]) + Context.SBox[3, TmpBlock.Xl[0]]);
-      {second half round }
-      Block[0] := Block[0] xor Context.PBox[I+1] xor (((
-                  Context.SBox[0, TmpBlock.Xr[3]] + Context.SBox[1, TmpBlock.Xr[2]])
-                  xor Context.SBox[2, TmpBlock.Xr[1]]) + Context.SBox[3, TmpBlock.Xr[0]]);
-      Inc(I, 2);
-    until I > BFRounds;
-    Block[1] := Block[1] xor Context.PBox[(BFRounds+1)];
-  end else begin
-    Block[1] := Block[1] xor Context.PBox[(BFRounds+1)];
-
-    {16 Rounds to go (8 double rounds to avoid swaps)}
-    I := BFRounds;
-    repeat
-      {first half round }
-      Block[0] := Block[0] xor Context.PBox[I] xor (((
-                  Context.SBox[0, TmpBlock.Xr[3]] + Context.SBox[1, TmpBlock.Xr[2]])
-                  xor Context.SBox[2, TmpBlock.Xr[1]]) + Context.SBox[3, TmpBlock.Xr[0]]);
-      {second half round }
-      Block[1] := Block[1] xor Context.PBox[i-1] xor (((
-                  Context.SBox[0, TmpBlock.Xl[3]] + Context.SBox[1, TmpBlock.Xl[2]])
-                  xor Context.SBox[2, TmpBlock.Xl[1]]) + Context.SBox[3, TmpBlock.Xl[0]]);
-       Dec (I, 2);
-     until I < 1;
-     Block[0] := Block[0] xor Context.PBox[0];
-  end;
+  for I := 0 to BufSize - 1 do
+    TByteArray(Buf)[I] := TByteArray(Buf)[I] xor                     {!!.01}
+                            TMISC.Random64Byte(TInt64(Context));
 end;
-{ -------------------------------------------------------------------------- }
-procedure EncryptBFCBC(const Context : TBFContext; const Prev : TBFBlock;
-  var Block : TBFBlock; Encrypt : Boolean);
+
+class procedure TRNG.InitEncryptRNG32(Key : LongInt; var Context : TRNG32Context);
 begin
-  if Encrypt then begin
-    XorMem(Block, Prev, SizeOf(Block));
-    EncryptBF(Context, Block, Encrypt);
-  end else begin
-    EncryptBF(Context, Block, Encrypt);
-    XorMem(Block, Prev, SizeOf(Block));
-  end;
+  LongInt(Context) := Key;
 end;
-{ -------------------------------------------------------------------------- }
-procedure InitEncryptLSC(const Key; KeySize : Integer; var Context : TLSCContext);
+
+class procedure TRNG.InitEncryptRNG64(KeyHi, KeyLo : LongInt; var Context : TRNG64Context);
+begin
+  TInt64(Context).Lo := KeyLo;
+  TInt64(Context).Hi := KeyHi;
+end;
+
+{ TLMD }
+
+class procedure TLMD.FinalizeLMD(var Context : TLMDContext; var Digest; DigestSize : LongInt);
+const
+  Padding : array [0..7] of Byte = (1, 0, 0, 0, 0, 0, 0, 0);
 var
-  R, I, A   : LongInt;
-  X         : Byte;
+  ContextEx : TLMDContextEx;                                         {!!.01}
+  BCContext : TLBCContext;
+  I         : Integer;
 begin
-  {initialize SBox}
-  for I := 0 to 255 do
-    Context.SBox[I] := I;
+ {pad with "1", followed by as many "0"s as needed to fill the block}
+  Move(Context, ContextEx, SizeOf(ContextEx));                       {!!.01}
+  UpdateLMD(Context, Padding, SizeOf(Padding) - ContextEx.KeyIndex);
+  Move(Context, ContextEx, SizeOf(ContextEx));                       {!!.01}
 
-  A := 0;
-  for R := 0 to 2 do  {3 rounds - "A" accumulates}
-    for I := 0 to 255 do begin
-      A := A + Context.SBox[I] + TByteArray(Key)[I mod KeySize];     {!!.01}
-      X := Context.SBox[I];
-      Context.SBox[I] := Context.SBox[Byte(A)];
-      Context.SBox[Byte(A)] := X;
-    end;
+  {mix context using block cipher}
+  TLBC.InitEncryptLBC(ContextEx.Key, BCContext, 8, True);
+  for I := 0 to (SizeOf(ContextEx.Digest) div SizeOf(TLBCBlock)) - 1 do
+    TLBC.EncryptLBC(BCContext, PLBCBlock(@ContextEx.Digest[I * SizeOf(TLBCBlock)])^);
 
-  Context.Index := 0;
-  Context.Accumulator := A;
+  {return Digest of requested DigestSize}
+  {max digest is 2048-bit, although it could be greater if Pi2048 was larger}
+  Move(ContextEx.Digest, Digest, Min(SizeOf(ContextEx.Digest), DigestSize));
 end;
-{ -------------------------------------------------------------------------- }
-procedure EncryptLSC(var Context : TLSCContext; var Buf; BufSize : LongInt);
+
+class procedure TLMD.GenerateLMDKey(var Key; KeySize : Integer; const ABytes: TBytes);
+begin
+  HashLMD(Key, KeySize, ABytes[0], Length(ABytes));
+end;
+
+class procedure TLMD.HashLMD(var Digest; DigestSize : LongInt; const Buf; BufSize : LongInt);
+var
+  Context : TLMDContext;
+begin
+  InitLMD(Context);
+  UpdateLMD(Context, Buf, BufSize);
+  FinalizeLMD(Context, Digest, DigestSize);
+end;
+
+class procedure TLMD.InitLMD(var Context : TLMDContext);
+var
+  ContextEx : TLMDContextEx;
+begin
+  Move(Context, ContextEx, SizeOf(ContextEx));                       {!!.01}
+  ContextEx.DigestIndex := 0;
+  TBlock2048(ContextEx.Digest) := TBlock2048(Pi2048);
+
+  ContextEx.KeyIndex := 0;
+  ContextEx.KeyInts[0] := $55555555;
+  ContextEx.KeyInts[1] := $55555555;
+  ContextEx.KeyInts[2] := $55555555;
+  ContextEx.KeyInts[3] := $55555555;
+  Move(ContextEx, Context, SizeOf(Context));                         {!!.01}
+end;
+
+class procedure TLMD.StringHashLMD(var Digest; DigestSize : LongInt; const ABytes: TBytes);
+begin
+ HashLMD(Digest, DigestSize, ABytes[0], Length(ABytes));
+end;
+
+class procedure TLMD.UpdateLMD(var Context : TLMDContext; const Buf; BufSize : LongInt);
+var
+  ContextEx : TLMDContextEx;                                         {!!.01}
+  AA, BB    : LongInt;
+  CC, DD    : LongInt;
+  I, R      : LongInt;
+begin
+  Move(Context, ContextEx, SizeOf(ContextEx));                       {!!.01}
+  for I := 0 to BufSize - 1 do
+    with ContextEx do begin
+      {update Digest}
+      Digest[DigestIndex] := Digest[DigestIndex] xor
+                               TByteArray(Buf)[I];                   {!!.01}
+      DigestIndex := DigestIndex + 1;
+      if (DigestIndex = SizeOf(Digest)) then
+        DigestIndex := 0;
+
+      {update BlockKey}
+      Key[KeyIndex] := Key[KeyIndex] xor TByteArray(Buf)[I];         {!!.01}
+      KeyIndex := KeyIndex + 1;
+      if (KeyIndex = SizeOf(Key) div 2) then begin
+        AA := KeyInts[3];
+        BB := KeyInts[2];
+        CC := KeyInts[1];
+        DD := KeyInts[0];
+
+        {mix all the bits around for 4 rounds}
+        {achieves avalanche and eliminates funnels}
+        for R := 0 to 3 do begin
+          AA := AA + DD; DD := DD + AA; AA := AA xor (AA shr 7);
+          BB := BB + AA; AA := AA + BB; BB := BB xor (BB shl 13);
+          CC := CC + BB; BB := BB + CC; CC := CC xor (CC shr 17);
+          DD := DD + CC; CC := CC + DD; DD := DD xor (DD shl 9);
+          AA := AA + DD; DD := DD + AA; AA := AA xor (AA shr 3);
+          BB := BB + AA; AA := AA + BB; BB := BB xor (BB shl 7);
+          CC := CC + BB; BB := BB + CC; CC := CC xor (DD shr 15);
+          DD := DD + CC; CC := CC + DD; DD := DD xor (DD shl 11);
+        end;
+
+        KeyInts[0] := AA;
+        KeyInts[1] := BB;
+        KeyInts[2] := CC;
+        KeyInts[3] := DD;
+
+        KeyIndex := 0;
+      end;
+    end;
+  Move(ContextEx, Context, SizeOf(Context));                         {!!.01}
+end;
+
+{ TLSC }
+
+class procedure TLSC.EncryptLSC(var Context : TLSCContext; var Buf; BufSize : LongInt);
 var
   L, Y, X   : LongInt;
   I, A      : LongInt;
@@ -1178,37 +1743,32 @@ begin
   Context.Index := I;
   Context.Accumulator := A;
 end;
-{ -------------------------------------------------------------------------- }
-procedure InitEncryptRNG32(Key : LongInt; var Context : TRNG32Context);
-begin
-  LongInt(Context) := Key;
-end;
-{ -------------------------------------------------------------------------- }
-procedure EncryptRNG32(var Context : TRNG32Context; var Buf; BufSize : LongInt);
+
+
+class procedure TLSC.InitEncryptLSC(const Key; KeySize : Integer; var Context : TLSCContext);
 var
-  I     : LongInt;
+  R, I, A   : LongInt;
+  X         : Byte;
 begin
-  for I := 0 to BufSize - 1 do
-    TByteArray(Buf)[I] := TByteArray(Buf)[I] xor                     {!!.01}
-                            Random32Byte(LongInt(Context));
+  {initialize SBox}
+  for I := 0 to 255 do
+    Context.SBox[I] := I;
+
+  A := 0;
+  for R := 0 to 2 do  {3 rounds - "A" accumulates}
+    for I := 0 to 255 do begin
+      A := A + Context.SBox[I] + TByteArray(Key)[I mod KeySize];     {!!.01}
+      X := Context.SBox[I];
+      Context.SBox[I] := Context.SBox[Byte(A)];
+      Context.SBox[Byte(A)] := X;
+    end;
+
+  Context.Index := 0;
+  Context.Accumulator := A;
 end;
-{ -------------------------------------------------------------------------- }
-procedure InitEncryptRNG64(KeyHi, KeyLo : LongInt; var Context : TRNG64Context);
-begin
-  TInt64(Context).Lo := KeyLo;
-  TInt64(Context).Hi := KeyHi;
-end;
-{ -------------------------------------------------------------------------- }
-procedure EncryptRNG64(var Context : TRNG64Context; var Buf; BufSize : LongInt);
-var
-  I : Integer;
-begin
-  for I := 0 to BufSize - 1 do
-    TByteArray(Buf)[I] := TByteArray(Buf)[I] xor                     {!!.01}
-                            Random64Byte(TInt64(Context));
-end;
-{ -------------------------------------------------------------------------- }
-procedure GenerateRandomKey(var Key; KeySize : Integer);
+
+
+class procedure TMISC.GenerateRandomKey(var Key; KeySize : Integer);
 var
   I     : Integer;
 begin
@@ -1216,149 +1776,57 @@ begin
   for I := 0 to KeySize - 1 do
     TByteArray(Key)[I] := System.Random(256);                        {!!.01}
 end;
-{ -------------------------------------------------------------------------- }
-procedure GenerateLMDKey(var Key; KeySize : Integer;
-            const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-begin
-  {$IFDEF LOCKBOXUNICODE}
-  GenerateLMDKeyW(Key, KeySize, Str);
-  {$ELSE}
-  GenerateLMDKeyA(Key, KeySize, Str);
-  {$ENDIF}
-end;
 
-procedure GenerateLMDKeyA(var Key; KeySize : Integer;
-            const Str : Ansistring);
-begin
-  HashLMD(Key, KeySize, Str[1], Length(Str) * SizeOf(AnsiChar));
-end;
+{ TMISC }
 
-{$IFDEF UNICODE}
-procedure GenerateLMDKeyW(var Key; KeySize : Integer; const Str : UnicodeString);
-begin
-  HashLMD(Key, KeySize, Str[1], Length(Str) * SizeOf(WideChar));
-end;
-{$ENDIF}
-{ -------------------------------------------------------------------------- }
-procedure GenerateMD5Key(var Key : TKey128; const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-begin
-  {$IFDEF LOCKBOXUNICODE}
-  GenerateMD5KeyW(Key, Str);
-  {$ELSE}
-  GenerateMD5KeyA(Key, Str);
-  {$ENDIF}
-end;
-
-procedure GenerateMD5KeyA(var Key : TKey128; const Str : AnsiString);
+class procedure TMISC.HashELF(var Digest : LongInt; const Buf; BufSize : LongInt);
 var
-  D : TMD5Digest;
+  I, X  : LongInt;
 begin
-  HashMD5(D, Str[1], Length(Str) * SizeOf(AnsiChar));
-  Key := TKey128(D);
+  Digest := 0;
+  for I := 0 to BufSize - 1 do begin
+    Digest := (Digest shl 4) + TByteArray(Buf)[I];                   {!!.01}
+    X := Digest and $F0000000;
+    if (X <> 0) then
+      Digest := Digest xor (X shr 24);
+    Digest := Digest and (not X);
+  end;
 end;
 
-{$IFDEF UNICODE}
-procedure GenerateMD5KeyW(var Key : TKey128; const Str : UnicodeString);
+class procedure TMISC.HashMix128(var Digest : LongInt; const Buf; BufSize : LongInt);
+type
+  T128BitArray = array[0..0] of T128Bit;
 var
-  D : TMD5Digest;
+  Temp      : T128Bit;
+  PTemp     : PByteArray;
+  I, L   : LongInt;
 begin
-  HashMD5(D, Str[1], Length(Str) * SizeOf(WideChar));
-  Key := TKey128(D);
-end;
-{$ENDIF}
-{ -------------------------------------------------------------------------- }
-function Ran0Prim(var Seed : LongInt; IA, IQ, IR : LongInt) : LongInt;
-const
-  IM = 2147483647;
-  MA = 123459876;
-var
-  I, K : LongInt;
-begin
-  {XORing with mask avoids seeds of zero}
-  I := Seed xor MA;
-  K := I div IQ;
-  I := (IA * (I - (K * IQ))) - (IR * K);
-  if I < 0 then
-    I := I + IM;
-  Result := I xor MA;
-  Seed := Result;
-end;
-{ -------------------------------------------------------------------------- }
-function Ran01(var Seed : LongInt) : LongInt;
-begin
-  Result := Ran0Prim(Seed, 16807, 127773, 2836);
-end;
-{ -------------------------------------------------------------------------- }
-function Ran02(var Seed : LongInt) : LongInt;
-begin
-  Result := Ran0Prim(Seed, 48271, 44488, 3399);
-end;
-{ -------------------------------------------------------------------------- }
-function Ran03(var Seed : LongInt) : LongInt;
-begin
-  Result := Ran0Prim(Seed, 69621, 30845, 23902);
-end;
-{ -------------------------------------------------------------------------- }
-function Random32Byte(var Seed : LongInt) : Byte;
-var
-  L : LongInt;
-  R : TLongIntRec;
-begin
-  L := Ran01(Seed);
-  R := TLongIntRec(L);
-  Result := R.LoLo xor R.LoHi xor R.HiLo xor R.HiHi;
-end;
-{ -------------------------------------------------------------------------- }
-function Random64(var Seed : TInt64) : LongInt;
-begin
-  Ran01(Seed.Lo);
-  Ran01(Seed.Hi);
-  Result := Seed.Lo xor Seed.Hi;
-end;
-{ -------------------------------------------------------------------------- }
-function Random64Byte(var Seed : TInt64) : Byte;
-var
-  L : LongInt;
-  R : TLongIntRec;
-begin
-  L := Random64(Seed);
-  R := TLongIntRec(L);
-  Result := R.LoLo xor R.LoHi xor R.HiLo xor R.HiHi;
-end;
-{ -------------------------------------------------------------------------- }
-procedure  ShrinkDESKey(var Key : TKey64);
-const
-  SK1 : TKey64 = ($C4,$08,$B0,$54,$0B,$A1,$E0,$AE);
-  SK2 : TKey64 = ($EF,$2C,$04,$1C,$E6,$38,$2F,$E6);
-var
-  I       : Integer;
-  Work1   : TKey64;
-  Work2   : TKey64;
-  Context : TDESContext;
-begin
-  {step #1 zero the parity bits - 8, 16, 24, ..., 64}
-  for I := 0 to 7 do
-    Work1[I] := Key[I] and $FE;
+  Temp[0] := $243F6A88;  {first 16 bytes of Pi in binary}
+  Temp[1] := $93F40317;
+  Temp[2] := $0C110496;
+  Temp[3] := $C709C289;
 
-  {step #2 encrypt output of #1 with SK1 and xor with output of #1}
-  InitEncryptDES(SK1, Context, True);
-  Work2 := Work1; {make copy}
-  EncryptDES(Context, TDESBlock(Work2));
-  for I := 0 to 7 do
-    Work1[I] := Work1[I] xor Work2[I];
+  L := BufSize div SizeOf(T128Bit);
+  for I := 0 to L - 1 do begin
+    Temp[0] := Temp[0] + T128BitArray(Buf)[I][0];                    {!!.01}
+    Temp[1] := Temp[1] + T128BitArray(Buf)[I][1];                    {!!.01}
+    Temp[2] := Temp[2] + T128BitArray(Buf)[I][2];                    {!!.01}
+    Temp[3] := Temp[3] + T128BitArray(Buf)[I][3];                    {!!.01}
+    Mix128(Temp);
+  end;
 
-  {step #3 zero bits 1,2,3,4,8,16,17,18,19,20,24,32,33,34,35,36,40,48,49,50,51,52,56,64}
-  TInt64(Work1).Lo := TInt64(Work1).Lo and $F101F101;
-  TInt64(Work1).Hi := TInt64(Work1).Hi and $F101F101;
+  PTemp := @Temp;
+  if (BufSize > L * SizeOf(T128Bit)) then begin
+    for I := 0 to (BufSize - L * SizeOf(T128Bit)) - 1 do
+      PTemp^[I] := PTemp^[I] + TByteArray(Buf)[(L * SizeOf(T128Bit)) + I]; {!!.01}
+    Mix128(Temp);
+  end;
 
-  {step #4 encrypt output of #3 with SK2}
-  InitEncryptDES(SK2, Context, True);
-  EncryptDES(Context, TDESBlock(Work1));
-
-  Key := Work1;
+  Digest := Temp[3];
 end;
-{ -------------------------------------------------------------------------- }
-procedure Mix128(var X : T128Bit);
+
+
+class procedure TMISC.Mix128(var X : T128Bit);
 var
   AA, BB, CC, DD : LongInt;
 begin
@@ -1375,40 +1843,84 @@ begin
 
   X[0] := AA;  X[1] := BB;  X[2] := CC;  X[3] := DD;
 end;
-{ -------------------------------------------------------------------------- }
-procedure HashELF(var Digest : LongInt; const Buf;  BufSize : LongInt);
-var
-  I, X  : LongInt;
-begin
-  Digest := 0;
-  for I := 0 to BufSize - 1 do begin
-    Digest := (Digest shl 4) + TByteArray(Buf)[I];                   {!!.01}
-    X := Digest and $F0000000;
-    if (X <> 0) then
-      Digest := Digest xor (X shr 24);
-    Digest := Digest and (not X);
-  end;
-end;
-{ -------------------------------------------------------------------------- }
-{$IFDEF UNICODE}
-procedure StringHashELFW(var Digest : LongInt; const Str : UnicodeString);
-begin
-  HashELF(Digest, Str[1], Length(Str) * SizeOf(WideChar));
-end;
-{$ENDIF}
 
-procedure StringHashELFA(var Digest : LongInt; const Str : AnsiString);
+class function TMISC.Ran01(var Seed : LongInt): LongInt;
 begin
-  HashELF(Digest, Str[1], Length(Str) * SizeOf(AnsiChar));
+  Result := Ran0Prim(Seed, 16807, 127773, 2836);
 end;
-{ -------------------------------------------------------------------------- }
-function RolX(I, C : DWord) : DWord; register;
+
+class function TMISC.Ran02(var Seed : LongInt): LongInt;
+begin
+  Result := Ran0Prim(Seed, 48271, 44488, 3399);
+end;
+
+class function TMISC.Ran03(var Seed : LongInt): LongInt;
+begin
+  Result := Ran0Prim(Seed, 69621, 30845, 23902);
+end;
+
+class function TMISC.Ran0Prim(var Seed : LongInt; IA, IQ, IR : LongInt): LongInt;
+const
+  IM = 2147483647;
+  MA = 123459876;
+var
+  I, K : LongInt;
+begin
+  {XORing with mask avoids seeds of zero}
+  I := Seed xor MA;
+  K := I div IQ;
+  I := (IA * (I - (K * IQ))) - (IR * K);
+  if I < 0 then
+    I := I + IM;
+  Result := I xor MA;
+  Seed := Result;
+end;
+
+class function TMISC.Random32Byte(var Seed : LongInt): Byte;
+var
+  L : LongInt;
+  R : TLongIntRec;
+begin
+  L := Ran01(Seed);
+  R := TLongIntRec(L);
+  Result := R.LoLo xor R.LoHi xor R.HiLo xor R.HiHi;
+end;
+
+
+class function TMISC.Random64(var Seed : TInt64): LongInt;
+begin
+  Ran01(Seed.Lo);
+  Ran01(Seed.Hi);
+  Result := Seed.Lo xor Seed.Hi;
+end;
+
+class function TMISC.Random64Byte(var Seed : TInt64): Byte;
+var
+  L : LongInt;
+  R : TLongIntRec;
+begin
+  L := Random64(Seed);
+  R := TLongIntRec(L);
+  Result := R.LoLo xor R.LoHi xor R.HiLo xor R.HiHi;
+end;
+
+class function TMISC.RolX(I, C : DWord): DWord;
 asm
   mov  ecx, edx         {get count to cl}
   rol  eax, cl          {rotate eax by cl}
 end;
-{ -------------------------------------------------------------------------- }
-procedure Transform(var Buffer : array of DWord;  const InBuf : array of DWord);
+
+class procedure TMISC.StringHashELF(var Digest: LongInt; const ABytes: TBytes);
+begin
+  HashELF(Digest, ABytes[0], Length(ABytes));
+end;
+
+class procedure TMISC.StringHashMix128(var Digest : LongInt; const ABytes: TBytes);
+begin
+  HashMix128(Digest, ABytes[0], Length(ABytes));
+end;
+
+class procedure TMISC.Transform(var Buffer : array of DWord; const InBuf : array of DWord);
 const
   S11 = 7;
   S12 = 12;
@@ -1543,298 +2055,13 @@ begin
 
   Move(Buf, Buffer, SizeOf(Buffer));                                 {!!.01}
 end;
-{ -------------------------------------------------------------------------- }
-procedure InitMD5(var Context : TMD5Context);
-var
-  MD5 : TMD5ContextEx;                                               {!!.01}
+
+class procedure TMISC.XorMem(var Mem1; const Mem2; Count : Cardinal);
 begin
-  Move(Context, MD5, SizeOf(MD5));                                   {!!.01}
-  MD5.Count[0] := 0;
-  MD5.Count[1] := 0;
-
-  {load magic initialization constants}
-  MD5.State[0] := $67452301;
-  MD5.State[1] := $EFCDAB89;
-  MD5.State[2] := $98BADCFE;
-  MD5.State[3] := $10325476;
-  Move(MD5, Context, SizeOf(Context));                               {!!.01}
-end;
-{ -------------------------------------------------------------------------- }
-procedure UpdateMD5(var Context : TMD5Context;  const Buf;  BufSize : LongInt);
-var
-  MD5    : TMD5ContextEx;
-  InBuf  : array [0..15] of DWord;
-  BufOfs : LongInt;
-  MDI    : Word;
-  I      : Word;
-  II     : Word;
-begin
-  Move(Context, MD5, SizeOf(MD5));                                   {!!.01}
-
-  {compute number of bytes mod 64}
-  MDI := (MD5.Count[0] shr 3) and $3F;
-
-  {update number of bits}
-  if ((MD5.Count[0] + (DWord(BufSize) shl 3)) < MD5.Count[0]) then
-    Inc(MD5.Count[1]);
-  Inc(MD5.Count[0], BufSize shl 3);
-  Inc(MD5.Count[1], BufSize shr 29);
-
-  {add new byte acters to buffer}
-  BufOfs := 0;
-  while (BufSize > 0) do begin
-    Dec(BufSize);
-    MD5.Buf[MDI] := TByteArray(Buf)[BufOfs];                         {!!.01}
-    Inc(MDI);
-    Inc(BufOfs);
-    if (MDI = $40) then begin
-      II := 0;
-      for I := 0 to 15 do begin
-        InBuf[I] := LongInt(MD5.Buf[II + 3]) shl 24 or
-          LongInt(MD5.Buf[II + 2]) shl 16 or
-          LongInt(MD5.Buf[II + 1]) shl 8 or
-          LongInt(MD5.Buf[II]);
-        Inc(II, 4);
-      end;
-      Transform(MD5.State, InBuf);
-      Transform(TMD5ContextEx( Context ).State, InBuf);
-      MDI := 0;
-    end;
-  end;
-  Move(MD5, Context, SizeOf(Context));                               {!!.01}
-end;
-{ -------------------------------------------------------------------------- }
-procedure FinalizeMD5(var Context : TMD5Context; var Digest : TMD5Digest);
-const
-  Padding: array [0..63] of Byte = (
-    $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,
-    $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,
-    $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,
-    $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00);
-var
-  MD5    : TMD5ContextEx;
-  InBuf  : array [0..15] of DWord;
-  MDI    : LongInt;
-  I      : Word;
-  II     : Word;
-  PadLen : Word;
-begin
-  Move(Context, MD5, SizeOf(MD5));                                   {!!.01}
-  {save number of bits}
-  InBuf[14] := MD5.Count[0];
-  InBuf[15] := MD5.Count[1];
-  {compute number of bytes mod 64}
-  MDI := (MD5.Count[0] shr 3) and $3F;
-  {pad out to 56 mod 64}
-  if (MDI < 56) then
-    PadLen := 56 - MDI
-  else
-    PadLen := 120 - MDI;
-  UpdateMD5(Context, Padding, PadLen);
-
-  Move(Context, MD5, SizeOf(MD5));                                   {!!.01}
-
-  {append length in bits and transform}
-  II := 0;
-  for I := 0 to 13 do begin
-    InBuf[I] :=
-      ( LongInt( MD5.Buf[ II + 3 ]) shl 24 ) or
-      ( LongInt( MD5.Buf[ II + 2 ]) shl 16 ) or
-      ( LongInt( MD5.Buf[ II + 1 ]) shl 8  ) or
-        LongInt( MD5.Buf[ II     ]);
-    Inc(II, 4);
-  end;
-  Transform(MD5.State, InBuf);
-  {store buffer in digest}
-  II := 0;
-  for I := 0 to 3 do begin
-    Digest[II] := Byte(MD5.State[I] and $FF);
-    Digest[II + 1] := Byte((MD5.State[I] shr 8) and $FF);
-    Digest[II + 2] := Byte((MD5.State[I] shr 16) and $FF);
-    Digest[II + 3] := Byte((MD5.State[I] shr 24) and $FF);
-    Inc(II, 4);
-  end;
-  Move(MD5, Context, SizeOf(Context));                               {!!.01}
-end;
-{ -------------------------------------------------------------------------- }
-procedure HashMD5(var Digest : TMD5Digest; const Buf;  BufSize : LongInt);
-var
-  Context : TMD5Context;
-begin
-  fillchar( context, SizeOf( context ), $00 );
-  InitMD5(Context);
-  UpdateMD5(Context, Buf, BufSize);
-  FinalizeMD5(Context, Digest);
-end;
-{ -------------------------------------------------------------------------- }
-procedure InitLMD(var Context : TLMDContext);
-var
-  ContextEx : TLMDContextEx;
-begin
-  Move(Context, ContextEx, SizeOf(ContextEx));                       {!!.01}
-  ContextEx.DigestIndex := 0;
-  TBlock2048(ContextEx.Digest) := TBlock2048(Pi2048);
-
-  ContextEx.KeyIndex := 0;
-  ContextEx.KeyInts[0] := $55555555;
-  ContextEx.KeyInts[1] := $55555555;
-  ContextEx.KeyInts[2] := $55555555;
-  ContextEx.KeyInts[3] := $55555555;
-  Move(ContextEx, Context, SizeOf(Context));                         {!!.01}
+  XorMemPrim(Mem1, Mem2, Count);
 end;
 
-{ -------------------------------------------------------------------------- }
-procedure UpdateLMD(var Context : TLMDContext; const Buf; BufSize : LongInt);
-var
-  ContextEx : TLMDContextEx;                                         {!!.01}
-  AA, BB    : LongInt;
-  CC, DD    : LongInt;
-  I, R      : LongInt;
-begin
-  Move(Context, ContextEx, SizeOf(ContextEx));                       {!!.01}
-  for I := 0 to BufSize - 1 do
-    with ContextEx do begin
-      {update Digest}
-      Digest[DigestIndex] := Digest[DigestIndex] xor
-                               TByteArray(Buf)[I];                   {!!.01}
-      DigestIndex := DigestIndex + 1;
-      if (DigestIndex = SizeOf(Digest)) then
-        DigestIndex := 0;
-
-      {update BlockKey}
-      Key[KeyIndex] := Key[KeyIndex] xor TByteArray(Buf)[I];         {!!.01}
-      KeyIndex := KeyIndex + 1;
-      if (KeyIndex = SizeOf(Key) div 2) then begin
-        AA := KeyInts[3];
-        BB := KeyInts[2];
-        CC := KeyInts[1];
-        DD := KeyInts[0];
-
-        {mix all the bits around for 4 rounds}
-        {achieves avalanche and eliminates funnels}
-        for R := 0 to 3 do begin
-          AA := AA + DD; DD := DD + AA; AA := AA xor (AA shr 7);
-          BB := BB + AA; AA := AA + BB; BB := BB xor (BB shl 13);
-          CC := CC + BB; BB := BB + CC; CC := CC xor (CC shr 17);
-          DD := DD + CC; CC := CC + DD; DD := DD xor (DD shl 9);
-          AA := AA + DD; DD := DD + AA; AA := AA xor (AA shr 3);
-          BB := BB + AA; AA := AA + BB; BB := BB xor (BB shl 7);
-          CC := CC + BB; BB := BB + CC; CC := CC xor (DD shr 15);
-          DD := DD + CC; CC := CC + DD; DD := DD xor (DD shl 11);
-        end;
-
-        KeyInts[0] := AA;
-        KeyInts[1] := BB;
-        KeyInts[2] := CC;
-        KeyInts[3] := DD;
-
-        KeyIndex := 0;
-      end;
-    end;
-  Move(ContextEx, Context, SizeOf(Context));                         {!!.01}
-end;
-{ -------------------------------------------------------------------------- }
-procedure FinalizeLMD(var Context : TLMDContext; var Digest; DigestSize : LongInt);
-const
-  Padding : array [0..7] of Byte = (1, 0, 0, 0, 0, 0, 0, 0);
-var
-  ContextEx : TLMDContextEx;                                         {!!.01}
-  BCContext : TLBCContext;
-  I         : Integer;
-begin
- {pad with "1", followed by as many "0"s as needed to fill the block}
-  Move(Context, ContextEx, SizeOf(ContextEx));                       {!!.01}
-  UpdateLMD(Context, Padding, SizeOf(Padding) - ContextEx.KeyIndex);
-  Move(Context, ContextEx, SizeOf(ContextEx));                       {!!.01}
-
-  {mix context using block cipher}
-  InitEncryptLBC(ContextEx.Key, BCContext, 8, True);
-  for I := 0 to (SizeOf(ContextEx.Digest) div SizeOf(TLBCBlock)) - 1 do
-    EncryptLBC(BCContext, PLBCBlock(@ContextEx.Digest[I * SizeOf(TLBCBlock)])^);
-
-  {return Digest of requested DigestSize}
-  {max digest is 2048-bit, although it could be greater if Pi2048 was larger}
-  Move(ContextEx.Digest, Digest, Min(SizeOf(ContextEx.Digest), DigestSize));
-end;
-{ -------------------------------------------------------------------------- }
-procedure HashLMD(var Digest; DigestSize : LongInt; const Buf; BufSize : LongInt);
-var
-  Context : TLMDContext;
-begin
-  InitLMD(Context);
-  UpdateLMD(Context, Buf, BufSize);
-  FinalizeLMD(Context, Digest, DigestSize);
-end;
-{ -------------------------------------------------------------------------- }
-procedure HashMix128(var Digest : LongInt; const Buf;  BufSize : LongInt);
-type
-  T128BitArray = array[0..0] of T128Bit;
-var
-  Temp      : T128Bit;
-  PTemp     : PByteArray;
-  I, L   : LongInt;
-begin
-  Temp[0] := $243F6A88;  {first 16 bytes of Pi in binary}
-  Temp[1] := $93F40317;
-  Temp[2] := $0C110496;
-  Temp[3] := $C709C289;
-
-  L := BufSize div SizeOf(T128Bit);
-  for I := 0 to L - 1 do begin
-    Temp[0] := Temp[0] + T128BitArray(Buf)[I][0];                    {!!.01}
-    Temp[1] := Temp[1] + T128BitArray(Buf)[I][1];                    {!!.01}
-    Temp[2] := Temp[2] + T128BitArray(Buf)[I][2];                    {!!.01}
-    Temp[3] := Temp[3] + T128BitArray(Buf)[I][3];                    {!!.01}
-    Mix128(Temp);
-  end;
-
-  PTemp := @Temp;
-  if (BufSize > L * SizeOf(T128Bit)) then begin
-    for I := 0 to (BufSize - L * SizeOf(T128Bit)) - 1 do
-      PTemp^[I] := PTemp^[I] + TByteArray(Buf)[(L * SizeOf(T128Bit)) + I]; {!!.01}
-    Mix128(Temp);
-  end;
-
-  Digest := Temp[3];
-end;
-{ -------------------------------------------------------------------------- }
-{$IFDEF UNICODE}
-procedure StringHashMix128W(var Digest : LongInt; const Str : Unicodestring);
-begin
-  HashMix128(Digest, Str[1], Length(Str) * SizeOf(WideChar));
-end;
-{$ENDIF}
-
-procedure StringHashMix128A(var Digest : LongInt; const Str : AnsiString);
-begin
-  HashMix128(Digest, Str[1], Length(Str) * SizeOf(AnsiChar));
-end;
-{ -------------------------------------------------------------------------- }
-{$IFDEF UNICODE}
-procedure StringHashMD5W(var Digest : TMD5Digest; const Str : UnicodeString);
-begin
-  HashMD5(Digest, Str[1], Length(Str) * SizeOf(WideChar));
-end;
-{$ENDIF}
-
-procedure StringHashMD5A(var Digest : TMD5Digest; const Str : AnsiString);
-begin
-  HashMD5(Digest, Str[1], Length(Str) * SizeOf(AnsiChar));
-end;
-{ -------------------------------------------------------------------------- }
-{$IFDEF UNICODE}
-procedure StringHashLMDW(var Digest; DigestSize : LongInt; const Str : UnicodeString);
-begin
-  HashLMD(Digest, DigestSize, Str[1], Length(Str) * SizeOf(WideChar));
-end;
-{$ENDIF}
-
-procedure StringHashLMDA(var Digest; DigestSize : LongInt; const Str : AnsiString);
-begin
-  HashLMD(Digest, DigestSize, Str[1], Length(Str) * SizeOf(AnsiChar));
-end;
-{ -------------------------------------------------------------------------- }
-procedure XorMemPrim(var Mem1;  const Mem2;  Count : Cardinal); register;
+class procedure TMISC.XorMemPrim(var Mem1; const Mem2; Count : Cardinal);
 asm
   push esi
   push edi
@@ -1871,384 +2098,6 @@ asm
 @Done:
   pop  edi
   pop  esi
-end;
-{ -------------------------------------------------------------------------- }
-procedure XorMem(var Mem1;  const Mem2;  Count : Cardinal);
-begin
-  XorMemPrim(Mem1, Mem2, Count);
-end;
-
-{ == SHA-1 hashing routines ================================================ }
-procedure SHA1Clear( var Context : TSHA1Context );
-begin
-  fillchar( Context, SizeOf( Context ), $00 );
-end;
-{ -------------------------------------------------------------------------- }
-function SHA1SwapByteOrder( n : DWORD ) : DWORD;
-begin
-  n := ( n shr 24 ) or (( n shr 8 ) and LBMASK_LO )
-       or (( n shl 8 ) and LBMASK_HI ) or ( n shl 24 );
-  Result := n;
-end;
-{ -------------------------------------------------------------------------- }
-procedure HashSHA1( var Digest : TSHA1Digest; const Buf; BufSize : Longint );
-var
-  Context : TSHA1Context;
-begin
-  InitSHA1( Context );
-  UpdateSHA1( Context, Buf, BufSize );
-  FinalizeSHA1( Context, Digest );
-end;
-{ -------------------------------------------------------------------------- }
-{$IFDEF UNICODE}
-procedure StringHashSHA1W(var Digest : TSHA1Digest; const Str : UnicodeString);
-begin
-  HashSHA1(Digest, Str[1], Length(Str) * SizeOf(WideChar));
-end;
-{$ENDIF}
-
-procedure StringHashSHA1A(var Digest : TSHA1Digest; const Str : AnsiString);
-begin
-  HashSHA1(Digest, Str[1], Length(Str) * SizeOf(AnsiChar));
-end;
-{ -------------------------------------------------------------------------- }
-procedure SHA1Hash( var Context : TSHA1Context );
-var
-  A : DWord;
-  B : DWord;
-  C : DWord;
-  D : DWord;
-  E : DWord;
-
-  X : DWord;
-  W : array[ 0..79 ] of DWord;
-
-  i : Longint;
-begin
-  with Context do begin
-    sdIndex:= 0;
-    Move( sdBuf, W, Sizeof( W ));
-
-    // W := Mt, for t = 0 to 15 : Mt is M sub t
-    for i := 0 to 15 do
-      W[ i ]:= SHA1SwapByteOrder( W[ i ] );
-
-    // Transform Message block from 16 32 bit words to 80 32 bit words
-    // Wt, = ( Wt-3 xor Wt-8 xor Wt-13 xor Wt-16 ) rolL 1 : Wt is W sub t
-    for i:= 16 to 79 do
-      W[i]:= RolX( W[ i - 3 ] xor W[ i - 8 ] xor W[ i - 14 ] xor W[ i - 16 ], 1 );
-
-    A := sdHash[ 0 ];
-    B := sdHash[ 1 ];
-    C := sdHash[ 2 ];
-    D := sdHash[ 3 ];
-    E := sdHash[ 4 ];
-
-    // the four rounds
-    for i:= 0 to 19 do begin
-      X := RolX( A, 5 ) + ( D xor ( B and ( C xor D ))) + E + W[ i ] + SHA1_K1;
-      E := D;
-      D := C;
-      C := RolX( B, 30 );
-      B := A;
-      A := X;
-    end;
-
-    for i:= 20 to 39 do begin
-      X := RolX( A, 5 ) + ( B xor C xor D ) + E + W[ i ] + SHA1_K2;
-      E := D;
-      D := C;
-      C := RolX( B, 30 );
-      B := A;
-      A := X;
-    end;
-
-    for i:= 40 to 59 do begin
-      X := RolX( A, 5 ) + (( B and C ) or ( D and ( B or C ))) + E + W[ i ] + SHA1_K3;
-      E := D;
-      D := C;
-      C := RolX( B, 30 );
-      B := A;
-      A := X;
-    end;
-
-    for i:= 60 to 79 do
-    begin
-      X := RolX( A, 5 ) + ( B xor C xor D ) + E + W[ i ] + SHA1_K4;
-      E := D;
-      D := C;
-      C := RolX( B, 30 );
-      B := A;
-      A := X;
-    end;
-
-    sdHash[ 0 ]:= sdHash[ 0 ] + A;
-    sdHash[ 1 ]:= sdHash[ 1 ] + B;
-    sdHash[ 2 ]:= sdHash[ 2 ] + C;
-    sdHash[ 3 ]:= sdHash[ 3 ] + D;
-    sdHash[ 4 ]:= sdHash[ 4 ] + E;
-
-    FillChar( W, Sizeof( W ), $00 );
-    FillChar( sdBuf, Sizeof( sdBuf ), $00 );
-  end;
-end;
-{ -------------------------------------------------------------------------- }
-procedure SHA1UpdateLen( var Context : TSHA1Context; Len : DWord );
-begin
-  Inc( Context.sdLo,( Len shl 3 ));
-  if Context.sdLo < ( Len shl 3 ) then
-    Inc( Context.sdHi );
-  Inc( Context.sdHi, Len shr 29 );
-end;
-{ -------------------------------------------------------------------------- }
-procedure InitSHA1( var Context : TSHA1Context );
-begin
-  SHA1Clear( Context );
-  Context.sdHash[ 0 ] := SHA1_A;
-  Context.sdHash[ 1 ] := SHA1_B;
-  Context.sdHash[ 2 ] := SHA1_C;
-  Context.sdHash[ 3 ] := SHA1_D;
-  Context.sdHash[ 4 ] := SHA1_E;
-end;
-{ -------------------------------------------------------------------------- }
-procedure UpdateSHA1( var Context : TSHA1Context; const Buf; BufSize: Longint );
-var
-  PBuf: ^Byte;
-begin
-  with Context do begin
-    SHA1UpdateLen( Context, BufSize );
-    PBuf := @Buf;
-    while BufSize > 0 do begin
-      if ( Sizeof( sdBuf ) - sdIndex ) <= DWord( BufSize ) then begin
-        Move( PBuf^, sdBuf[ sdIndex ], Sizeof( sdBuf ) - sdIndex );
-        Dec( BufSize, Sizeof( sdBuf ) - sdIndex );
-        Inc( PBuf, Sizeof( sdBuf ) - sdIndex );
-        SHA1Hash( Context );
-      end else begin
-        Move( PBuf^, sdBuf[ sdIndex ], BufSize );
-        Inc( sdIndex, BufSize );
-        BufSize := 0;
-      end;
-    end;
-  end;
-end;
-{ -------------------------------------------------------------------------- }
-procedure FinalizeSHA1( var Context : TSHA1Context; var Digest : TSHA1Digest );
-begin
-  with Context do begin
-    sdBuf[ sdIndex ] := $80;
-
-    if sdIndex >= 56 then
-      SHA1Hash( Context );
-
-    PDWord( @sdBuf[ 56 ])^ := SHA1SwapByteOrder( sdHi );
-    PDWord( @sdBuf[ 60 ])^ := SHA1SwapByteOrder( sdLo );
-
-    SHA1Hash( Context );
-
-    sdHash[ 0 ] := SHA1SwapByteOrder( sdHash[ 0 ]);
-    sdHash[ 1 ] := SHA1SwapByteOrder( sdHash[ 1 ]);
-    sdHash[ 2 ] := SHA1SwapByteOrder( sdHash[ 2 ]);
-    sdHash[ 3 ] := SHA1SwapByteOrder( sdHash[ 3 ]);
-    sdHash[ 4 ] := SHA1SwapByteOrder( sdHash[ 4 ]);
-
-    Move( sdHash, Digest, Sizeof( Digest ));
-    SHA1Clear( Context );
-  end;
-end;
-
-
-{ == Rijndael ============================================================== }
-function RdlSubVector(v : TRDLVector) : TRDLVector;
-  { S-Box substitution }
-begin
-  Result.bt[0] := RdlSBox[v.bt[0]];
-  Result.bt[1] := RdlSBox[v.bt[1]];
-  Result.bt[2] := RdlSBox[v.bt[2]];
-  Result.bt[3] := RdlSBox[v.bt[3]];
-end;
-{ ------------------------------------------------------------------- }
-function RdlRotateVector(v : TRDLVector; Count : Byte) : TRDLVector;
-  { rotate vector (count bytes) to the right, e.g. }
-  { |3 2 1 0| -> |0 3 2 1| for Count = 1 }
-var
-  i : Byte;
-begin
-  i := Count mod 4;
-  Result.bt[0] := v.bt[i];
-  Result.bt[1] := v.bt[(i+1) mod 4];
-  Result.bt[2] := v.bt[(i+2) mod 4];
-  Result.bt[3] := v.bt[(i+3) mod 4];
-end;
-{ -------------------------------------------------------------------------- }
-procedure RdlRound(const RoundKey : TRDLBlock; var State : TRDLBlock; Final : Boolean);
-  { Rijndael round transformation }
-  { entire routine rewritten for optimization }                      {!!.01}
-var
-  i : Integer;
-  e : TRDLVectors;
-begin
-  for i := 0 to 3 do begin
-    if not Final then begin
-      e[i].dw := RDL_T0[TRDlVectors(State)[(i+0) mod 4].bt[0]] xor
-                 RDL_T1[TRDlVectors(State)[(i+1) mod 4].bt[1]] xor
-                 RDL_T2[TRDlVectors(State)[(i+2) mod 4].bt[2]] xor
-                 RDL_T3[TRDlVectors(State)[(i+3) mod 4].bt[3]]
-    end else begin
-      e[i].bt[0] := RDLSBox[TRDlVectors(State)[(i+0) mod 4].bt[0]];
-      e[i].bt[1] := RDLSBox[TRDlVectors(State)[(i+1) mod 4].bt[1]];
-      e[i].bt[2] := RDLSBox[TRDlVectors(State)[(i+2) mod 4].bt[2]];
-      e[i].bt[3] := RDLSBox[TRDlVectors(State)[(i+3) mod 4].bt[3]];
-    end;
-  end;
-  XorMemPrim(e, RoundKey, SizeOf(TRDLBlock));
-  State := TRDLBlock(e);
-end;
-{ -------------------------------------------------------------------------- }
-procedure RdlInvRound(const RoundKey : TRDLBlock; var State : TRDLBlock; First : Boolean);
-  { Rijndael inverse round transformation }
-  { entire routine rewritten for optimization }                      {!!.01}
-var
-  i : Integer;
-  r : TRDLVectors;
-  e : TRDLVector;
-begin
-  XorMemPrim(State, RoundKey, SizeOf(TRDLBlock));
-  for i := 0 to 3 do begin
-    if not First then begin
-      e.dw := RDL_InvT0[TRDlVectors(State)[i].bt[0]] xor
-              RDL_InvT1[TRDlVectors(State)[i].bt[1]] xor
-              RDL_InvT2[TRDlVectors(State)[i].bt[2]] xor
-              RDL_InvT3[TRDlVectors(State)[i].bt[3]];
-      r[(i+0) mod 4].bt[0] := RDLInvSBox[e.bt[0]];
-      r[(i+1) mod 4].bt[1] := RDLInvSBox[e.bt[1]];
-      r[(i+2) mod 4].bt[2] := RDLInvSBox[e.bt[2]];
-      r[(i+3) mod 4].bt[3] := RDLInvSBox[e.bt[3]];
-    end else begin
-      r[i].bt[0] := RDLInvSBox[TRDlVectors(State)[(i+0) mod 4].bt[0]];
-      r[i].bt[1] := RDLInvSBox[TRDlVectors(State)[(i+3) mod 4].bt[1]];
-      r[i].bt[2] := RDLInvSBox[TRDlVectors(State)[(i+2) mod 4].bt[2]];
-      r[i].bt[3] := RDLInvSBox[TRDlVectors(State)[(i+1) mod 4].bt[3]];
-    end;
-  end;
-  State := TRDLBlock(r);
-end;
-{ ------------------------------------------------------------------- }
-procedure EncryptRDL(const Context : TRDLContext; var Block : TRDLBlock);
-  { encrypt/decrypt block ECB mode }
-var
-  i : Integer;
-begin
-  if Context.Encrypt then begin
-    XorMemPrim(Block, Context.Rk[0], SizeOf(TRDLBlock));
-    for i := 1 to (Context.Rounds - 1) do
-      RdlRound(Context.Rk[i], Block, False);
-    RdlRound(Context.Rk[Context.Rounds], Block, True);
-  end else begin
-    RdlInvRound(Context.Rk[Context.Rounds], Block, True);
-    for i := (Context.Rounds - 1) downto 1 do
-      RdlInvRound(Context.Rk[i], Block, False);
-    XorMemPrim(Block, Context.Rk[0], SizeOf(TRDLBlock));
-  end;
-end;
-{ -------------------------------------------------------------------------- }
-procedure EncryptRDLCBC(const Context : TRDLContext;
-            const Prev : TRDLBlock; var Block : TRDLBlock);
-  { encrypt/decrypt block CBC mode }
-begin
-  if Context.Encrypt then begin
-    XorMemPrim(Block, Prev, SizeOf(Block));
-    EncryptRDL(Context, Block);
-  end else begin
-    EncryptRDL(Context, Block);
-    XorMemPrim(Block, Prev, SizeOf(Block));
-  end;
-end;
-{ -------------------------------------------------------------------------- }
-procedure InitEncryptRDL(const Key; KeySize : Longint;
-            var Context : TRDLContext; Encrypt : Boolean);
-  { Rijndael key expansion }
-var
-  i : Integer;
-  Nk : Byte;
-  temp : TRDLVector;
-  Sk : Longint;
-begin
-  { prepare context }
-  FillChar(Context, SizeOf(Context), #0);
-  Context.Encrypt := Encrypt;
-  Sk := Min(KeySize, SizeOf(Context.Rk));
-  Move(Key, Context.Rk, Sk);
-  Nk := KeySize div 4;       { # key columns }
-  if (Nk > RDLNk256) then
-    Nk := RDLNk256
-  else if (Nk < RDLNk128) then
-    Nk := RDLNk128;
-  Context.Rounds := 6 + Nk;
-
-  { expand key into round keys }
-  for i := Nk to (4 * (Context.Rounds + 1)) do begin
-    temp := Context.W[i-1];
-    if (Nk in [RDLNk128, RDLNk192]) then
-      begin
-        if (i mod Nk) = 0 then
-          temp.dw := RdlSubVector(RdlRotateVector(temp, 1)).dw xor RCon[i div Nk];
-        Context.W[i].dw := Context.W[i - Nk].dw xor temp.dw;
-      end
-    else  { Nk = RDLNk256 }
-      begin
-        if (i mod Nk) = 0 then
-          temp.dw := RdlSubVector(RdlRotateVector(temp, 1)).dw xor RCon[i div Nk]
-        else if (i mod Nk) = 4 then
-          temp := RdlSubVector(Temp);
-        Context.W[i].dw := Context.W[i - Nk].dw xor temp.dw;
-      end;
-  end;
-end;
-
-procedure StringHashELF(var Digest : LongInt; const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-begin
-  {$IFDEF LOCKBOXUNICODE}
-  StringHashELFW(Digest, Str);
-  {$ELSE}
-  StringHashELFA(Digest, Str);
-  {$ENDIF}
-end;
-
-procedure StringHashLMD(var Digest; DigestSize : LongInt; const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-begin
-  {$IFDEF LOCKBOXUNICODE}
-  StringHashLMDW(Digest, DigestSize, Str);
-  {$ELSE}
-  StringHashLMDA(Digest, DigestSize, Str);
-  {$ENDIF}
-end;
-
-procedure StringHashMD5(var Digest : TMD5Digest; const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-begin
-  {$IFDEF LOCKBOXUNICODE}
-  StringHashMD5W(Digest, Str);
-  {$ELSE}
-  StringHashMD5A(Digest, Str);
-  {$ENDIF}
-end;
-
-procedure StringHashMix128(var Digest : LongInt; const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-begin
-  {$IFDEF LOCKBOXUNICODE}
-  StringHashMix128W(Digest, Str);
-  {$ELSE}
-  StringHashMix128A(Digest, Str);
-  {$ENDIF}
-end;
-
-procedure StringHashSHA1(var Digest : TSHA1Digest; const Str : {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF});
-begin
-  {$IFDEF LOCKBOXUNICODE}
-  StringHashSHA1W(Digest, Str);
-  {$ELSE}
-  StringHashSHA1A(Digest, Str);
-  {$ENDIF}
 end;
 
 end.
