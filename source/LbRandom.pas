@@ -20,6 +20,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ * Roman Kassebaum
  *
  * ***** END LICENSE BLOCK ***** *)
 {*********************************************************}
@@ -36,72 +37,55 @@
 unit LbRandom;
 
 interface
+
 uses
 {$IFDEF MSWINDOWS}
-  Windows, { only needed for get tick count }
+  Winapi.Windows,
 {$ENDIF}
-{$IFDEF POSIX}
-  Types, Classes,
-{$ENDIF}
-{$IFDEF UsingCLX}
-  Types,
-{$ENDIF}
-{$IFDEF LINUX}
-  Libc,
-{$ENDIF}
-  Sysutils,
-  Math,
-  LbCipher;
-
-const
-  tmp = 1;
-
+  System.Types, System.Classes, System.SysUtils, System.Math, LbCipher;
 
 { TLbRandomGenerator }
 type
   TLbRandomGenerator = class
-    private
-      RandCount : Integer;
-      Seed : TMD5Digest;
-      procedure ChurnSeed;
-    public
-      constructor Create;
-      destructor Destroy; override;
-      procedure RandomBytes( var buff; len : DWORD );
+  strict private
+    RandCount : Integer;
+    Seed : TMD5Digest;
+    procedure ChurnSeed;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure RandomBytes( var buff; len : DWORD );
   end;
-
 
 { TLbRanLFS }
 type
   TLbRanLFS = class
-    private
-      ShiftRegister : DWORD;
-      procedure SetSeed;
-      function LFS : byte;
-    public
-      constructor Create;
-      destructor Destroy; override;
-      procedure FillBuf( var buff; len : DWORD );
+  strict private
+    ShiftRegister : DWORD;
+    procedure SetSeed;
+    function LFS : byte;
+  public
+    constructor Create;
+    procedure FillBuf( var buff; len : DWORD );
   end;
-
 
 implementation
 
+{ TLbRandomGenerator }
 
-{ == TLbRandomGenerator ==================================================== }
 constructor TLbRandomGenerator.create;
 begin
-  inherited;
+  inherited Create;
   ChurnSeed;
 end;
-{ -------------------------------------------------------------------------- }
+
 destructor TLbRandomGenerator.Destroy;
 begin
   RandCount := 0;
   FillChar( Seed, SizeOf( Seed ), $00 );
-  inherited;
+  inherited Destroy;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbRandomGenerator.ChurnSeed;
 var
   RandomSeed : array[ 0..15 ] of byte;
@@ -113,10 +97,10 @@ begin
   try
     lcg.FillBuf( RandomSeed, SizeOf( RandomSeed ));
     for i := 0 to 4 do begin
-      InitMD5( Context );
-      UpdateMD5( Context, Seed, SizeOf( Seed ));
-      UpdateMD5( Context, RandomSeed, SizeOf( RandomSeed ));
-      FinalizeMD5( Context, Seed );
+      TMD5.InitMD5( Context );
+      TMD5.UpdateMD5( Context, Seed, SizeOf( Seed ));
+      TMD5.UpdateMD5( Context, RandomSeed, SizeOf( RandomSeed ));
+      TMD5.FinalizeMD5( Context, Seed );
     end;
   finally
     lcg.Free;
@@ -140,10 +124,10 @@ begin
     m := SizeOfTmpDig;
 
   While Index < len do begin
-    InitMD5( Context );
-    UpdateMD5( Context, Seed, sizeof( Seed ));
-    UpdateMD5( Context, RandCount, sizeof( RandCount ));
-    FinalizeMD5( Context, TmpDig );
+    TMD5.InitMD5( Context );
+    TMD5.UpdateMD5( Context, Seed, sizeof( Seed ));
+    TMD5.UpdateMD5( Context, RandCount, sizeof( RandCount ));
+    TMD5.FinalizeMD5( Context, TmpDig );
 
     inc( RandCount );
     move( tmpDig, TByteArray( buff )[ Index ], m );
@@ -155,18 +139,14 @@ begin
       m := SizeOfTmpDig;
   end;
 end;
-{ == TLbRanLFS ============================================================= }
+
+{ TLbRanLFS }
 constructor TLbRanLFS.Create;
 begin
-  inherited;
+  inherited Create;
   SetSeed;
 end;
-{ -------------------------------------------------------------------------- }
-destructor TLbRanLFS.Destroy;
-begin
-  inherited;
-end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbRanLFS.FillBuf( var buff; len : DWORD );
 var
   l : DWORD;
@@ -181,16 +161,13 @@ begin
     TByteArray( buff )[ l ] := tmp_byt;
   end;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbRanLFS.SetSeed;
 const
   hold : integer = 1;
 var
 {$IFDEF MSWINDOWS}
   _time : TSYSTEMTIME;
-{$ENDIF}
-{$IFDEF LINUX}
-  fd : pIOFile;
 {$ENDIF}
 {$IFDEF POSIX}
   FS: TFileStream;
@@ -205,11 +182,6 @@ begin
                       ( DWORD( _time.wMinute or _time.wMilliseconds  )));
     hold := ShiftRegister;
     inc( hold );
-{$ENDIF}
-{$IFDEF LINUX}
-    fd := fopen( '/dev/random', 'r' );
-    fread( @ShiftRegister, SizeOf( byte ), SizeOf( ShiftRegister ), fd );
-    fclose( fd );
 {$ENDIF}
 {$IFDEF POSIX}
   FS := TFileStream.Create('/dev/random', fmOpenRead);
