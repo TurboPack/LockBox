@@ -191,7 +191,7 @@ type
   end;
 
 { Blowfish Cipher }
-  TBlowfish = record
+  TBlowfish = class(TObject)
   public
     class procedure EncryptBF(const Context : TBFContext; var Block : TBFBlock; Encrypt : Boolean); static;
     class procedure EncryptBFCBC(const Context : TBFContext; const Prev : TBFBlock; var Block : TBFBlock; Encrypt : Boolean); static;
@@ -199,7 +199,7 @@ type
   end;
 
 { DES Cipher }
-  TDES = record
+  TDES = class(TObject)
   public
     class procedure EncryptDES(const Context : TDESContext; var Block : TDESBlock); static;
     class procedure EncryptDESCBC(const Context : TDESContext; const Prev : TDESBlock; var Block : TDESBlock); static;
@@ -214,7 +214,7 @@ type
   end;
 
 { SHA1 Cipher }
-  TSHA1 = record
+  TSHA1 = class(TObject)
   strict private
     class procedure SHA1Clear(var Context : TSHA1Context); static;
     class procedure SHA1Hash(var Context : TSHA1Context); static;
@@ -229,7 +229,7 @@ type
   end;
 
 { LockBox Cipher }
-  TLBC = record
+  TLBC = class(TObject)
   public
     class procedure EncryptLBC(const Context : TLBCContext; var Block : TLBCBlock); static;
     class procedure EncryptLBCCBC(const Context : TLBCContext; const Prev : TLBCBlock; var Block : TLBCBlock); static;
@@ -239,7 +239,7 @@ type
   end;
 
 { MD5 Cipher }
-  TMD5 = record
+  TMD5 = class(TObject)
   public
     class procedure FinalizeMD5(var Context : TMD5Context; var Digest : TMD5Digest); static;
     class procedure GenerateMD5Key(var Key : TKey128; const ABytes: TBytes); static;
@@ -250,13 +250,12 @@ type
   end;
 
 { Rijndael Cipher }
-  TRDL = record
+  TRDL = class(TObject)
   strict private
     class procedure RdlInvRound(const RoundKey : TRDLBlock; var State : TRDLBlock; First : Boolean); static;
     class function RdlRotateVector(v : TRDLVector; Count : Byte): TRDLVector; static;
     class procedure RdlRound(const RoundKey : TRDLBlock; var State : TRDLBlock; AFinal : Boolean); static;
     class function RdlSubVector(v : TRDLVector): TRDLVector; static;
-  private
   public
     class procedure EncryptRDL(const Context : TRDLContext; var Block : TRDLBlock); static;
     class procedure EncryptRDLCBC(const Context : TRDLContext; const Prev : TRDLBlock; var Block : TRDLBlock); static;
@@ -275,7 +274,7 @@ type
   end;
 
 { Random Number Cipher }
-  TRNG = record
+  TRNG = class(TObject)
   public
     class procedure EncryptRNG32(var Context : TRNG32Context; var Buf; BufSize : LongInt); static;
     class procedure EncryptRNG64(var Context : TRNG64Context; var Buf; BufSize : LongInt); static;
@@ -284,7 +283,7 @@ type
   end;
 
 { LockBox Stream Cipher }
-  TLSC = record
+  TLSC = class(TObject)
   public
     class procedure EncryptLSC(var Context : TLSCContext; var Buf; BufSize : LongInt); static;
     class procedure InitEncryptLSC(const Key; KeySize : Integer; var Context : TLSCContext); static;
