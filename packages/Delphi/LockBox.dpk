@@ -64,10 +64,10 @@ contains
   LbConst in '..\..\source\LbConst.pas',
   LBPROC in '..\..\source\LBPROC.pas',
   LbRandom in '..\..\source\LbRandom.pas',
-  LbString in '..\..\source\LbString.pas',
   LbAsym in '..\..\source\LbAsym.pas',
   LbClass in '..\..\source\LbClass.pas',
   LbDSA in '..\..\source\LbDSA.pas',
-  LbRSA in '..\..\source\LbRSA.pas';
+  LbRSA in '..\..\source\LbRSA.pas',
+  LbBytes in '..\..\source\LbBytes.pas';
 
 end.
