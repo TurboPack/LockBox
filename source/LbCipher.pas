@@ -1766,17 +1766,16 @@ begin
   Context.Accumulator := A;
 end;
 
+{ TMISC }
 
 class procedure TMISC.GenerateRandomKey(var Key; KeySize : Integer);
 var
-  I     : Integer;
+  I: Integer;
 begin
   Randomize;
   for I := 0 to KeySize - 1 do
     TByteArray(Key)[I] := System.Random(256);                        {!!.01}
 end;
-
-{ TMISC }
 
 class procedure TMISC.HashELF(var Digest : LongInt; const Buf; BufSize : LongInt);
 var
