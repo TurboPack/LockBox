@@ -115,7 +115,7 @@ type
     class procedure StreamHashMD5(var Digest : TMD5Digest; AStream : TStream); static;
   end;
 
-  TSHA1Enrypt = class(TSHA1)
+  TSHA1Encrypt = class(TSHA1)
   public
     class procedure FileHashSHA1(var Digest : TSHA1Digest; const AFileName : string); static;
     class procedure StreamHashSHA1(var Digest : TSHA1Digest; AStream : TStream); static;
@@ -1483,9 +1483,9 @@ begin
   FinalizeMD5(Context, Digest);
 end;
 
-{ TSHA1Enrypt }
+{ TSHA1Encrypt }
 
-class procedure TSHA1Enrypt.FileHashSHA1(var Digest : TSHA1Digest; const AFileName : string);
+class procedure TSHA1Encrypt.FileHashSHA1(var Digest : TSHA1Digest; const AFileName : string);
 var
   FS : TFileStream;
 begin
@@ -1497,7 +1497,7 @@ begin
   end;
 end;
 
-class procedure TSHA1Enrypt.StreamHashSHA1(var Digest : TSHA1Digest; AStream : TStream);
+class procedure TSHA1Encrypt.StreamHashSHA1(var Digest : TSHA1Digest; AStream : TStream);
 var
   BufSize : Cardinal;
   Buf : array[0..1023] of Byte;
