@@ -20,6 +20,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s): Sebastian Zierer
+ *               : Roman Kassebaum
  *
  * ***** END LICENSE BLOCK ***** *)
 {*********************************************************}
@@ -37,213 +38,143 @@ interface
 
 uses
 {$IFDEF MSWINDOWS}
-  Windows,
+  Winapi.Windows,
 {$ENDIF}
-{$IFDEF POSIX}
-  Types,
-{$ENDIF}
-{$IFDEF UsingCLX}
-  Types,
-{$ENDIF}
-{$IFDEF LINUX}
-  Libc,
-{$ENDIF}
-  Classes,
-  Sysutils,
-  LbRandom,
-  LbCipher,
-  LbBigInt,
-  LbAsym,
-  LbConst;
+  System.Types, System.Classes, System.SysUtils,
+  LbRandom, LbCipher, LbBigInt, LbAsym, LbConst;
 
 type
   TLbDSABlock = array[0..cBytes160-1] of Byte;   { same as TSHA1Digest }
 
-type
+
   TLbGetDSABlockEvent = procedure(Sender : TObject; var Block : TLbDSABlock) of object;
   TLbDSACallback = procedure(var Abort : Boolean) of object;
 
-{ TLbDSAParameters }
-type
   TLbDSAParameters = class(TLbAsymmetricKey)
-    protected
-      FP : TLbBigInt;
-      FQ : TLbBigInt;
-      FG : TLbBigInt;
-      F2Tog : TLbBigInt;
-      FMostLeast : TLbBigInt;
-      FPrimeTestIterations : Byte;
-      FCallback : TLbDSACallback;
-      function GenerateP(const ASeed : TLbDSABlock) : Boolean;
-      function GenerateQ(const ASeed : TLbDSABlock) : Boolean;
-      function GenerateG : Boolean;
-      function GetPAsString : string;
-      procedure SetPAsString(const Value : string);
-      function GetQAsString : string;
-      procedure SetQAsString(const Value : string);
-      function GetGAsString : string;
-      procedure SetGAsString(const Value : string);
-      procedure SetKeySize(Value : TLbAsymKeySize); override;
-    public {methods}
-      constructor Create(aKeySize : TLbAsymKeySize); override;
-      destructor Destroy; override;
-      procedure Clear; virtual;
-      procedure CopyDSAParameters(AKey : TLbDSAParameters);
-      function GenerateDSAParameters(const ASeed : TLbDSABlock) : Boolean;
-    public {properties}
-      property P : TLbBigInt
-        read FP;
-      property Q : TLbBigInt
-        read FQ;
-      property G : TLbBigInt
-        read FG;
-      property PAsString : string
-        read GetPAsString write SetPAsString;
-      property QAsString : string
-        read GetQAsString write SetQAsString;
-      property GAsString : string
-        read GetGAsString write SetGAsString;
-      property PrimeTestIterations : Byte
-        read FPrimeTestIterations write FPrimeTestIterations;
-      property Callback : TLbDSACallback
-        read FCallback write FCallback;
+  strict private
+    F2Tog : TLbBigInt;
+    FCallback : TLbDSACallback;
+    FMostLeast : TLbBigInt;
+    FPrimeTestIterations : Byte;
+    function GenerateG : Boolean;
+    function GenerateP(const ASeed : TLbDSABlock) : Boolean;
+    function GenerateQ(const ASeed : TLbDSABlock) : Boolean;
+    function GetGAsString : string;
+    function GetPAsString : string;
+    function GetQAsString : string;
+    procedure SetGAsString(const Value : string);
+    procedure SetKeySize(Value : TLbAsymKeySize); override;
+    procedure SetPAsString(const Value : string);
+    procedure SetQAsString(const Value : string);
+  strict protected
+    FG: TLbBigInt;
+    FP: TLbBigInt;
+    FQ: TLbBigInt;
+  public
+    constructor Create(aKeySize : TLbAsymKeySize); override;
+    destructor Destroy; override;
+    procedure Clear; virtual;
+    procedure CopyDSAParameters(AKey : TLbDSAParameters);
+    function GenerateDSAParameters(const ASeed : TLbDSABlock) : Boolean;
+    property G : TLbBigInt read FG;
+    property GAsString : string read GetGAsString write SetGAsString;
+    property P : TLbBigInt read FP;
+    property PAsString : string read GetPAsString write SetPAsString;
+    property PrimeTestIterations : Byte read FPrimeTestIterations write FPrimeTestIterations;
+    property Q : TLbBigInt read FQ;
+    property QAsString : string read GetQAsString write SetQAsString;
+    property Callback : TLbDSACallback read FCallback write FCallback;
    end;
 
-
-{ TLbDSAPrivateKey }
-type
   TLbDSAPrivateKey = class(TLbDSAParameters)
-    protected {private}
-      FX    : TLbBigInt;
-      FXKey : TLbDSABlock;
-      function GetXAsString : string;
-      procedure SetXAsString(const Value : string);
-
-{!!.06}
-      function  CreateASNKey(Input : pByteArray; Length : Integer) : Integer; override;
-      function ParseASNKey(Input : pByte; Length : Integer) : boolean; override;
-{!!.06}
-
-    public {methods}
-      constructor Create(aKeySize : TLbAsymKeySize); override;
-      destructor Destroy; override;
-      procedure Clear; override;
-      procedure GenerateX(const AXKey : TLbDSABlock);
-    public {properties}
-      property X : TLbBigInt
-        read FX;
-      property XAsString : string
-        read GetXAsString write SetXAsString;
+  strict private
+    FX    : TLbBigInt;
+    FXKey : TLbDSABlock;
+    function  CreateASNKey(Input : pByteArray; Length : Integer) : Integer; override;
+    function GetXAsString : string;
+    function ParseASNKey(Input : pByte; Length : Integer) : boolean; override;
+    procedure SetXAsString(const Value : string);
+  public
+    constructor Create(aKeySize : TLbAsymKeySize); override;
+    destructor Destroy; override;
+    procedure Clear; override;
+    procedure GenerateX(const AXKey : TLbDSABlock);
+    property X : TLbBigInt read FX;
+    property XAsString : string read GetXAsString write SetXAsString;
    end;
 
-
-{ TLbDSAPublicKey }
-type
   TLbDSAPublicKey = class(TLbDSAParameters)
-    protected {private}
-      FY : TLbBigInt;
-      function GetYAsString : string;
-      procedure SetYAsString(const Value : string);
-
-{!!.06}
-      function  CreateASNKey(Input : pByteArray; Length : Integer) : Integer; override;
-      function ParseASNKey(Input : pByte; Length : Integer) : boolean; override;
-{!!.06}
-
-    public {methods}
-      constructor Create(aKeySize : TLbAsymKeySize); override;
-      destructor Destroy; override;
-      procedure Clear; override;
-      procedure GenerateY(aX : TLbBigInt);
-    public {properties}
-      property Y : TLbBigInt
-        read FY;
-      property YAsString : string
-        read GetYAsString write SetYAsString;
+  strict private
+    FY : TLbBigInt;
+    function  CreateASNKey(Input : pByteArray; Length : Integer) : Integer; override;
+    function GetYAsString : string;
+    function ParseASNKey(Input : pByte; Length : Integer) : boolean; override;
+    procedure SetYAsString(const Value : string);
+  public
+    constructor Create(aKeySize : TLbAsymKeySize); override;
+    destructor Destroy; override;
+    procedure Clear; override;
+    procedure GenerateY(aX : TLbBigInt);
+    property Y: TLbBigInt read FY;
+    property YAsString: string read GetYAsString write SetYAsString;
    end;
 
-
-{ TLbDSA }
-type
   TLbDSA = class(TLbSignature)
-    protected {private}
-      FPrivateKey : TLbDSAPrivateKey;
-      FPublicKey : TLbDSAPublicKey;
-      FPrimeTestIterations : Byte;
-      FSignatureR : TLbBigInt;
-      FSignatureS : TLbBigInt;
-      FOnGetR     : TLbGetDSABlockEvent;
-      FOnGetS     : TLbGetDSABlockEvent;
-      FOnGetSeed  : TLbGetDSABlockEvent;
-      FOnGetXKey  : TLbGetDSABlockEvent;
-      FOnGetKKey  : TLbGetDSABlockEvent;
-      FRandomSeed : Boolean;
-      procedure SignHash(const ADigest : TSHA1Digest);
-      function VerifyHash(const ADigest : TSHA1Digest) : Boolean;
-      procedure SHA1KKey(var AKKey : TLbDSABlock);
-      procedure RandomBlock(var ABlock : TLbDSABlock);
-      procedure DoGetR;
-      procedure DoGetS;
-      procedure DoGetSeed(var ASeed : TLbDSABlock);
-      procedure DoGetXKey(var AXKey : TLbDSABlock);
-      procedure DoGetKKey(var AKKey : TLbDSABlock);
-      procedure SetKeySize(Value : TLbAsymKeySize); override;
-      procedure SetPrimeTestIterations(Value : Byte);
-      procedure DSAParameterCallback(var Abort : Boolean);
-    public {methods}
-      constructor Create(AOwner : TComponent); override;
-      destructor Destroy; override;
-
-      procedure GenerateKeyPair; override;
-      procedure SignBuffer(const Buf; BufLen : Cardinal); override;
-      procedure SignFile(const AFileName : string);  override;
-      procedure SignStream(AStream : TStream); override;
-      procedure SignStringA(const AStr : AnsiString); override;
-      {$IFDEF UNICODE}
-      procedure SignStringW(const AStr : UnicodeString); override;
-      {$ENDIF}
-
-      function  VerifyBuffer(const Buf; BufLen : Cardinal) : Boolean; override;
-      function  VerifyFile(const AFileName : string) : Boolean; override;
-      function  VerifyStream(AStream : TStream) : Boolean; override;
-      function  VerifyStringA(const AStr : AnsiString) : Boolean; override;
-      {$IFDEF UNICODE}
-      function  VerifyStringW(const AStr : UnicodeString) : Boolean; override;
-      {$ENDIF}
-
-      procedure Clear;
-      function GeneratePQG : Boolean;
-      procedure GenerateXY;
-
-    public {properties}
-      property PrivateKey : TLbDSAPrivateKey
-        read FPrivateKey;
-      property PublicKey : TLbDSAPublicKey
-        read FPublicKey;
-      property SignatureR : TLbBigInt
-        read FSignatureR;
-      property SignatureS : TLbBigInt
-        read FSignatureS;
-
-    published {properties}
-      property PrimeTestIterations : Byte
-        read FPrimeTestIterations write SetPrimeTestIterations;
-      property KeySize;
-
-    published {events}
-      property OnGetR : TLbGetDSABlockEvent
-        read FOnGetR write FOnGetR;
-      property OnGetS : TLbGetDSABlockEvent
-        read FOnGetS write FOnGetS;
-      property OnGetSeed : TLbGetDSABlockEvent
-        read FOnGetSeed write FOnGetSeed;
-      property OnGetXKey : TLbGetDSABlockEvent
-        read FOnGetXKey write FOnGetXKey;
-      property OnGetKKey : TLbGetDSABlockEvent
-        read FOnGetKKey write FOnGetKKey;
-      property OnProgress : TLbProgressEvent
-        read FOnProgress write FOnProgress;
-    end;
+  strict private const
+    cZeroBlock : TLbDSABlock = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  strict private
+    FPrivateKey : TLbDSAPrivateKey;
+    FPublicKey : TLbDSAPublicKey;
+    FPrimeTestIterations : Byte;
+    FSignatureR : TLbBigInt;
+    FSignatureS : TLbBigInt;
+    FOnGetR     : TLbGetDSABlockEvent;
+    FOnGetS     : TLbGetDSABlockEvent;
+    FOnGetSeed  : TLbGetDSABlockEvent;
+    FOnGetXKey  : TLbGetDSABlockEvent;
+    FOnGetKKey  : TLbGetDSABlockEvent;
+    FRandomSeed : Boolean;
+    procedure SignHash(const ADigest : TSHA1Digest);
+    function VerifyHash(const ADigest : TSHA1Digest) : Boolean;
+    procedure SHA1KKey(var AKKey : TLbDSABlock);
+    procedure RandomBlock(var ABlock : TLbDSABlock);
+    procedure DoGetR;
+    procedure DoGetS;
+    procedure DoGetSeed(var ASeed : TLbDSABlock);
+    procedure DoGetXKey(var AXKey : TLbDSABlock);
+    procedure DoGetKKey(var AKKey : TLbDSABlock);
+    procedure SetKeySize(Value : TLbAsymKeySize); override;
+    procedure SetPrimeTestIterations(Value : Byte);
+    procedure DSAParameterCallback(var Abort : Boolean);
+  public
+    constructor Create(AOwner : TComponent); override;
+    destructor Destroy; override;
+    procedure GenerateKeyPair; override;
+    procedure SignBuffer(const Buf; BufLen : Cardinal); override;
+    procedure SignFile(const AFileName : string);  override;
+    procedure SignStream(AStream : TStream); override;
+    procedure SignString(const AStr: string); override;
+    function  VerifyBuffer(const Buf; BufLen : Cardinal) : Boolean; override;
+    function  VerifyFile(const AFileName : string) : Boolean; override;
+    function  VerifyStream(AStream : TStream) : Boolean; override;
+    function  VerifyString(const AStr : string) : Boolean; override;
+    procedure Clear;
+    function GeneratePQG : Boolean;
+    procedure GenerateXY;
+    property PrivateKey: TLbDSAPrivateKey read FPrivateKey;
+    property PublicKey: TLbDSAPublicKey read FPublicKey;
+    property SignatureR: TLbBigInt read FSignatureR;
+    property SignatureS: TLbBigInt read FSignatureS;
+  published
+    property PrimeTestIterations: Byte read FPrimeTestIterations write SetPrimeTestIterations;
+    property KeySize;
+    property OnGetR: TLbGetDSABlockEvent read FOnGetR write FOnGetR;
+    property OnGetS: TLbGetDSABlockEvent read FOnGetS write FOnGetS;
+    property OnGetSeed: TLbGetDSABlockEvent read FOnGetSeed write FOnGetSeed;
+    property OnGetXKey: TLbGetDSABlockEvent read FOnGetXKey write FOnGetXKey;
+    property OnGetKKey: TLbGetDSABlockEvent read FOnGetKKey write FOnGetKKey;
+    property OnProgress;
+  end;
 
 
 implementation
@@ -251,20 +182,8 @@ implementation
 uses
   LbProc, LbUtils;
 
+{ TLbDSAParameters }
 
-const
-  { 5 magic numbers for SHA-1 }
-  SHA1_A = DWORD( $67452301 );
-  SHA1_B = DWORD( $EFCDAB89 );
-  SHA1_C = DWORD( $98BADCFE );
-  SHA1_D = DWORD( $10325476 );
-  SHA1_E = DWORD( $C3D2E1F0 );
-
-  cZeroBlock : TLbDSABlock =
-    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
-
-{ == TLbDSAParameters =================================================== }
 constructor TLbDSAParameters.Create(aKeySize : TLbAsymKeySize);
   { initialization }
 begin
@@ -286,7 +205,7 @@ begin
 
   FPrimeTestIterations := cDefIterations;
 end;
-{ -------------------------------------------------------------------------- }
+
 destructor TLbDSAParameters.Destroy;
   { finalization }
 begin
@@ -297,7 +216,7 @@ begin
   FMostLeast.Free;
   inherited Destroy;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSAParameters.Clear;
   { reset everything }
 begin
@@ -305,72 +224,7 @@ begin
   FQ.Clear;
   FG.Clear;
 end;
-{ -------------------------------------------------------------------------- }
-procedure TLbDSAParameters.SetKeySize(Value : TLbAsymKeySize);
-  { DSA key must be between 512 and 1024 bits }
-begin
-  if (Value <> FKeySize) then begin
-    if (Ord(Value) >= Ord(aks512)) and (Ord(Value) <= Ord(aks1024)) then
-      FKeySize := Value
-    else
-      FKeySize := cLbDefAsymKeySize;
-    FP.Clear;
-    FQ.Clear;
-    FG.Clear;
-  end;
-end;
-{ -------------------------------------------------------------------------- }
-function TLbDSAParameters.GetPAsString : string;
-  { return "big to little" hex string representation of p }
-begin
-  Result := FP.IntStr;
-end;
-{ -------------------------------------------------------------------------- }
-procedure TLbDSAParameters.SetPAsString(const Value : string);
-  { set p to value represented by "big to little" hex string }
-var
-  Buf : array[Byte] of Byte;
-begin
-  FillChar(Buf, SizeOf(Buf), #0);
-  HexToBuffer(Value, Buf, cLbAsymKeyBytes[FKeySize]);
-  FP.CopyBuffer(Buf, cLbAsymKeyBytes[FKeySize]);
-  FP.Trim;
-end;
-{ -------------------------------------------------------------------------- }
-function TLbDSAParameters.GetQAsString : string;
-  { return "big to little" hex string representation of q }
-begin
-  Result := FQ.IntStr;
-end;
-{ -------------------------------------------------------------------------- }
-procedure TLbDSAParameters.SetQAsString(const Value : string);
-  { set q to value represented by "big to little" hex string }
-var
-  Buf : TLbDSABlock;
-begin
-  FillChar(Buf, SizeOf(Buf), #0);
-  HexToBuffer(Value, Buf, SizeOf(Buf));
-  FQ.CopyBuffer(Buf, SizeOf(Buf));
-  FQ.Trim;
-end;
-{ -------------------------------------------------------------------------- }
-function TLbDSAParameters.GetGAsString : string;
-  { return "big to little" hex string representation of g }
-begin
-  Result := FG.IntStr;
-end;
-{ -------------------------------------------------------------------------- }
-procedure TLbDSAParameters.SetGAsString(const Value : string);
-  { set g to value represented by "big to little" hex string }
-var
-  Buf : array[Byte] of Byte;
-begin
-  FillChar(Buf, SizeOf(Buf), #0);
-  HexToBuffer(Value, Buf, cLbAsymKeyBytes[FKeySize]);
-  FG.CopyBuffer(Buf, cLbAsymKeyBytes[FKeySize]);
-  FG.Trim;
-end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSAParameters.CopyDSAParameters(aKey : TLbDSAParameters);
   { assign paramters p, q, and g from another key }
 begin
@@ -378,7 +232,7 @@ begin
   FQ.Copy(aKey.Q);
   FG.Copy(aKey.G);
 end;
-{ -------------------------------------------------------------------------- }
+
 function TLbDSAParameters.GenerateDSAParameters(const ASeed : TLbDSABlock) : Boolean;
   { generate paramaters p, q, and g }
 begin
@@ -388,66 +242,47 @@ begin
   if Result then
     Result := GenerateG;
 end;
-{ -------------------------------------------------------------------------- }
-function TLbDSAParameters.GenerateQ(const ASeed : TLbDSABlock) : Boolean;
-  { generate parameter q }
-const
-  MaxTries = 4096;                                                   {!!.06}
+
+function TLbDSAParameters.GenerateG : Boolean;
+  { generate parameter g }
 var
-  U, SHAseed, SHAseed1 : TLbBigInt;
-  Digest : TSHA1Digest;
-  Counter : Word;                                                    {!!.06}
+  h, p1q, tmp, c1 : TLbBigInt;
 begin
-  U := TLbBigInt.Create(SizeOf(TLbDSABlock));
-  SHAseed := TLbBigInt.Create(SizeOf(TLbDSABlock));
-  SHAseed1 := TLbBigInt.Create(SizeOf(TLbDSABlock));
+  Result := False;
+  if (FP.Size < 2) then
+    Exit;
 
-  Counter := 0;
+  h   := TLbBigInt.Create(20);
+  p1q := TLbBigInt.Create(20);
+  tmp := TLbBigInt.Create(20);
+  c1 := TLbBigInt.Create(20);
   try
-    { Step 2: U = SHA(seed) xor SHA((seed+1) mod 2^g) }
-    SHAseed.CopyBuffer(ASeed, SizeOf(ASeed));
-    repeat
-      FQ.Clear;
-      {         SHA(Seed) }
-      HashSHA1(Digest, SHAseed.IntBuf^, SHAseed.Size);
-      SHAseed.CopyBuffer(Digest, SizeOf(Digest));    { SHASeed is big to little }
-      SHAseed.ReverseBytes;                          { SHASeed -> little to big for math }
+    c1.CopyByte(1);
 
-      {         SHA((seed+1) mod 2^g }
-      SHAseed1.CopyBuffer(ASeed, SizeOf(ASeed));     { SHASeed1 is big to little }
-      SHASeed1.ReverseBytes;                         { SHASeed1 -> little to big for math }
-      SHAseed1.AddByte(1);
-      SHAseed1.Modulus(F2Tog);
-      SHASeed1.ReverseBytes;                         { SHASeed1 -> big to little for SHA }
-      HashSHA1(Digest, SHAseed1.IntBuf^, SHAseed1.Size);
-      SHAseed1.CopyBuffer(Digest, SizeOf(Digest));
-      SHASeed1.ReverseBytes;                         { SHASeed1 -> little to big for math }
+    { (p-1)/q }
+    p1q.Copy(FP);
+    p1q.SubtractByte(1);
+    p1q.Divide(FQ);
 
-      {         U = SHASeed xor SHASeed1 }
-      U.Copy(SHAseed);
-      U.XOR_(SHAseed1);
+    h.CopyByte( $01 );
+    repeat { until valid h }
+      h.AddByte( $01 );
+      tmp.Copy(h);
+      tmp.PowerAndMod(p1q, FP);
+    until (tmp.Compare(c1) = cGREATER_THAN);
 
-      { Step 3: q = q or 2^159 or 1 }
-      FQ.Copy(U);
-      FQ.OR_(FMostLeast);
-
-      { Step 4,5: fail if q is composite }
-      Result := not FQ.IsComposite(FPrimeTestIterations);
-
-      { if q is not composite then try again with another random seed }
-      if not Result then begin
-        Inc(Counter);
-        SHASeed.RandomBytes(SizeOf(TLbDSABlock));
-      end;
-    until Result or (Counter >= MaxTries);
+    { g = h^((p-1)/q) }
+    FG.Copy(h);
+    FG.PowerAndMod(p1q, FP);
+    Result := True;
   finally
-    U.Free;
-    SHAseed.Free;
-    SHAseed1.Free;
+    h.Free;
+    p1q.Free;
+    tmp.Free;
+    c1.Free;
   end;
 end;
 
-{ -------------------------------------------------------------------------- }
 function TLbDSAParameters.GenerateP(const ASeed : TLbDSABlock) : Boolean;
   { generate parameter p }
 const
@@ -495,7 +330,7 @@ begin
         V.Modulus(F2Tog);
 
         V.ReverseBytes;                      { V -> big to little for SHA }
-        HashSHA1(Digest, V.IntBuf^, V.Size);
+        TSHA1.HashSHA1(Digest, V.IntBuf^, V.Size);
         V.CopyBuffer(Digest, SizeOf(Digest));
         V.ReverseBytes;                      { V -> little to big for math }
 
@@ -553,51 +388,132 @@ begin
   end;
   Result := Prime;
 end;
-{ -------------------------------------------------------------------------- }
-function TLbDSAParameters.GenerateG : Boolean;
-  { generate parameter g }
+
+function TLbDSAParameters.GenerateQ(const ASeed : TLbDSABlock) : Boolean;
+  { generate parameter q }
+const
+  MaxTries = 4096;
 var
-  h, p1q, tmp, c1 : TLbBigInt;
+  U, SHAseed, SHAseed1 : TLbBigInt;
+  Digest : TSHA1Digest;
+  Counter : Word;
 begin
-  Result := False;
-  if (FP.Size < 2) then
-    Exit;
+  U := TLbBigInt.Create(SizeOf(TLbDSABlock));
+  SHAseed := TLbBigInt.Create(SizeOf(TLbDSABlock));
+  SHAseed1 := TLbBigInt.Create(SizeOf(TLbDSABlock));
 
-  h   := TLbBigInt.Create(20);
-  p1q := TLbBigInt.Create(20);
-  tmp := TLbBigInt.Create(20);
-  c1 := TLbBigInt.Create(20);
+  Counter := 0;
   try
-    c1.CopyByte(1);
+    { Step 2: U = SHA(seed) xor SHA((seed+1) mod 2^g) }
+    SHAseed.CopyBuffer(ASeed, SizeOf(ASeed));
+    repeat
+      FQ.Clear;
+      {         SHA(Seed) }
+      TSHA1.HashSHA1(Digest, SHAseed.IntBuf^, SHAseed.Size);
+      SHAseed.CopyBuffer(Digest, SizeOf(Digest));    { SHASeed is big to little }
+      SHAseed.ReverseBytes;                          { SHASeed -> little to big for math }
 
-    { (p-1)/q }
-    p1q.Copy(FP);
-    p1q.SubtractByte(1);
-    p1q.Divide(FQ);
+      {         SHA((seed+1) mod 2^g }
+      SHAseed1.CopyBuffer(ASeed, SizeOf(ASeed));     { SHASeed1 is big to little }
+      SHASeed1.ReverseBytes;                         { SHASeed1 -> little to big for math }
+      SHAseed1.AddByte(1);
+      SHAseed1.Modulus(F2Tog);
+      SHASeed1.ReverseBytes;                         { SHASeed1 -> big to little for SHA }
+      TSHA1.HashSHA1(Digest, SHAseed1.IntBuf^, SHAseed1.Size);
+      SHAseed1.CopyBuffer(Digest, SizeOf(Digest));
+      SHASeed1.ReverseBytes;                         { SHASeed1 -> little to big for math }
 
-    h.CopyByte( $01 );
-    repeat { until valid h }
-      h.AddByte( $01 );
-      tmp.Copy(h);
-      tmp.PowerAndMod(p1q, FP);
-    until (tmp.Compare(c1) = cGREATER_THAN);
+      {         U = SHASeed xor SHASeed1 }
+      U.Copy(SHAseed);
+      U.XOR_(SHAseed1);
 
-    { g = h^((p-1)/q) }
-    FG.Copy(h);
-    FG.PowerAndMod(p1q, FP);
-    Result := True;
+      { Step 3: q = q or 2^159 or 1 }
+      FQ.Copy(U);
+      FQ.OR_(FMostLeast);
+
+      { Step 4,5: fail if q is composite }
+      Result := not FQ.IsComposite(FPrimeTestIterations);
+
+      { if q is not composite then try again with another random seed }
+      if not Result then begin
+        Inc(Counter);
+        SHASeed.RandomBytes(SizeOf(TLbDSABlock));
+      end;
+    until Result or (Counter >= MaxTries);
   finally
-    h.Free;
-    p1q.Free;
-    tmp.Free;
-    c1.Free;
+    U.Free;
+    SHAseed.Free;
+    SHAseed1.Free;
   end;
 end;
 
+function TLbDSAParameters.GetGAsString : string;
+  { return "big to little" hex string representation of g }
+begin
+  Result := FG.IntStr;
+end;
 
+function TLbDSAParameters.GetPAsString : string;
+  { return "big to little" hex string representation of p }
+begin
+  Result := FP.IntStr;
+end;
 
+function TLbDSAParameters.GetQAsString : string;
+  { return "big to little" hex string representation of q }
+begin
+  Result := FQ.IntStr;
+end;
 
-{ == TLbDSAPrivateKey =================================================== }
+procedure TLbDSAParameters.SetGAsString(const Value : string);
+  { set g to value represented by "big to little" hex string }
+var
+  Buf : array[Byte] of Byte;
+begin
+  FillChar(Buf, SizeOf(Buf), #0);
+  HexToBuffer(Value, Buf, cLbAsymKeyBytes[FKeySize]);
+  FG.CopyBuffer(Buf, cLbAsymKeyBytes[FKeySize]);
+  FG.Trim;
+end;
+
+procedure TLbDSAParameters.SetKeySize(Value : TLbAsymKeySize);
+  { DSA key must be between 512 and 1024 bits }
+begin
+  if (Value <> FKeySize) then begin
+    if (Ord(Value) >= Ord(aks512)) and (Ord(Value) <= Ord(aks1024)) then
+      FKeySize := Value
+    else
+      FKeySize := cLbDefAsymKeySize;
+    FP.Clear;
+    FQ.Clear;
+    FG.Clear;
+  end;
+end;
+
+procedure TLbDSAParameters.SetPAsString(const Value : string);
+  { set p to value represented by "big to little" hex string }
+var
+  Buf : array[Byte] of Byte;
+begin
+  FillChar(Buf, SizeOf(Buf), #0);
+  HexToBuffer(Value, Buf, cLbAsymKeyBytes[FKeySize]);
+  FP.CopyBuffer(Buf, cLbAsymKeyBytes[FKeySize]);
+  FP.Trim;
+end;
+
+procedure TLbDSAParameters.SetQAsString(const Value : string);
+  { set q to value represented by "big to little" hex string }
+var
+  Buf : TLbDSABlock;
+begin
+  FillChar(Buf, SizeOf(Buf), #0);
+  HexToBuffer(Value, Buf, SizeOf(Buf));
+  FQ.CopyBuffer(Buf, SizeOf(Buf));
+  FQ.Trim;
+end;
+
+{ TLbDSAPrivateKey }
+
 constructor TLbDSAPrivateKey.Create(aKeySize : TLbAsymKeySize);
   {initialization }
 begin
@@ -605,14 +521,14 @@ begin
   FX := TLbBigInt.Create(SizeOf(TLbDSABlock));
   FillChar(FXKey, SizeOf(FXKey), #0);
 end;
-{ -------------------------------------------------------------------------- }
+
 destructor TLbDSAPrivateKey.Destroy;
   { finalization }
 begin
   FX.Free;
   inherited Destroy;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSAPrivateKey.Clear;
   { reset everything }
 begin
@@ -620,42 +536,7 @@ begin
   FX.Clear;
   FillChar(FXKey, SizeOf(FXKey), #0);
 end;
-{ -------------------------------------------------------------------------- }
-procedure TLbDSAPrivateKey.GenerateX(const AXKey : TLbDSABlock);
-  { generate parameter x }
-var
-  XVal : TSHA1Digest;
-begin
-  Move(AXKey, FXKey, SizeOf(FXKey));
-  FillChar(XVal, SizeOf(XVal), #0);
 
-  { X = SHA(XKey), XKey is big to little }
-  HashSHA1(XVal, FXKey, SizeOf(FXKey));
-  FX.CopyBuffer(XVal, SizeOf(XVal));
-  FX.ReverseBytes;                         { X -> little to big for math }
-
-  { X = XVal mod q, }
-  FX.Modulus(FQ);
-end;
-{ -------------------------------------------------------------------------- }
-function TLbDSAPrivateKey.GetXAsString : string;
-  { return "big to little" hex string representation of x }
-begin
-  Result := FX.IntStr;
-end;
-{ -------------------------------------------------------------------------- }
-procedure TLbDSAPrivateKey.SetXAsString(const Value : string);
-  { set x to value represented by "big to little" hex string }
-var
-  Buf : TLbDSABlock;
-begin
-  FillChar(Buf, SizeOf(Buf), #0);
-  HexToBuffer(Value, Buf, SizeOf(Buf));
-  FX.CopyBuffer(Buf, SizeOf(Buf));
-  FX.Trim;
-end;
-{ -------------------------------------------------------------------------- }
-{!!.06}
 function  TLbDSAPrivateKey.CreateASNKey(Input : pByteArray; Length : Integer) : Integer;
 const
   TAG30 = $30;
@@ -678,8 +559,30 @@ begin
   CreateASN1(Input^, Total, TAG30);
   Result := Total;
 end;
-{ -------------------------------------------------------------------------- }
-{!!.06}
+
+procedure TLbDSAPrivateKey.GenerateX(const AXKey : TLbDSABlock);
+  { generate parameter x }
+var
+  XVal : TSHA1Digest;
+begin
+  Move(AXKey, FXKey, SizeOf(FXKey));
+  FillChar(XVal, SizeOf(XVal), #0);
+
+  { X = SHA(XKey), XKey is big to little }
+  TSHA1.HashSHA1(XVal, FXKey, SizeOf(FXKey));
+  FX.CopyBuffer(XVal, SizeOf(XVal));
+  FX.ReverseBytes;                         { X -> little to big for math }
+
+  { X = XVal mod q, }
+  FX.Modulus(FQ);
+end;
+
+function TLbDSAPrivateKey.GetXAsString : string;
+  { return "big to little" hex string representation of x }
+begin
+  Result := FX.IntStr;
+end;
+
 function TLbDSAPrivateKey.ParseASNKey(Input : PByte; Length : Integer ) : Boolean;
 var
   Tag : Integer;
@@ -704,56 +607,39 @@ begin
   Result := (Max = 0);
 end;
 
+procedure TLbDSAPrivateKey.SetXAsString(const Value : string);
+  { set x to value represented by "big to little" hex string }
+var
+  Buf : TLbDSABlock;
+begin
+  FillChar(Buf, SizeOf(Buf), #0);
+  HexToBuffer(Value, Buf, SizeOf(Buf));
+  FX.CopyBuffer(Buf, SizeOf(Buf));
+  FX.Trim;
+end;
 
-
-
-{ == TLbDSAPublicKey ==================================================== }
+{ TLbDSAPublicKey }
 constructor TLbDSAPublicKey.Create(aKeySize : TLbAsymKeySize);
   {initialization }
 begin
   inherited Create(aKeySize);
   FY := TLbBigInt.Create(cLbAsymKeyBytes[FKeySize]);
 end;
-{ -------------------------------------------------------------------------- }
+
 destructor TLbDSAPublicKey.Destroy;
   { finalization }
 begin
   FY.Free;
   inherited Destroy;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSAPublicKey.Clear;
   { reset everything }
 begin
   inherited Clear;
   FY.Clear;
 end;
-{ -------------------------------------------------------------------------- }
-procedure TLbDSAPublicKey.GenerateY(aX : TLbBigInt);
-  { generate parameter y }
-begin
-  FY.Copy(FG);
-  FY.PowerAndMod(aX, FP);
-end;
-{ -------------------------------------------------------------------------- }
-function TLbDSAPublicKey.GetYAsString : string;
-  { return "big to little" hex string representation of y }
-begin
-  Result := FY.IntStr;
-end;
-{ -------------------------------------------------------------------------- }
-procedure TLbDSAPublicKey.SetYAsString(const Value : string);
-  { set y to value represented by "big to little" hex string }
-var
-  Buf : array[Byte] of Byte;
-begin
-  FillChar(Buf, SizeOf(Buf), #0);
-  HexToBuffer(Value, Buf, cLbAsymKeyBytes[FKeySize]);
-  FY.CopyBuffer(Buf, cLbAsymKeyBytes[FKeySize]);
-  FY.Trim;
-end;
-{ -------------------------------------------------------------------------- }
-{!!.06}
+
 function  TLbDSAPublicKey.CreateASNKey(Input : pByteArray; Length : Integer) : Integer;
 const
   TAG30 = $30;
@@ -776,8 +662,20 @@ begin
   CreateASN1(Input^, Total, TAG30);
   Result := Total;
 end;
-{ -------------------------------------------------------------------------- }
-{!!.06}
+
+procedure TLbDSAPublicKey.GenerateY(aX : TLbBigInt);
+  { generate parameter y }
+begin
+  FY.Copy(FG);
+  FY.PowerAndMod(aX, FP);
+end;
+
+function TLbDSAPublicKey.GetYAsString : string;
+  { return "big to little" hex string representation of y }
+begin
+  Result := FY.IntStr;
+end;
+
 function TLbDSAPublicKey.ParseASNKey(input : pByte; length : Integer) : Boolean;
 var
   Tag : Integer;
@@ -802,8 +700,19 @@ begin
   Result := (Max = 0);
 end;
 
+procedure TLbDSAPublicKey.SetYAsString(const Value : string);
+  { set y to value represented by "big to little" hex string }
+var
+  Buf : array[Byte] of Byte;
+begin
+  FillChar(Buf, SizeOf(Buf), #0);
+  HexToBuffer(Value, Buf, cLbAsymKeyBytes[FKeySize]);
+  FY.CopyBuffer(Buf, cLbAsymKeyBytes[FKeySize]);
+  FY.Trim;
+end;
 
-{ == TLbDSA ============================================================= }
+{ TLbDSA }
+
 constructor TLbDSA.Create(AOwner : TComponent);
   { initialization }
 begin
@@ -817,7 +726,7 @@ begin
   FSignatureS := TLbBigInt.Create(SizeOf(TLbDSABlock));
   FPrimeTestIterations := cDefIterations;
 end;
-{ -------------------------------------------------------------------------- }
+
 destructor TLbDSA.Destroy;
   { finalization }
 begin
@@ -828,7 +737,7 @@ begin
 
   inherited Destroy;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.Clear;
   { clear out everything }
 begin
@@ -837,7 +746,7 @@ begin
   FSignatureR.Clear;
   FSignatureS.Clear;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.SetKeySize(Value : TLbAsymKeySize);
   { DSA key must be between 512 and 1024 bits }
 begin
@@ -850,7 +759,7 @@ begin
     FPublicKey.KeySize := FKeySize;
   end;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.SetPrimeTestIterations(Value : Byte);
   { set prime testing confidence level, 50 is plenty }
 begin
@@ -860,7 +769,7 @@ begin
     FPublicKey.PrimeTestIterations := Value;
   end;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.DSAParameterCallback(var Abort : Boolean);
   { pass callback on via OnProgress event }
 begin
@@ -868,7 +777,7 @@ begin
   if Assigned(FOnProgress) then
     FOnProgress(Self, Abort);
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.RandomBlock(var ABlock : TLbDSABlock);
   { fill block with random bytes }
 begin
@@ -879,7 +788,7 @@ begin
       Free;
     end;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.DoGetSeed(var ASeed : TLbDSABlock);
   { fire OnGetSeed event to obtain seed, randomize if necessary }
 begin
@@ -890,7 +799,7 @@ begin
   if CompareBuffers(ASeed, cZeroBlock, SizeOf(ASeed)) then
     RandomBlock(ASeed);
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.DoGetXKey(var AXKey : TLbDSABlock);
   { fire OnGetXKey event to obtain XKey, randomize if necessary }
 begin
@@ -901,7 +810,7 @@ begin
   if CompareBuffers(AXKey, cZeroBlock, SizeOf(AXKey)) then
     RandomBlock(AXKey);
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.DoGetKKey(var AKKey : TLbDSABlock);
   { fire OnGetKKey event to obtain KKey, randomize if necessary }
 begin
@@ -912,8 +821,16 @@ begin
   if CompareBuffers(AKKey, cZeroBlock, SizeOf(AKKey)) then
     RandomBlock(AKKey);
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.SHA1KKey(var AKKey : TLbDSABlock);
+const
+  { 5 magic numbers for SHA-1 }
+  SHA1_A = DWORD( $67452301 );
+  SHA1_B = DWORD( $EFCDAB89 );
+  SHA1_C = DWORD( $98BADCFE );
+  SHA1_D = DWORD( $10325476 );
+  SHA1_E = DWORD( $C3D2E1F0 );
+
   { SHA(KKey) requires special magic number sequence }
 var
   Context : TSHA1Context;
@@ -926,11 +843,11 @@ begin
   Context.sdHash[ 3 ] := SHA1_E;
   Context.sdHash[ 4 ] := SHA1_A;
 
-  UpdateSHA1(Context, AKKey, SizeOf(AKKey));
-  FinalizeSHA1(Context, Digest);
+  TSHA1.UpdateSHA1(Context, AKKey, SizeOf(AKKey));
+  TSHA1.FinalizeSHA1(Context, Digest);
   Move(Digest, AKKey, SizeOf(AKKey));
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.DoGetR;
   { fire OnGetR event to obtain signature(R) }
 var
@@ -942,7 +859,7 @@ begin
     FSignatureR.CopyBuffer(R, SizeOf(R));
   end;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.DoGetS;
   { fire OnGetS event to obtain signature(S) }
 var
@@ -954,14 +871,14 @@ begin
     FSignatureS.CopyBuffer(S, SizeOf(S));
   end;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.GenerateKeyPair;
   { generate public and private key parameters p, q, g, x, and y }
 begin
   GeneratePQG;
   GenerateXY;
 end;
-{ -------------------------------------------------------------------------- }
+
 function TLbDSA.GeneratePQG : Boolean;
   { generate parameters p, q, and g }
 var
@@ -976,7 +893,7 @@ begin
     raise Exception.Create(sDSAParametersPQGErr);
   end;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.GenerateXY;
   { generate parameters x and y }
 var
@@ -990,7 +907,7 @@ begin
     raise Exception.Create(sDSAParametersXYErr);
   end;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.SignHash(const ADigest : TSHA1Digest);
   { generate signature(r, s) of message hash }
 var
@@ -1003,7 +920,7 @@ begin
   DoGetKKey(KKey);
   try
     K.CopyBuffer(KKey, SizeOf(KKey));
-    K.Modulus(FPrivateKey.Q);                                        {!!.06}
+    K.Modulus(FPrivateKey.Q);
     { r = (g^k mod p) mod q }
     with FSignatureR do begin
       Copy(FPrivateKey.G);
@@ -1036,7 +953,7 @@ begin
   K.Free;
   XR.Free;
 end;
-{ -------------------------------------------------------------------------- }
+
 function TLbDSA.VerifyHash(const ADigest : TSHA1Digest) : Boolean;
   { verify signature(r, s) against message hash }
 var
@@ -1091,99 +1008,75 @@ begin
   V.Free;
   V2.Free;
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.SignBuffer(const Buf; BufLen : Cardinal);
   { generate DSA signature of buffer data }
 var
   Digest : TSHA1Digest;
 begin
-  HashSHA1(Digest, Buf, BufLen);
+  TSHA1.HashSHA1(Digest, Buf, BufLen);
   SignHash(Digest);
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.SignFile(const AFileName : string);
   { generate DSA signature of file data }
 var
   Digest : TSHA1Digest;
 begin
-  FileHashSHA1(Digest, AFileName);
+  TSHA1Encrypt.FileHashSHA1(Digest, AFileName);
   SignHash(Digest);
 end;
-{ -------------------------------------------------------------------------- }
+
 procedure TLbDSA.SignStream(AStream : TStream);
   { generate DSA signature of stream data }
 var
   Digest : TSHA1Digest;
 begin
-  StreamHashSHA1(Digest, AStream);
+  TSHA1Encrypt.StreamHashSHA1(Digest, AStream);
   SignHash(Digest);
 end;
-{ -------------------------------------------------------------------------- }
-procedure TLbDSA.SignStringA(const AStr : AnsiString);
+
+procedure TLbDSA.SignString(const AStr : string);
   { generate DSA signature of string data }
 var
   Digest : TSHA1Digest;
 begin
-  StringHashSHA1A(Digest, AStr);
+  TSHA1Encrypt.StringHashSHA1(Digest, GetBytes(AStr));
   SignHash(Digest);
 end;
-{ -------------------------------------------------------------------------- }
-{$IFDEF UNICODE}
-procedure TLbDSA.SignStringW(const AStr : UnicodeString);
-  { generate DSA signature of string data }
-var
-  Digest : TSHA1Digest;
-begin
-  StringHashSHA1W(Digest, AStr);
-  SignHash(Digest);
-end;
-{$ENDIF}
-{ -------------------------------------------------------------------------- }
+
 function TLbDSA.VerifyBuffer(const Buf; BufLen : Cardinal) : Boolean;
   { verify DSA signature agrees with buffer data }
 var
   Digest : TSHA1Digest;
 begin
-  HashSHA1(Digest, Buf, BufLen);
+  TSHA1Encrypt.HashSHA1(Digest, Buf, BufLen);
   Result := VerifyHash(Digest);
 end;
-{ -------------------------------------------------------------------------- }
+
 function TLbDSA.VerifyFile(const AFileName : string) : Boolean;
   { verify DSA signature agrees with file data }
 var
   Digest : TSHA1Digest;
 begin
-  FileHashSHA1(Digest, AFileName);
+  TSHA1Encrypt.FileHashSHA1(Digest, AFileName);
   Result := VerifyHash(Digest);
 end;
-{ -------------------------------------------------------------------------- }
+
 function TLbDSA.VerifyStream(AStream : TStream) : Boolean;
   { verify DSA signature agrees with stream data }
 var
   Digest : TSHA1Digest;
 begin
-  StreamHashSHA1(Digest, AStream);
+  TSHA1Encrypt.StreamHashSHA1(Digest, AStream);
   Result := VerifyHash(Digest);
 end;
-{ -------------------------------------------------------------------------- }
-function TLbDSA.VerifyStringA(const AStr : AnsiString) : Boolean;
+
+function TLbDSA.VerifyString(const AStr : string) : Boolean;
   { verify DSA signature agrees with string data }
 var
   Digest : TSHA1Digest;
 begin
-  StringHashSHA1A(Digest, AStr);
+  TSHA1.StringHashSHA1(Digest, GetBytes(AStr));
   Result := VerifyHash(Digest);
-end;
-
-{$IFDEF UNICODE}
-function TLbDSA.VerifyStringW(const AStr : UnicodeString) : Boolean;
-  { verify DSA signature agrees with string data }
-var
-  Digest : TSHA1Digest;
-begin
-  StringHashSHA1W(Digest, AStr);
-  Result := VerifyHash(Digest);
-end;
-{$ENDIF}
-
-end.
+end;end.

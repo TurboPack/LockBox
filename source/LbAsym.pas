@@ -54,22 +54,20 @@ type
   TLbAsymmetricKey = class(TObject)
   strict private
     FEncoding: TEncoding;
-    FKeySize  : TLbAsymKeySize;
-    FPassphrase : AnsiString;
-    procedure SetKeySize(Value : TLbAsymKeySize); virtual;
-
+    FPassphrase : string;
     procedure MovePtr(var Ptr : PByte; var Max : Integer );
     procedure MovePtrCount(var Ptr : PByte; var Max : Integer; Count : Integer);
-    function GetASN1StructLen( var input : pByte; var len : Integer ) : Integer;
-    function GetASN1StructNum ( var input : pByte; var len : Integer ) : Integer;
-    procedure CreateASN1(var Buf; var BufLen : Integer; Tag : Byte);
-    procedure ParseASN1(var input : pByte; var length : Integer; biValue : TLbBigInt);
-    function EncodeASN1(biValue : TLbBigInt; var pBuf : PByteArray; var MaxLen : Integer) : Integer;
-    function  CreateASNKey(Input : pByteArray; Length : Integer) : Integer; virtual; abstract;
-    function ParseASNKey(Input : pByte; Length : Integer) : boolean; virtual; abstract;
-
   strict protected
+    FKeySize  : TLbAsymKeySize;
+    procedure CreateASN1(var Buf; var BufLen : Integer; Tag : Byte);
+    function CreateASNKey(Input : pByteArray; Length : Integer): Integer; virtual; abstract;
+    function EncodeASN1(biValue : TLbBigInt; var pBuf : PByteArray; var MaxLen : Integer): Integer;
+    function GetASN1StructLen(var input : pByte; var len : Integer): Integer;
+    function GetASN1StructNum(var input : pByte; var len : Integer): Integer;
     function GetBytes(const AString: string): TBytes;
+    procedure ParseASN1(var input : pByte; var length : Integer; biValue : TLbBigInt);
+    function ParseASNKey(Input : pByte; Length : Integer): boolean; virtual; abstract;
+    procedure SetKeySize(Value : TLbAsymKeySize); virtual;
   public
     constructor Create(aKeySize : TLbAsymKeySize); virtual;
     procedure Assign(aKey : TLbAsymmetricKey); virtual;
@@ -81,26 +79,26 @@ type
 
     property Encoding: TEncoding read FEncoding write FEncoding;
     property KeySize : TLbAsymKeySize read FKeySize write SetKeySize;
-    property Passphrase : AnsiString read FPassphrase write FPassphrase;
+    property Passphrase : string read FPassphrase write FPassphrase;
   end;
 
-
   TLbAsymmetricCipher = class(TLbCipher)
-    strict private
-      FKeySize    : TLbAsymKeySize;
-      FOnProgress : TLbProgressEvent;
-      procedure SetKeySize(Value : TLbAsymKeySize); virtual;
-    public
-      constructor Create(AOwner : TComponent); override;
-      procedure GenerateKeyPair; virtual; abstract;
-      property KeySize : TLbAsymKeySize read FKeySize write SetKeySize;
-      property OnProgress : TLbProgressEvent read FOnProgress write FOnProgress;
-    end;
+  strict private
+    FKeySize    : TLbAsymKeySize;
+    FOnProgress : TLbProgressEvent;
+    procedure SetKeySize(Value : TLbAsymKeySize); virtual;
+  public
+    constructor Create(AOwner : TComponent); override;
+    procedure GenerateKeyPair; virtual; abstract;
+    property KeySize : TLbAsymKeySize read FKeySize write SetKeySize;
+    property OnProgress : TLbProgressEvent read FOnProgress write FOnProgress;
+  end;
 
   TLbSignature = class(TLbBaseComponent)
   strict private
-    FKeySize : TLbAsymKeySize;
-    FOnProgress : TLbProgressEvent;
+  strict protected
+    FKeySize: TLbAsymKeySize;
+    FOnProgress: TLbProgressEvent;
     procedure SetKeySize(Value : TLbAsymKeySize); virtual;
   public
     constructor Create(AOwner : TComponent); override;
@@ -110,13 +108,12 @@ type
     procedure SignBuffer(const Buf; BufLen : Cardinal); virtual; abstract;
     procedure SignFile(const AFileName : string); virtual; abstract;
     procedure SignStream(AStream : TStream); virtual; abstract;
-    procedure SignString(const AStr : AnsiString); virtual; abstract;
+    procedure SignString(const AStr : string); virtual; abstract;
 
     function  VerifyBuffer(const Buf; BufLen : Cardinal) : Boolean; virtual; abstract;
     function  VerifyFile(const AFileName : string) : Boolean; virtual; abstract;
     function  VerifyStream(AStream : TStream) : Boolean; virtual; abstract;
     function  VerifyString(const AStr : string): Boolean; virtual; abstract;
-  public
     property KeySize : TLbAsymKeySize read FKeySize write SetKeySize;
     property OnProgress : TLbProgressEvent read FOnProgress write FOnProgress;
   end;
@@ -163,7 +160,7 @@ begin
   Inc(Ptr, Count);
 end;
 
-function TLbAsymmetricKey.GetASN1StructLen(var Input : PByte; var Len : Integer) : Integer;
+function TLbAsymmetricKey.GetASN1StructLen(var input : pByte; var len : Integer): Integer;
   { return length of ASN.1 structure in buffer located at Input }
 var
   Tmp_int : Integer;
@@ -194,7 +191,7 @@ begin
   input := tmp_ptr;
 end;
 
-function TLbAsymmetricKey.GetASN1StructNum (var Input : PByte; var Len : Integer) : Integer;
+function TLbAsymmetricKey.GetASN1StructNum(var input : pByte; var len : Integer): Integer;
   { return ID of ASN.1 structure in buffer located at Input }
 var
   tmp_int : Integer;
@@ -391,8 +388,7 @@ begin
   end;
 end;
 
-procedure TLbAsymmetricKey.ParseASN1(var input : pByte; var length : Integer;
-                                     biValue : TLbBigInt);
+procedure TLbAsymmetricKey.ParseASN1(var input : pByte; var length : Integer; biValue : TLbBigInt);
 var
   tag : Integer;
   len : Integer;
