@@ -37,10 +37,6 @@ unit LbProc;
 interface
 
 uses
-
-{$IFDEF MSWINDOWS}
-  Winapi.Windows, Winapi.MMSystem,
-{$ENDIF}
   System.Classes, System.SysUtils, LbCipher;
 
 type
@@ -52,8 +48,9 @@ type
   strict private class var
     FOnProgress: TProgressProc;
     FProgressSize: LongInt;
+  private
+    class procedure Init; static;
   public
-    class constructor Create;
     class property ProgressSize: LongInt read FProgressSize write FProgressSize;
     class property OnProgress: TProgressProc read FOnProgress write FOnProgress;
   end;
@@ -109,7 +106,7 @@ type
     class procedure RDLEncryptStreamCBC(InStream, OutStream : TStream; const Key; KeySize : Longint; Encrypt : Boolean); static;
   end;
 
-  TMD5Encrpyt = class(TMD5)
+  TMD5Encrypt = class(TMD5)
   public
     class procedure FileHashMD5(var Digest : TMD5Digest; const AFileName : string); static;
     class procedure StreamHashMD5(var Digest : TMD5Digest; AStream : TStream); static;
@@ -229,12 +226,6 @@ var
   Work : TBFBlock;
   Context : TBFContext;
   BlockCount : LongInt;
-{$IFDEF LINUX}
-  fd : pIOFile;
-{$ENDIF}
-{$IFDEF POSIX}
-  FS: TFileStream;
-{$ENDIF}
 begin
   InitEncryptBF(Key, Context);
 
@@ -243,25 +234,8 @@ begin
 
   if Encrypt then begin
     {set up an initialization vector (IV)}
-{$IFDEF MSWINDOWS}
-    Block[0] := timeGetTime;
-    Block[1] := timeGetTime;
-{$ENDIF}
-{$IFDEF LINUX}
-    fd := fopen( '/dev/random', 'r' );
-    fread( @Block[0], SizeOf( byte ), SizeOf( Block[0] ), fd );
-    fread( @Block[1], SizeOf( byte ), SizeOf( Block[1] ), fd );
-    fclose( fd );
-{$ENDIF}
-{$IFDEF POSIX}
-  FS := TFileStream.Create('/dev/random', fmOpenRead);
-  try
-    FS.Read(Block[0], SizeOf(Block[0]));
-    FS.Read(Block[1], SizeOf(Block[1]));
-  finally
-    FS.Free;
-  end;
-{$ENDIF}
+    Block[0] := TThread.GetTickCount;
+    Block[1] := TThread.GetTickCount;
     EncryptBF(Context, Block, Encrypt);
     OutStream.Write(Block, SizeOf(Block));
     IV := Block;
@@ -431,12 +405,6 @@ var
   Work       : TDESBlock;
   Context    : TDESContext;
   BlockCount : LongInt;
-{$IFDEF LINUX}
-  fd : pIOFile;
-{$ENDIF}
-{$IFDEF POSIX}
-  FS: TFileStream;
-{$ENDIF}
 begin
   InitEncryptDES(Key, Context, Encrypt);
 
@@ -445,31 +413,10 @@ begin
 
   if Encrypt then begin
     {set up an initialization vector (IV)}
-{$IFDEF MSWINDOWS}
-    Block[0] := timeGetTime;
-    Block[1] := timeGetTime;
-    Block[2] := timeGetTime;
-    Block[3] := timeGetTime;
-{$ENDIF}
-{$IFDEF LINUX}
-    fd := fopen( '/dev/random', 'r' );
-    fread( @Block[0], SizeOf( byte ), SizeOf( Block[0] ), fd );
-    fread( @Block[1], SizeOf( byte ), SizeOf( Block[1] ), fd );
-    fread( @Block[2], SizeOf( byte ), SizeOf( Block[2] ), fd );
-    fread( @Block[3], SizeOf( byte ), SizeOf( Block[3] ), fd );
-    fclose( fd );
-{$ENDIF}
-{$IFDEF POSIX}
-  FS := TFileStream.Create('/dev/random', fmOpenRead);
-  try
-    FS.Read(Block[0], SizeOf(Block[0]));
-    FS.Read(Block[1], SizeOf(Block[1]));
-    FS.Read(Block[2], SizeOf(Block[2]));
-    FS.Read(Block[3], SizeOf(Block[3]));
-  finally
-    FS.Free;
-  end;
-{$ENDIF}
+    Block[0] := TThread.GetTickCount;
+    Block[1] := TThread.GetTickCount;
+    Block[2] := TThread.GetTickCount;
+    Block[3] := TThread.GetTickCount;
     EncryptDES(Context, Block);
     OutStream.Write(Block, SizeOf(Block));
     IV := Block;
@@ -637,12 +584,6 @@ var
   Work       : TDESBlock;
   Context    : TTripleDESContext;
   BlockCount : LongInt;
-{$IFDEF LINUX}
-  fd : pIOFile;
-{$ENDIF}
-{$IFDEF POSIX}
-  FS: TFileStream;
-{$ENDIF}
 begin
   InitEncryptTripleDES(Key, Context, Encrypt);
 
@@ -651,31 +592,9 @@ begin
 
   if Encrypt then begin
     {set up an initialization vector (IV)}
-{$IFDEF MSWINDOWS}
-    Block[0] := timeGetTime;
-    Block[1] := timeGetTime;
-    Block[2] := timeGetTime;
-    Block[3] := timeGetTime;
-{$ENDIF}
-{$IFDEF LINUX}
-    fd := fopen( '/dev/random', 'r' );
-    fread( @Block[0], SizeOf( byte ), SizeOf( Block[0] ), fd );
-    fread( @Block[1], SizeOf( byte ), SizeOf( Block[1] ), fd );
-    fread( @Block[2], SizeOf( byte ), SizeOf( Block[2] ), fd );
-    fread( @Block[3], SizeOf( byte ), SizeOf( Block[3] ), fd );
-    fclose( fd );
-{$ENDIF}
-{$IFDEF POSIX}
-    FS := TFileStream.Create('/dev/random', fmOpenRead);
-    try
-      FS.Read(Block[0], SizeOf(Block[0]));
-      FS.Read(Block[1], SizeOf(Block[1]));
-      FS.Read(Block[2], SizeOf(Block[2]));
-      FS.Read(Block[3], SizeOf(Block[3]));
-    finally
-      FS.Free;
-    end;
-{$ENDIF}
+    Block[1] := TThread.GetTickCount;
+    Block[2] := TThread.GetTickCount;
+    Block[3] := TThread.GetTickCount;
 
     EncryptTripleDES(Context, Block);
     OutStream.Write(Block, SizeOf(Block));
@@ -846,12 +765,6 @@ var
   Work       : TLBCBlock;
   Context    : TLBCContext;
   BlockCount : LongInt;
-{$IFDEF LINUX}
-  fd : pIOFile;
-{$ENDIF}
-{$IFDEF POSIX}
-  FS: TFileStream;
-{$ENDIF}
 begin
   InitEncryptLBC(Key, Context, Rounds, Encrypt);
 
@@ -860,31 +773,10 @@ begin
 
   if Encrypt then begin
     {set up an initialization vector (IV)}
-{$IFDEF MSWINDOWS}
-    Block[0] := timeGetTime;
-    Block[1] := timeGetTime;
-    Block[2] := timeGetTime;
-    Block[3] := timeGetTime;
-{$ENDIF}
-{$IFDEF LINUX}
-    fd := fopen( '/dev/random', 'r' );
-    fread( @Block[0], SizeOf( byte ), SizeOf( Block[0] ), fd );
-    fread( @Block[1], SizeOf( byte ), SizeOf( Block[1] ), fd );
-    fread( @Block[2], SizeOf( byte ), SizeOf( Block[2] ), fd );
-    fread( @Block[3], SizeOf( byte ), SizeOf( Block[3] ), fd );
-    fclose( fd );
-{$ENDIF}
-{$IFDEF POSIX}
-    FS := TFileStream.Create('/dev/random', fmOpenRead);
-    try
-      FS.Read(Block[0], SizeOf(Block[0]));
-      FS.Read(Block[1], SizeOf(Block[1]));
-      FS.Read(Block[2], SizeOf(Block[2]));
-      FS.Read(Block[3], SizeOf(Block[3]));
-    finally
-      FS.Free;
-    end;
-{$ENDIF}
+    Block[0] := TThread.GetTickCount;
+    Block[1] := TThread.GetTickCount;
+    Block[2] := TThread.GetTickCount;
+    Block[3] := TThread.GetTickCount;
     EncryptLBC(Context, Block);
     OutStream.Write(Block, SizeOf(Block));
     IV := Block;
@@ -1048,37 +940,14 @@ var
   IV         : TLQCBlock;
   Work       : TLQCBlock;
   BlockCount : LongInt;
-{$IFDEF LINUX}
-  fd : pIOFile;
-{$ENDIF}
-{$IFDEF POSIX}
-  FS: TFileStream;
-{$ENDIF}
 begin
   {get the number of blocks in the file}
   BlockCount := (InStream.Size div SizeOf(Block));
 
   if Encrypt then begin
     {set up an initialization vector (IV)}
-{$IFDEF MSWINDOWS}
-    Block[0] := timeGetTime;
-    Block[1] := timeGetTime;
-{$ENDIF}
-{$IFDEF LINUX}
-    fd := fopen( '/dev/random', 'r' );
-    fread( @Block[0], SizeOf( byte ), SizeOf( Block[0] ), fd );
-    fread( @Block[1], SizeOf( byte ), SizeOf( Block[1] ), fd );
-    fclose( fd );
-{$ENDIF}
-{$IFDEF POSIX}
-    FS := TFileStream.Create('/dev/random', fmOpenRead);
-    try
-      FS.Read(Block[0], SizeOf(Block[0]));
-      FS.Read(Block[1], SizeOf(Block[1]));
-    finally
-      FS.Free;
-    end;
-{$ENDIF}
+    Block[0] := TThread.GetTickCount;
+    Block[1] := TThread.GetTickCount;
     EncryptLQC(Key, Block, Encrypt);
     OutStream.Write(Block, SizeOf(Block));
     IV := Block;
@@ -1354,12 +1223,6 @@ var
   Work       : TRDLBlock;
   Context    : TRDLContext;
   BlockCount : LongInt;
-{$IFDEF LINUX}
-  fd : pIOFile;
-{$ENDIF}
-{$IFDEF POSIX}
-  FS: TFileStream;
-{$ENDIF}
 begin
   InitEncryptRDL(Key, KeySize, Context, Encrypt);
 
@@ -1368,25 +1231,8 @@ begin
 
   if Encrypt then begin
     {set up an initialization vector (IV)}
-{$IFDEF MSWINDOWS}
-    Block[0] := timeGetTime;
-    Block[1] := timeGetTime;
-{$ENDIF}
-{$IFDEF LINUX}
-    fd := fopen( '/dev/random', 'r' );
-    fread( @Block[0], SizeOf( byte ), SizeOf( Block[0] ), fd );
-    fread( @Block[1], SizeOf( byte ), SizeOf( Block[1] ), fd );
-    fclose( fd );
-{$ENDIF}
-{$IFDEF POSIX}
-    FS := TFileStream.Create('/dev/random', fmOpenRead);
-    try
-      FS.Read(Block[0], SizeOf(Block[0]));
-      FS.Read(Block[1], SizeOf(Block[1]));
-    finally
-      FS.Free;
-    end;
-{$ENDIF}
+    Block[0] := TThread.GetTickCount;
+    Block[1] := TThread.GetTickCount;
     EncryptRDL(Context, Block);
     OutStream.Write(Block, SizeOf(Block));
     IV := Block;
@@ -1454,9 +1300,9 @@ begin
 end;
 
 
-{ TMD5Encrpyt }
+{ TMD5Encrypt }
 
-class procedure TMD5Encrpyt.FileHashMD5(var Digest : TMD5Digest; const AFileName : string);
+class procedure TMD5Encrypt.FileHashMD5(var Digest : TMD5Digest; const AFileName : string);
 var
   FS : TFileStream;
 begin
@@ -1468,7 +1314,7 @@ begin
   end;
 end;
 
-class procedure TMD5Encrpyt.StreamHashMD5(var Digest : TMD5Digest; AStream : TStream);
+class procedure TMD5Encrypt.StreamHashMD5(var Digest : TMD5Digest; AStream : TStream);
 var
   BufSize : Cardinal;
   Buf : array[0..1023] of Byte;
@@ -1514,9 +1360,12 @@ end;
 
 { TLbProgress }
 
-class constructor TLbProgress.Create;
+class procedure TLbProgress.Init;
 begin
   FProgressSize := 64;                                                         {!!.06a}
 end;
+
+initialization
+  TLbProgress.Init;
 
 end.

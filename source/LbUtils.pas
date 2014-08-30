@@ -19,7 +19,7 @@
  * Portions created by the Initial Developer are Copyright (C) 1997-2002
  * the Initial Developer. All Rights Reserved.
  *
- * Contributor(s): 
+ * Contributor(s): Roman Kassebaum
  *
  * ***** END LICENSE BLOCK ***** *)
 {*********************************************************}
@@ -36,53 +36,18 @@ unit LbUtils;
 interface
 
 uses
-  SysUtils;
+  System.Types, System.SysUtils;
+
+type
+  PDWord = ^DWord;
 
 function BufferToHex(const Buf; BufSize : Cardinal) : string;
 function HexToBuffer(const Hex : string; var Buf; BufSize : Cardinal) : Boolean;
-function Min(A, B : LongInt) : LongInt;
-function Max(A, B : LongInt) : LongInt;
-function CompareBuffers(const Buf1, Buf2; BufSize : Cardinal) : Boolean;
-
-{$IFDEF Debugging}
-procedure DebugStr(const AStr : string);
-procedure DebugLogFile(const AFileName : string);
-{$ENDIF}
 
 implementation
 
-
-{$IFDEF Debugging}
-var
-  DebugLogFileName : string = 'LbDebug.txt';
-
-procedure DebugStr(const AStr : string);
-var
-  F : TextFile;
-begin
-  try
-    AssignFile(F, DebugLogFileName);
-    Append(F);
-  except
-    on E : EInOutError do
-      if (E.ErrorCode = 2) or (E.ErrorCode = 32) then
-        Rewrite(F)
-      else
-        raise;
-  end;
-  WriteLn(F, AStr);
-  Close(F);
-  if IOResult <> 0 then ;
-end;
-
-procedure DebugLogFile(const AFileName : string);
-begin
-  if FileExists(AFileName) then
-    DeleteFile(AFileName);
-  DebugLogFileName := AFileName;
-end;
-{$ENDIF}
-
+uses
+  System.Math;
 
 { -------------------------------------------------------------------------- }
 function BufferToHex(const Buf; BufSize : Cardinal) : string;
@@ -103,7 +68,7 @@ begin
   Result := False;
   Str := '';
   for i := 1 to Length(Hex) do
-    if {$IFDEF Unicode}CharInSet(UpCase(Hex[i]), ['0'..'9', 'A'..'F']){$ELSE} Upcase(Hex[i]) in ['0'..'9', 'A'..'F'] {$ENDIF} then
+    if CharInSet(UpCase(Hex[i]), ['0'..'9', 'A'..'F']) then
       Str := Str + Hex[i];
 
   FillChar(Buf, BufSize, #0);
@@ -116,35 +81,6 @@ begin
   end;
 
   Result := True;
-end;
-{ -------------------------------------------------------------------------- }
-function Min(A, B : LongInt) : LongInt;
-begin
-  if A < B then
-    Result := A
-  else
-    Result := B;
-end;
-{ -------------------------------------------------------------------------- }
-function Max(A, B : LongInt) : LongInt;
-begin
-  if A > B then
-    Result := A
-  else
-    Result := B;
-end;
-{ -------------------------------------------------------------------------- }
-function CompareBuffers(const Buf1, Buf2; BufSize : Cardinal) : Boolean;
-  { return true if buffers are the same }
-var
-  i : Integer;
-begin
-  Result := False;
-  for i := 0 to Pred(BufSize) do begin
-    Result := TByteArray(Buf1)[i] = TByteArray(Buf2)[i];
-    if not Result then
-      Break;
-  end;
 end;
 
 end.

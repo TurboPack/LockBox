@@ -322,7 +322,7 @@ type
 implementation
 
 uses
-  {$IFDEF MSWINDOWS}Winapi.Windows, {$ENDIF}LbUtils;
+  System.Math, LbUtils;
 
 {first 2048 bits of Pi in hexadecimal, low to high, without the leading "3"}
 const

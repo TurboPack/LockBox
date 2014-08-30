@@ -39,12 +39,7 @@ unit LbClass;
 interface
 
 uses
-{$IFDEF MSWINDOWS}
-  Winapi.Windows,
-{$ENDIF}
-  System.Classes,
-  System.SysUtils,
-  LbCipher;
+  System.Classes, System.SysUtils, LbCipher;
 
 type
   TLBBaseComponent = class(TLBBase)
@@ -297,7 +292,7 @@ type
 implementation
 
 uses
-  LbProc, LbString, LbConst;
+  LbProc, LbBytes, LbConst;
 
 { TLBBaseComponent }
 
@@ -703,7 +698,7 @@ end;
 
 procedure TLbMD5.HashBuffer(const Buf; BufSize : Cardinal);
 begin
-  TMD5Encrpyt.HashMD5(FDigest, Buf, BufSize);
+  TMD5Encrypt.HashMD5(FDigest, Buf, BufSize);
 end;
 
 procedure TLbMD5.HashFile(const AFileName: string);
@@ -723,18 +718,18 @@ var
   Context : TMD5Context;
   BufSize : Integer;
 begin
-  TMD5Encrpyt.InitMD5(Context);
+  TMD5Encrypt.InitMD5(Context);
   BufSize := AStream.Read(FBuf, SizeOf(FBuf));
   while (BufSize > 0) do begin
-    TMD5Encrpyt.UpdateMD5(Context, FBuf, BufSize);
+    TMD5Encrypt.UpdateMD5(Context, FBuf, BufSize);
     BufSize := AStream.Read(FBuf, SizeOf(FBuf));
   end;
-  TMD5Encrpyt.FinalizeMD5(Context, FDigest);
+  TMD5Encrypt.FinalizeMD5(Context, FDigest);
 end;
 
 procedure TLbMD5.HashString(const AStr: string);
 begin
-  TMD5Encrpyt.StringHashMD5(FDigest, GetBytes(AStr));
+  TMD5Encrypt.StringHashMD5(FDigest, GetBytes(AStr));
 end;
 
 { TLbSHA1 }

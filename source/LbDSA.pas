@@ -37,11 +37,8 @@ unit LbDSA;
 interface
 
 uses
-{$IFDEF MSWINDOWS}
-  Winapi.Windows,
-{$ENDIF}
-  System.Types, System.Classes, System.SysUtils,
-  LbRandom, LbCipher, LbBigInt, LbAsym, LbConst;
+  System.Types, System.Classes, System.SysUtils, LbRandom, LbCipher, LbBigInt, LbAsym,
+  LbConst;
 
 type
   TLbDSABlock = array[0..cBytes160-1] of Byte;   { same as TSHA1Digest }
@@ -63,13 +60,13 @@ type
     function GetPAsString : string;
     function GetQAsString : string;
     procedure SetGAsString(const Value : string);
-    procedure SetKeySize(Value : TLbAsymKeySize); override;
     procedure SetPAsString(const Value : string);
     procedure SetQAsString(const Value : string);
   strict protected
     FG: TLbBigInt;
     FP: TLbBigInt;
     FQ: TLbBigInt;
+    procedure SetKeySize(Value : TLbAsymKeySize); override;
   public
     constructor Create(aKeySize : TLbAsymKeySize); override;
     destructor Destroy; override;
@@ -90,10 +87,11 @@ type
   strict private
     FX    : TLbBigInt;
     FXKey : TLbDSABlock;
-    function  CreateASNKey(Input : pByteArray; Length : Integer) : Integer; override;
     function GetXAsString : string;
-    function ParseASNKey(Input : pByte; Length : Integer) : boolean; override;
     procedure SetXAsString(const Value : string);
+  strict protected
+    function CreateASNKey(Input : pByteArray; Length : Integer): Integer; override;
+    function ParseASNKey(Input : pByte; Length : Integer): boolean; override;
   public
     constructor Create(aKeySize : TLbAsymKeySize); override;
     destructor Destroy; override;
@@ -106,10 +104,11 @@ type
   TLbDSAPublicKey = class(TLbDSAParameters)
   strict private
     FY : TLbBigInt;
-    function  CreateASNKey(Input : pByteArray; Length : Integer) : Integer; override;
     function GetYAsString : string;
-    function ParseASNKey(Input : pByte; Length : Integer) : boolean; override;
     procedure SetYAsString(const Value : string);
+  strict protected
+    function CreateASNKey(Input : pByteArray; Length : Integer): Integer; override;
+    function ParseASNKey(Input : pByte; Length : Integer): boolean; override;
   public
     constructor Create(aKeySize : TLbAsymKeySize); override;
     destructor Destroy; override;
@@ -133,19 +132,19 @@ type
     FOnGetSeed  : TLbGetDSABlockEvent;
     FOnGetXKey  : TLbGetDSABlockEvent;
     FOnGetKKey  : TLbGetDSABlockEvent;
-    FRandomSeed : Boolean;
     procedure SignHash(const ADigest : TSHA1Digest);
     function VerifyHash(const ADigest : TSHA1Digest) : Boolean;
-    procedure SHA1KKey(var AKKey : TLbDSABlock);
     procedure RandomBlock(var ABlock : TLbDSABlock);
     procedure DoGetR;
     procedure DoGetS;
     procedure DoGetSeed(var ASeed : TLbDSABlock);
     procedure DoGetXKey(var AXKey : TLbDSABlock);
     procedure DoGetKKey(var AKKey : TLbDSABlock);
-    procedure SetKeySize(Value : TLbAsymKeySize); override;
     procedure SetPrimeTestIterations(Value : Byte);
     procedure DSAParameterCallback(var Abort : Boolean);
+  strict protected
+    procedure SetKeySize(Value : TLbAsymKeySize); override;
+    procedure SHA1KKey(var AKKey : TLbDSABlock);
   public
     constructor Create(AOwner : TComponent); override;
     destructor Destroy; override;
@@ -537,7 +536,7 @@ begin
   FillChar(FXKey, SizeOf(FXKey), #0);
 end;
 
-function  TLbDSAPrivateKey.CreateASNKey(Input : pByteArray; Length : Integer) : Integer;
+function TLbDSAPrivateKey.CreateASNKey(Input : pByteArray; Length : Integer): Integer;
 const
   TAG30 = $30;
 var
@@ -583,7 +582,7 @@ begin
   Result := FX.IntStr;
 end;
 
-function TLbDSAPrivateKey.ParseASNKey(Input : PByte; Length : Integer ) : Boolean;
+function TLbDSAPrivateKey.ParseASNKey(Input : pByte; Length : Integer): boolean;
 var
   Tag : Integer;
   Max : Integer;
@@ -640,7 +639,7 @@ begin
   FY.Clear;
 end;
 
-function  TLbDSAPublicKey.CreateASNKey(Input : pByteArray; Length : Integer) : Integer;
+function TLbDSAPublicKey.CreateASNKey(Input : pByteArray; Length : Integer): Integer;
 const
   TAG30 = $30;
 var
@@ -676,7 +675,7 @@ begin
   Result := FY.IntStr;
 end;
 
-function TLbDSAPublicKey.ParseASNKey(input : pByte; length : Integer) : Boolean;
+function TLbDSAPublicKey.ParseASNKey(Input : pByte; Length : Integer): boolean;
 var
   Tag : Integer;
   Max : Integer;
@@ -796,7 +795,7 @@ begin
   if Assigned(FOnGetSeed) then
     FOnGetSeed(Self, ASeed);
 
-  if CompareBuffers(ASeed, cZeroBlock, SizeOf(ASeed)) then
+  if CompareMem(@ASeed, @cZeroBlock, SizeOf(ASeed)) then
     RandomBlock(ASeed);
 end;
 
@@ -807,7 +806,7 @@ begin
   if Assigned(FOnGetXKey) then
     FOnGetXKey(Self, AXKey);
 
-  if CompareBuffers(AXKey, cZeroBlock, SizeOf(AXKey)) then
+  if CompareMem(@AXKey, @cZeroBlock, SizeOf(AXKey)) then
     RandomBlock(AXKey);
 end;
 
@@ -818,7 +817,7 @@ begin
   if Assigned(FOnGetKKey) then
     FOnGetKKey(Self, AKKey);
 
-  if CompareBuffers(AKKey, cZeroBlock, SizeOf(AKKey)) then
+  if CompareMem(@AKKey, @cZeroBlock, SizeOf(AKKey)) then
     RandomBlock(AKKey);
 end;
 

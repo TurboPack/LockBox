@@ -60,14 +60,14 @@ requires
 contains
   LbUtils in '..\..\source\LbUtils.pas',
   LbBigInt in '..\..\source\LbBigInt.pas',
-  LBCIPHER in '..\..\source\LBCIPHER.pas',
+  LBCipher in '..\..\source\LBCipher.pas',
   LbConst in '..\..\source\LbConst.pas',
-  LBPROC in '..\..\source\LBPROC.pas',
   LbRandom in '..\..\source\LbRandom.pas',
   LbAsym in '..\..\source\LbAsym.pas',
   LbClass in '..\..\source\LbClass.pas',
   LbDSA in '..\..\source\LbDSA.pas',
   LbRSA in '..\..\source\LbRSA.pas',
-  LbBytes in '..\..\source\LbBytes.pas';
+  LbBytes in '..\..\source\LbBytes.pas',
+  LBPROC in '..\..\source\LBPROC.pas';
 
 end.

@@ -36,17 +36,7 @@ unit LbBigInt;
 interface
 
 uses
-{$IFDEF MSWINDOWS}
-  Windows,
-{$ENDIF}
-{$IFDEF POSIX}
-  Types,
-{$ENDIF}
-{$IFDEF UsingCLX}
-  Types,
-{$ENDIF}
-  Sysutils,
-  LbRandom;
+  System.Types, System.SysUtils, LbRandom;
 
 const
   cLESS_THAN    = shortInt(-1);
@@ -156,8 +146,7 @@ end;
 implementation
 
 uses
-  {$IFDEF Debugging} Dialogs, {$ENDIF}
-  LbUtils, LbConst;
+  System.Math, LbUtils, LbConst;
 
 const { misc local constants }
   cBYTE_POSSIBLE_VALUES  = 256;

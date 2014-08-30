@@ -29,19 +29,11 @@
 {*                 All rights reserved.                  *}
 {*********************************************************}
 
-{$I LockBox.inc}
-{$IFDEF MSWINDOWS}
-  {$WRITEABLECONST ON}
-{$ENDIF}
-
 unit LbRandom;
 
 interface
 
 uses
-{$IFDEF MSWINDOWS}
-  Winapi.Windows,
-{$ENDIF}
   System.Types, System.Classes, System.SysUtils, System.Math, LbCipher;
 
 { TLbRandomGenerator }
@@ -163,34 +155,19 @@ begin
 end;
 
 procedure TLbRanLFS.SetSeed;
-const
-  hold : integer = 1;
 var
-{$IFDEF MSWINDOWS}
-  _time : TSYSTEMTIME;
-{$ENDIF}
-{$IFDEF POSIX}
-  FS: TFileStream;
-{$ENDIF}
+  wHour, wMin, wSec, wMSec: Word;
+  hold : integer;
 begin
+  hold := 1;
   while true do begin
-{$IFDEF MSWINDOWS}
+    DecodeTime(Time, wHour, wMin, wSec, wMSec);
     ShiftRegister := hold;
-    GetLocalTime( _time );
     ShiftRegister := ( ShiftRegister shl ( hold and $0000000F )) xor
-                     (( DWORD( _time.wHour or _time.wSecond ) shl 16 ) or
-                      ( DWORD( _time.wMinute or _time.wMilliseconds  )));
+                     (( DWORD( wHour or wSec ) shl 16 ) or
+                      ( DWORD( wMin or wMSec  )));
     hold := ShiftRegister;
     inc( hold );
-{$ENDIF}
-{$IFDEF POSIX}
-  FS := TFileStream.Create('/dev/random', fmOpenRead);
-  try
-    FS.Read(ShiftRegister, SizeOf(ShiftRegister));
-  finally
-    FS.Free;
-  end;
-{$ENDIF}
     if( ShiftRegister <> 0 )then
       break;
   end;

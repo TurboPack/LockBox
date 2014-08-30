@@ -84,8 +84,9 @@ type
 
   TLbAsymmetricCipher = class(TLbCipher)
   strict private
-    FKeySize    : TLbAsymKeySize;
     FOnProgress : TLbProgressEvent;
+  strict protected
+    FKeySize: TLbAsymKeySize;
     procedure SetKeySize(Value : TLbAsymKeySize); virtual;
   public
     constructor Create(AOwner : TComponent); override;
@@ -314,7 +315,7 @@ begin
   if (FPassphrase <> '') then begin
     MemStream := TMemoryStream.Create;
     try
-      TMD5Encrpyt.StringHashMD5(TMD5Digest(BFKey), GetBytes(FPassphrase));
+      TMD5Encrypt.StringHashMD5(TMD5Digest(BFKey), GetBytes(FPassphrase));
       TBlowfishEncrypt.BFEncryptStream(aStream, MemStream, BFKey, False);
       Len := MemStream.Size;
       if (Len > SizeOf(KeyBuf)) then
@@ -351,7 +352,7 @@ begin
     try
       MemStream.Write(KeyBuf, Len);
       MemStream.Position := 0;
-      TMD5Encrpyt.StringHashMD5(TMD5Digest(BFKey), GetBytes(FPassphrase));
+      TMD5Encrypt.StringHashMD5(TMD5Digest(BFKey), GetBytes(FPassphrase));
       TBlowfishEncrypt.BFEncryptStream(MemStream, aStream, BFKey, True);
     finally
       MemStream.Free;
