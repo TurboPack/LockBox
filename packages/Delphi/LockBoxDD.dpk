@@ -22,7 +22,7 @@
  * Contributor(s):
  *
  * ***** END LICENSE BLOCK ***** *)
-package dclLockBox;
+package LockBoxDD;
 
 {$R *.res}
 {$R '..\..\source\LbDesign.dcr'}
@@ -51,7 +51,7 @@ package dclLockBox;
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'TurboPower LockBox 2.08 Design-time package - VCL200'}
-{$LIBSUFFIX '200'}
+{$LIBSUFFIX '20'}
 {$DESIGNONLY}
 {$IMPLICITBUILD OFF}
 
@@ -59,7 +59,7 @@ requires
   vcl,
   designide,
   vclx,
-  LockBox;
+  LockBoxDR;
 
 contains
   LbDesign in '..\..\source\LbDesign.pas',

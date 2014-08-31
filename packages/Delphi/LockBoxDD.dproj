@@ -1,9 +1,9 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{08EAAF8B-5E76-4FDD-BFFE-FBD56B7BF50A}</ProjectGuid>
-        <MainSource>dclLockBox.dpk</MainSource>
+        <MainSource>LockBoxDD.dpk</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Package</AppType>
         <FrameworkType>VCL</FrameworkType>
@@ -53,11 +53,11 @@
     <PropertyGroup Condition="'$(Base)'!=''">
         <DCC_UnitSearchPath>.\$(Platform)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
-        <SanitizedProjectName>dclLockBox</SanitizedProjectName>
+        <SanitizedProjectName>LockBoxDD</SanitizedProjectName>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DesignOnlyPackage>true</DesignOnlyPackage>
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <DllSuffix>200</DllSuffix>
+        <DllSuffix>20</DllSuffix>
         <DCC_ImageBase>00400000</DCC_ImageBase>
         <DCC_Description>TurboPower LockBox 2.08 Design-time package - VCL200</DCC_Description>
         <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;$(DCC_Namespace)</DCC_Namespace>
@@ -111,7 +111,7 @@
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="designide.dcp"/>
         <DCCReference Include="vclx.dcp"/>
-        <DCCReference Include="LockBox.dcp"/>
+        <DCCReference Include="LockBoxDR.dcp"/>
         <DCCReference Include="..\..\source\LbDesign.pas"/>
         <DCCReference Include="..\..\source\LbKeyEd1.pas">
             <Form>frmSymmetricKey</Form>
@@ -137,7 +137,7 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">dclLockBox.dpk</Source>
+                    <Source Name="MainSource">LockBoxDD.dpk</Source>
                 </Source>
                 <VersionInfo>
                     <VersionInfo Name="IncludeVerInfo">True</VersionInfo>

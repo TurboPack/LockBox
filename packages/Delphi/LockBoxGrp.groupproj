@@ -3,10 +3,10 @@
         <ProjectGuid>{D86B8D66-4420-49C6-9E8B-3908F17820CA}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="LockBox.dproj">
+        <Projects Include="LockBoxDR.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="dclLockBox.dproj">
+        <Projects Include="LockBoxDD.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -17,32 +17,32 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="LockBox">
-        <MSBuild Projects="LockBox.dproj"/>
+    <Target Name="LockBoxDR">
+        <MSBuild Projects="LockBoxDR.dproj"/>
     </Target>
-    <Target Name="LockBox:Clean">
-        <MSBuild Projects="LockBox.dproj" Targets="Clean"/>
+    <Target Name="LockBoxDR:Clean">
+        <MSBuild Projects="LockBoxDR.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="LockBox:Make">
-        <MSBuild Projects="LockBox.dproj" Targets="Make"/>
+    <Target Name="LockBoxDR:Make">
+        <MSBuild Projects="LockBoxDR.dproj" Targets="Make"/>
     </Target>
-    <Target Name="dclLockBox">
-        <MSBuild Projects="dclLockBox.dproj"/>
+    <Target Name="LockBoxDD">
+        <MSBuild Projects="LockBoxDD.dproj"/>
     </Target>
-    <Target Name="dclLockBox:Clean">
-        <MSBuild Projects="dclLockBox.dproj" Targets="Clean"/>
+    <Target Name="LockBoxDD:Clean">
+        <MSBuild Projects="LockBoxDD.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="dclLockBox:Make">
-        <MSBuild Projects="dclLockBox.dproj" Targets="Make"/>
+    <Target Name="LockBoxDD:Make">
+        <MSBuild Projects="LockBoxDD.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="LockBox;dclLockBox"/>
+        <CallTarget Targets="LockBoxDR;LockBoxDD"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="LockBox:Clean;dclLockBox:Clean"/>
+        <CallTarget Targets="LockBoxDR:Clean;LockBoxDD:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="LockBox:Make;dclLockBox:Make"/>
+        <CallTarget Targets="LockBoxDR:Make;LockBoxDD:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
