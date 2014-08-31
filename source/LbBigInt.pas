@@ -1784,13 +1784,14 @@ end;
 procedure LbBiReverseAllBits(N1 : LbInteger; var N2 : LbInteger);
 var
   i : integer;                                                            {!!03}
-  byt_ptr : pByte;
+  byt_ptr : PByte;
 begin
   LbBiReverseBytes(N1, N2);
   byt_ptr := N2.IntBuf.pBuf;
-  for i := 1 to N2.dwUsed do begin
+  for i := 1 to N2.dwUsed do
+  begin
     byt_ptr^ := LbBiReverseBits(byt_ptr^);
-    Inc(Longint(byt_ptr));
+    Inc(NativeInt(byt_ptr));
   end;
 end;
 { ------------------------------------------------------------------- }

@@ -104,13 +104,18 @@ type
 
 
 { encryption block types }
-type
   PLBCBlock  = ^TLBCBlock;
   TLBCBlock  = array[0..3] of LongInt;     { LockBox Cipher }
   TDESBlock  = array[0..7] of Byte;        { DES }
   TLQCBlock  = array[0..1] of LongInt;     { LockBox Quick Cipher }
   TBFBlock   = array[0..1] of LongInt;     { BlowFish }
   TRDLBlock  = array[0..15] of Byte;       { Rijndael }
+
+  TDesConverter = record
+  case Boolean of
+    False: (Bytes: array [0..7] of Byte);
+    True: (DWords: array [0..1] of DWord)
+  end;
 
 
 { context type constants }
@@ -200,6 +205,10 @@ type
 
 { DES Cipher }
   TDES = class(TObject)
+  strict private
+    class procedure JoinBlock(const L, R : LongInt; var Block : TDESBlock); static; register;
+    class procedure SplitBlock(const Block : TDESBlock; var L, R : DWord); static; register;
+  private
   public
     class procedure EncryptDES(const Context : TDESContext; var Block : TDESBlock); static;
     class procedure EncryptDESCBC(const Context : TDESContext; const Prev : TDESBlock; var Block : TDESBlock); static;
@@ -598,50 +607,6 @@ var
   I, L, R, Work : DWord;
   CPtr          : PDWord;
 
-  procedure SplitBlock(const Block : TDESBlock;  var L, R : DWord); register;
-  asm
-    push ebx
-    push eax
-    mov  eax, [eax]
-    mov  bh, al
-    mov  bl, ah
-    rol  ebx, 16
-    shr  eax, 16
-    mov  bh, al
-    mov  bl, ah
-    mov  [edx], ebx
-    pop  eax
-    mov  eax, [eax+4]
-    mov  bh, al
-    mov  bl, ah
-    rol  ebx, 16
-    shr  eax, 16
-    mov  bh, al
-    mov  bl, ah
-    mov  [ecx], ebx
-    pop  ebx
-  end;
-
-  procedure JoinBlock(const L, R : LongInt;  var Block : TDESBlock); register;
-  asm
-    push ebx
-    mov  bh, al
-    mov  bl, ah
-    rol  ebx, 16
-    shr  eax, 16
-    mov  bh, al
-    mov  bl, ah
-    mov  [ecx+4], ebx
-    mov  bh, dl
-    mov  bl, dh
-    rol  ebx, 16
-    shr  edx, 16
-    mov  bh, dl
-    mov  bl, dh
-    mov  [ecx], ebx
-    pop  ebx
-  end;
-
   procedure IPerm(var L, R : DWord);
   var
     Work : DWord;
@@ -890,6 +855,17 @@ begin
   end;
 end;
 
+class procedure TDES.JoinBlock(const L, R : LongInt; var Block : TDESBlock);
+var
+  Temp: TDesConverter;
+  I: integer;
+begin
+  Temp.DWords[0] := DWord(L);
+  Temp.DWords[1] := DWord(R);
+  for I := Low(Block) to High(Block) do
+    Block[I] := Temp.Bytes[7-I];
+end;
+
 
 class procedure TDES.ShrinkDESKey(var Key : TKey64);
 const
@@ -921,6 +897,17 @@ begin
   EncryptDES(Context, TDESBlock(Work1));
 
   Key := Work1;
+end;
+
+class procedure TDES.SplitBlock(const Block : TDESBlock; var L, R : DWord);
+var
+  Temp: TDesConverter;
+  I: integer;
+begin
+  for I := Low(Block) to High(Block) do
+    Temp.Bytes[7-I] := Block[I];
+  L:= Temp.DWords[1];
+  R:= Temp.DWords[0];
 end;
 
 { TSHA1 }
@@ -1903,9 +1890,8 @@ begin
 end;
 
 class function TMISC.RolX(I, C : DWord): DWord;
-asm
-  mov  ecx, edx         {get count to cl}
-  rol  eax, cl          {rotate eax by cl}
+begin
+  Result := (I shl (C and 31)) or (I shr (32-(C and 31)));
 end;
 
 class procedure TMISC.StringHashELF(var Digest: LongInt; const ABytes: TBytes);
@@ -2054,48 +2040,30 @@ begin
   Move(Buf, Buffer, SizeOf(Buffer));                                 {!!.01}
 end;
 
-class procedure TMISC.XorMem(var Mem1; const Mem2; Count : Cardinal);
+class procedure TMISC.XorMem(var Mem1; const Mem2; Count: Cardinal);
 begin
   XorMemPrim(Mem1, Mem2, Count);
 end;
 
-class procedure TMISC.XorMemPrim(var Mem1; const Mem2; Count : Cardinal);
-asm
-  push esi
-  push edi
-
-  mov  esi, eax         //esi = Mem1
-  mov  edi, edx         //edi = Mem2
-
-  push ecx              //save byte count
-  shr  ecx, 2           //convert to dwords
-  jz   @Continue
-
-  cld
-@Loop1:                 //xor dwords at a time
-  mov  eax, [edi]
-  xor  [esi], eax
-  add  esi, 4
-  add  edi, 4
-  dec  ecx
-  jnz  @Loop1
-
-@Continue:              //handle remaining bytes (3 or less)
-  pop  ecx
-  and  ecx, 3
-  jz   @Done
-
-@Loop2:                 //xor remaining bytes
-  mov  al, [edi]
-  xor  [esi], al
-  inc  esi
-  inc  edi
-  dec  ecx
-  jnz  @Loop2
-
-@Done:
-  pop  edi
-  pop  esi
+class procedure TMISC.XorMemPrim(var Mem1; const Mem2; Count: Cardinal);
+var
+  i: Integer;
+  p1,p2: NativeInt;
+begin
+  p1 := NativeInt(@Mem1);
+  p2 := NativeInt(@Mem2);
+  for i := 1 to count div 4 do
+  begin
+    PDWord(p1)^ := PDWord(p1)^ xor PDWord(p2)^;
+    p1 := p1 + 4;
+    p2 := p2 + 4;
+  end;
+  for i := 1 to Count mod 4 do
+  begin
+    PByte(p1)^ := PByte(p1)^ xor PByte(p2)^;
+    p1 := p1 + 1;
+    p2 := p2 + 1;
+  end;
 end;
 
 end.
