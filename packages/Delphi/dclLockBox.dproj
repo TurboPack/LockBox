@@ -51,8 +51,6 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_DcpOutput>.\$(Platform)\$(Config)</DCC_DcpOutput>
-        <DCC_BplOutput>.\$(Platform)\$(Config)</DCC_BplOutput>
         <DCC_UnitSearchPath>.\$(Platform)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
         <SanitizedProjectName>dclLockBox</SanitizedProjectName>

@@ -42,12 +42,8 @@ uses
   Messages,
   Dialogs,
   ShellAPI,
-{$IFDEF Version6}
   DesignIntf,
   DesignEditors,
-{$ELSE}
-  DsgnIntf,
-{$ENDIF}
   StdCtrls,
   Graphics,
   ExtCtrls,

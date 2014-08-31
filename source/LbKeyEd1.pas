@@ -19,7 +19,7 @@
  * Portions created by the Initial Developer are Copyright (C) 1997-2002
  * the Initial Developer. All Rights Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Roman Kassebaum
  *
  * ***** END LICENSE BLOCK ***** *)
 {*********************************************************}
@@ -40,7 +40,6 @@ unit LbKeyEd1;
 interface
 
 uses
-{$IFDEF MSWINDOWS}
   Windows,
   Controls,
   Forms,
@@ -51,22 +50,8 @@ uses
   StdCtrls,
   ComCtrls,
   Tabnotbk,
-{$ENDIF}
-
-{$IFDEF Version6}
   DesignIntf,
   DesignEditors,
-{$ELSE}
-  DsgnIntf,
-{$ENDIF}
-
-{$IFDEF UsingCLX}
-  QForms,
-  QGraphics,
-  QControls,
-  QStdCtrls,
-  QExtCtrls,
-{$ENDIF}
   SysUtils,
   Classes;
 
@@ -169,9 +154,9 @@ begin
   Screen.Cursor := crHourGlass;
   try
     case cbxKeyType.ItemIndex of
-      0: GenerateRandomKey(Key, SizeOf(Key));
-      1: GenerateLMDKey(Key, SizeOf(Key), {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF}(AnsiUpperCase(edtPassphrase.Text)));
-      2: GenerateLMDKey(Key, SizeOf(Key), {$IFDEF LOCKBOXUNICODE}UnicodeString{$ELSE}AnsiString{$ENDIF}(edtPassphrase.Text));
+      0: TMISC.GenerateRandomKey(Key, SizeOf(Key));
+      1: TLMD.GenerateLMDKey(Key, SizeOf(Key), TEncoding.ANSI.GetBytes(AnsiUpperCase(edtPassphrase.Text)));
+      2: TLMD.GenerateLMDKey(Key, SizeOf(Key), TEncoding.ANSI.GetBytes(edtPassphrase.Text));
     end;
     edtKey.Text := BufferToHex(Key, KeySizes[TKeySizeIndex(cbxKeySize.ItemIndex)]);
   finally

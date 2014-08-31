@@ -36,7 +36,6 @@ unit LbKeyEd2;
 interface
 
 uses
-{$IFDEF MSWINDOWS}
   Windows,
   Controls,
   Forms,
@@ -47,23 +46,8 @@ uses
   StdCtrls,
   ComCtrls,
   Tabnotbk,
-{$ENDIF}
-
-{$IFDEF Version6}
   DesignIntf,
   DesignEditors,
-{$ELSE}
-  DsgnIntf,
-{$ENDIF}
-
-{$IFDEF UsingCLX}
-  QForms,
-  QGraphics,
-  QControls,
-  QStdCtrls,
-  QExtCtrls,
-  QComCtrls,
-{$ENDIF}
   SysUtils,
   Classes;
 
@@ -151,7 +135,7 @@ begin
   Pub := TLbRSAKey.Create(TLbAsymKeySize(cbxKeySize.ItemIndex));
   Pri := TLbRSAKey.Create(TLbAsymKeySize(cbxKeySize.ItemIndex));
   try
-    GenerateRSAKeysEx(Pri, Pub, TLbAsymKeySize(cbxKeySize.ItemIndex),
+    TRSA.GenerateRSAKeysEx(Pri, Pub, TLbAsymKeySize(cbxKeySize.ItemIndex),
       StrToIntDef(edtIterations.Text, 20), RSACallback);
     edtModulus.Text := Pri.ModulusAsString;
     edtPublicExponent.Text := Pub.ExponentAsString;
