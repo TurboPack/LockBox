@@ -47,7 +47,7 @@ function HexToBuffer(const Hex : string; var Buf; BufSize : Cardinal) : Boolean;
 implementation
 
 uses
-  System.Math;
+  System.Math, System.Character;
 
 { -------------------------------------------------------------------------- }
 function BufferToHex(const Buf; BufSize : Cardinal) : string;
@@ -68,7 +68,7 @@ begin
   Result := False;
   Str := '';
   for i := 1 to Length(Hex) do
-    if CharInSet(UpCase(Hex[i]), ['0'..'9', 'A'..'F']) then
+    if UpCase(Hex[i]).IsInArray(['0','1','2','3','4','5','6','7','8','9', 'A','B','C','D','E','F']) then
       Str := Str + Hex[i];
 
   FillChar(Buf, BufSize, #0);
@@ -84,4 +84,5 @@ begin
 end;
 
 end.
+
 
