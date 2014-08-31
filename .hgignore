@@ -3,7 +3,6 @@ syntax: glob
 *.dsk
 *identcache
 *.~dsk
-*.hpp
 *.tvsconfig
 __history
 Win32
@@ -11,3 +10,5 @@ Win64
 iOSSimulator
 Android
 OSX32
+Debug
+Release
