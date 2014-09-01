@@ -312,7 +312,7 @@ type
     class function Random64(var Seed : TInt64): LongInt; static;
   private
     class procedure Transform(var Buffer : array of DWord; const InBuf : array of DWord); static;
-    class procedure XorMemPrim(var Mem1; const Mem2; Count : Cardinal); static; register;
+    class procedure XorMemPrim(var Mem1; const Mem2; Count : Cardinal); static;
   public
     class procedure GenerateRandomKey(var Key; KeySize : Integer); static;
     class procedure HashELF(var Digest : LongInt; const Buf; BufSize : LongInt); static;
