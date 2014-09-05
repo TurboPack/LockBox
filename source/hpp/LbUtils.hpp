@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2014 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbUtils.pas' rev: 27.00 (Android)
+// (DO NOT EDIT: machine generated header) 'LbUtils.pas' rev: 28.00 (Windows)
 
 #ifndef LbutilsHPP
 #define LbutilsHPP

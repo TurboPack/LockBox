@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2014 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbRSA.pas' rev: 27.00 (Android)
+// (DO NOT EDIT: machine generated header) 'LbRSA.pas' rev: 28.00 (Windows)
 
 #ifndef LbrsaHPP
 #define LbrsaHPP
@@ -114,7 +114,6 @@ public:
 #pragma pack(pop)
 
 class DELPHICLASS TLbRSA;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbRSA : public Lbasym::TLbAsymmetricCipher
 {
 	typedef Lbasym::TLbAsymmetricCipher inherited;
@@ -148,10 +147,8 @@ __published:
 	__property OnProgress;
 };
 
-#pragma pack(pop)
 
 class DELPHICLASS TLbRSASSA;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbRSASSA : public Lbasym::TLbSignature
 {
 	typedef Lbasym::TLbSignature inherited;
@@ -195,7 +192,6 @@ __published:
 	__property OnProgress;
 };
 
-#pragma pack(pop)
 
 struct DECLSPEC_DRECORD TRSA
 {
@@ -228,7 +224,7 @@ public:
 
 
 //-- var, const, procedure ---------------------------------------------------
-static constexpr System::Int8 cRSAMinPadBytes = System::Int8(0xb);
+static const System::Int8 cRSAMinPadBytes = System::Int8(0xb);
 extern DELPHI_PACKAGE System::StaticArray<System::Word, 5> cRSACipherBlockSize;
 extern DELPHI_PACKAGE System::StaticArray<System::Word, 5> cRSAPlainBlockSize;
 }	/* namespace Lbrsa */

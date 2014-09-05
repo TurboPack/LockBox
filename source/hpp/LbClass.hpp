@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2014 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbClass.pas' rev: 27.00 (Android)
+// (DO NOT EDIT: machine generated header) 'LbClass.pas' rev: 28.00 (Windows)
 
 #ifndef LbclassHPP
 #define LbclassHPP
@@ -24,7 +24,6 @@ namespace Lbclass
 {
 //-- type declarations -------------------------------------------------------
 class DELPHICLASS TLBBaseComponent;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLBBaseComponent : public Lbcipher::TLBBase
 {
 	typedef Lbcipher::TLBBase inherited;
@@ -49,12 +48,10 @@ public:
 	
 };
 
-#pragma pack(pop)
 
 enum DECLSPEC_DENUM TLbCipherMode : unsigned char { cmECB, cmCBC };
 
 class DELPHICLASS TLbCipher;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbCipher : public TLBBaseComponent
 {
 	typedef TLBBaseComponent inherited;
@@ -77,10 +74,8 @@ public:
 	
 };
 
-#pragma pack(pop)
 
 class DELPHICLASS TLbSymmetricCipher;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbSymmetricCipher : public TLbCipher
 {
 	typedef TLbCipher inherited;
@@ -100,10 +95,8 @@ public:
 	
 };
 
-#pragma pack(pop)
 
 class DELPHICLASS TLbBlowfish;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbBlowfish : public TLbSymmetricCipher
 {
 	typedef TLbSymmetricCipher inherited;
@@ -134,10 +127,8 @@ public:
 	
 };
 
-#pragma pack(pop)
 
 class DELPHICLASS TLbDES;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbDES : public TLbSymmetricCipher
 {
 	typedef TLbSymmetricCipher inherited;
@@ -168,10 +159,8 @@ public:
 	
 };
 
-#pragma pack(pop)
 
 class DELPHICLASS TLb3DES;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLb3DES : public TLbSymmetricCipher
 {
 	typedef TLbSymmetricCipher inherited;
@@ -202,12 +191,10 @@ public:
 	
 };
 
-#pragma pack(pop)
 
 enum DECLSPEC_DENUM TLbKeySizeRDL : unsigned char { ks128, ks192, ks256 };
 
 class DELPHICLASS TLbRijndael;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbRijndael : public TLbSymmetricCipher
 {
 	typedef TLbSymmetricCipher inherited;
@@ -241,10 +228,8 @@ public:
 	
 };
 
-#pragma pack(pop)
 
 class DELPHICLASS TLbHash;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbHash : public TLBBaseComponent
 {
 	typedef TLBBaseComponent inherited;
@@ -265,10 +250,8 @@ public:
 	
 };
 
-#pragma pack(pop)
 
 class DELPHICLASS TLbMD5;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbMD5 : public TLbHash
 {
 	typedef TLbHash inherited;
@@ -290,10 +273,8 @@ public:
 	
 };
 
-#pragma pack(pop)
 
 class DELPHICLASS TLbSHA1;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbSHA1 : public TLbHash
 {
 	typedef TLbHash inherited;
@@ -315,7 +296,6 @@ public:
 	
 };
 
-#pragma pack(pop)
 
 class DELPHICLASS TLbSCStream;
 #pragma pack(push,4)

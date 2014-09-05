@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2014 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbProc.pas' rev: 27.00 (Android)
+// (DO NOT EDIT: machine generated header) 'LbProc.pas' rev: 28.00 (Windows)
 
 #ifndef LbprocHPP
 #define LbprocHPP
@@ -32,12 +32,16 @@ class PASCALIMPLEMENTATION ECipherException : public System::Sysutils::Exception
 public:
 	/* Exception.Create */ inline __fastcall ECipherException(const System::UnicodeString Msg) : System::Sysutils::Exception(Msg) { }
 	/* Exception.CreateFmt */ inline __fastcall ECipherException(const System::UnicodeString Msg, System::TVarRec const *Args, const int Args_High) : System::Sysutils::Exception(Msg, Args, Args_High) { }
-	/* Exception.CreateRes */ inline __fastcall ECipherException(System::PResStringRec ResStringRec) : System::Sysutils::Exception(ResStringRec) { }
-	/* Exception.CreateResFmt */ inline __fastcall ECipherException(System::PResStringRec ResStringRec, System::TVarRec const *Args, const int Args_High) : System::Sysutils::Exception(ResStringRec, Args, Args_High) { }
+	/* Exception.CreateRes */ inline __fastcall ECipherException(NativeUInt Ident)/* overload */ : System::Sysutils::Exception(Ident) { }
+	/* Exception.CreateRes */ inline __fastcall ECipherException(System::PResStringRec ResStringRec)/* overload */ : System::Sysutils::Exception(ResStringRec) { }
+	/* Exception.CreateResFmt */ inline __fastcall ECipherException(NativeUInt Ident, System::TVarRec const *Args, const int Args_High)/* overload */ : System::Sysutils::Exception(Ident, Args, Args_High) { }
+	/* Exception.CreateResFmt */ inline __fastcall ECipherException(System::PResStringRec ResStringRec, System::TVarRec const *Args, const int Args_High)/* overload */ : System::Sysutils::Exception(ResStringRec, Args, Args_High) { }
 	/* Exception.CreateHelp */ inline __fastcall ECipherException(const System::UnicodeString Msg, int AHelpContext) : System::Sysutils::Exception(Msg, AHelpContext) { }
 	/* Exception.CreateFmtHelp */ inline __fastcall ECipherException(const System::UnicodeString Msg, System::TVarRec const *Args, const int Args_High, int AHelpContext) : System::Sysutils::Exception(Msg, Args, Args_High, AHelpContext) { }
-	/* Exception.CreateResHelp */ inline __fastcall ECipherException(System::PResStringRec ResStringRec, int AHelpContext) : System::Sysutils::Exception(ResStringRec, AHelpContext) { }
-	/* Exception.CreateResFmtHelp */ inline __fastcall ECipherException(System::PResStringRec ResStringRec, System::TVarRec const *Args, const int Args_High, int AHelpContext) : System::Sysutils::Exception(ResStringRec, Args, Args_High, AHelpContext) { }
+	/* Exception.CreateResHelp */ inline __fastcall ECipherException(NativeUInt Ident, int AHelpContext)/* overload */ : System::Sysutils::Exception(Ident, AHelpContext) { }
+	/* Exception.CreateResHelp */ inline __fastcall ECipherException(System::PResStringRec ResStringRec, int AHelpContext)/* overload */ : System::Sysutils::Exception(ResStringRec, AHelpContext) { }
+	/* Exception.CreateResFmtHelp */ inline __fastcall ECipherException(System::PResStringRec ResStringRec, System::TVarRec const *Args, const int Args_High, int AHelpContext)/* overload */ : System::Sysutils::Exception(ResStringRec, Args, Args_High, AHelpContext) { }
+	/* Exception.CreateResFmtHelp */ inline __fastcall ECipherException(NativeUInt Ident, System::TVarRec const *Args, const int Args_High, int AHelpContext)/* overload */ : System::Sysutils::Exception(Ident, Args, Args_High, AHelpContext) { }
 	/* Exception.Destroy */ inline __fastcall virtual ~ECipherException(void) { }
 	
 };
@@ -45,13 +49,11 @@ public:
 #pragma pack(pop)
 
 typedef System::DelphiInterface<System::Sysutils::TProc__2<int,int> > TProgressProc;
-// System::DelphiInterface<System::Sysutils::TProc__2<int,int> > TProgressProc;
 
 struct DECLSPEC_DRECORD TLbProgress
 {
 private:
 	static System::DelphiInterface<System::Sysutils::TProc__2<int,int> > FOnProgress;
-	// System::DelphiInterface<System::Sysutils::TProc__2<int,int> > FOnProgress;
 	static int FProgressSize;
 	
 private:
@@ -60,7 +62,6 @@ private:
 public:
 	/* static */ __property int ProgressSize = {read=FProgressSize, write=FProgressSize};
 	/* static */ __property System::DelphiInterface<System::Sysutils::TProc__2<int,int> > OnProgress = {read=FOnProgress, write=FOnProgress};
-	// static __property System::DelphiInterface<System::Sysutils::TProc__2<int,int> > OnProgress = ...;
 };
 
 

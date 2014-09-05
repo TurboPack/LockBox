@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2014 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbAsym.pas' rev: 27.00 (Android)
+// (DO NOT EDIT: machine generated header) 'LbAsym.pas' rev: 28.00 (Windows)
 
 #ifndef LbasymHPP
 #define LbasymHPP
@@ -73,7 +73,6 @@ public:
 #pragma pack(pop)
 
 class DELPHICLASS TLbAsymmetricCipher;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbAsymmetricCipher : public Lbclass::TLbCipher
 {
 	typedef Lbclass::TLbCipher inherited;
@@ -95,10 +94,8 @@ public:
 	
 };
 
-#pragma pack(pop)
 
 class DELPHICLASS TLbSignature;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbSignature : public Lbclass::TLBBaseComponent
 {
 	typedef Lbclass::TLBBaseComponent inherited;
@@ -126,7 +123,6 @@ public:
 	
 };
 
-#pragma pack(pop)
 
 //-- var, const, procedure ---------------------------------------------------
 static const TLbAsymKeySize cLbDefAsymKeySize = (TLbAsymKeySize)(2);

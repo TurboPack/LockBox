@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2014 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbDSA.pas' rev: 27.00 (Android)
+// (DO NOT EDIT: machine generated header) 'LbDSA.pas' rev: 28.00 (Windows)
 
 #ifndef LbdsaHPP
 #define LbdsaHPP
@@ -35,7 +35,6 @@ typedef void __fastcall (__closure *TLbGetDSABlockEvent)(System::TObject* Sender
 typedef void __fastcall (__closure *TLbDSACallback)(bool &Abort);
 
 class DELPHICLASS TLbDSAParameters;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbDSAParameters : public Lbasym::TLbAsymmetricKey
 {
 	typedef Lbasym::TLbAsymmetricKey inherited;
@@ -77,10 +76,8 @@ public:
 	__property TLbDSACallback Callback = {read=FCallback, write=FCallback};
 };
 
-#pragma pack(pop)
 
 class DELPHICLASS TLbDSAPrivateKey;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbDSAPrivateKey : public TLbDSAParameters
 {
 	typedef TLbDSAParameters inherited;
@@ -104,10 +101,8 @@ public:
 	__property System::UnicodeString XAsString = {read=GetXAsString, write=SetXAsString};
 };
 
-#pragma pack(pop)
 
 class DELPHICLASS TLbDSAPublicKey;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbDSAPublicKey : public TLbDSAParameters
 {
 	typedef TLbDSAParameters inherited;
@@ -130,10 +125,8 @@ public:
 	__property System::UnicodeString YAsString = {read=GetYAsString, write=SetYAsString};
 };
 
-#pragma pack(pop)
 
 class DELPHICLASS TLbDSA;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLbDSA : public Lbasym::TLbSignature
 {
 	typedef Lbasym::TLbSignature inherited;
@@ -196,7 +189,6 @@ __published:
 	__property OnProgress;
 };
 
-#pragma pack(pop)
 
 //-- var, const, procedure ---------------------------------------------------
 }	/* namespace Lbdsa */

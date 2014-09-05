@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2014 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbBigInt.pas' rev: 27.00 (Android)
+// (DO NOT EDIT: machine generated header) 'LbBigInt.pas' rev: 28.00 (Windows)
 
 #ifndef LbbigintHPP
 #define LbbigintHPP
@@ -120,11 +120,11 @@ public:
 #pragma pack(pop)
 
 //-- var, const, procedure ---------------------------------------------------
-static constexpr System::Int8 cLESS_THAN = System::Int8(-1);
-static constexpr System::Int8 cEQUAL_TO = System::Int8(0);
-static constexpr System::Int8 cGREATER_THAN = System::Int8(1);
-static constexpr bool cPOSITIVE = true;
-static constexpr bool cNEGATIVE = false;
+static const System::Int8 cLESS_THAN = System::Int8(-1);
+static const System::Int8 cEQUAL_TO = System::Int8(0);
+static const System::Int8 cGREATER_THAN = System::Int8(1);
+static const bool cPOSITIVE = true;
+static const bool cNEGATIVE = false;
 }	/* namespace Lbbigint */
 #if !defined(DELPHIHEADER_NO_IMPLICIT_NAMESPACE_USE) && !defined(NO_USING_NAMESPACE_LBBIGINT)
 using namespace Lbbigint;

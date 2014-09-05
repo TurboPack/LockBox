@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2014 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbCipher.pas' rev: 27.00 (Android)
+// (DO NOT EDIT: machine generated header) 'LbCipher.pas' rev: 28.00 (Windows)
 
 #ifndef LbcipherHPP
 #define LbcipherHPP
@@ -24,7 +24,6 @@ namespace Lbcipher
 {
 //-- type declarations -------------------------------------------------------
 class DELPHICLASS TLBBase;
-#pragma pack(push,4)
 class PASCALIMPLEMENTATION TLBBase : public System::Classes::TComponent
 {
 	typedef System::Classes::TComponent inherited;
@@ -35,7 +34,6 @@ public:
 	
 };
 
-#pragma pack(pop)
 
 typedef System::StaticArray<int, 512000000> TLongIntArray;
 
@@ -386,9 +384,9 @@ class PASCALIMPLEMENTATION TRDL : public System::TObject
 	
 private:
 	static void __fastcall RdlInvRound(const TRDLBlock &RoundKey, TRDLBlock &State, bool First);
-	static TRDLVector __fastcall RdlRotateVector(const TRDLVector &v, System::Byte Count);
+	static TRDLVector __fastcall RdlRotateVector(TRDLVector v, System::Byte Count);
 	static void __fastcall RdlRound(const TRDLBlock &RoundKey, TRDLBlock &State, bool AFinal);
-	static TRDLVector __fastcall RdlSubVector(const TRDLVector &v);
+	static TRDLVector __fastcall RdlSubVector(TRDLVector v);
 	
 public:
 	static void __fastcall EncryptRDL(const TRDLContext &Context, TRDLBlock &Block);
@@ -482,9 +480,9 @@ public:
 
 
 //-- var, const, procedure ---------------------------------------------------
-static constexpr int MaxStructSize = int(0x7a120000);
-static constexpr System::Int8 BFRounds = System::Int8(0x10);
-static constexpr System::Int8 MaxRDLRounds = System::Int8(0xe);
+static const int MaxStructSize = int(0x7a120000);
+static const System::Int8 BFRounds = System::Int8(0x10);
+static const System::Int8 MaxRDLRounds = System::Int8(0xe);
 }	/* namespace Lbcipher */
 #if !defined(DELPHIHEADER_NO_IMPLICIT_NAMESPACE_USE) && !defined(NO_USING_NAMESPACE_LBCIPHER)
 using namespace Lbcipher;

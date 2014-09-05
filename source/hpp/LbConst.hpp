@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2014 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbConst.pas' rev: 27.00 (Android)
+// (DO NOT EDIT: machine generated header) 'LbConst.pas' rev: 28.00 (Windows)
 
 #ifndef LbconstHPP
 #define LbconstHPP
@@ -21,20 +21,20 @@ namespace Lbconst
 {
 //-- type declarations -------------------------------------------------------
 //-- var, const, procedure ---------------------------------------------------
-static constexpr System::Int8 cBytes128 = System::Int8(0x10);
-static constexpr System::Int8 cBytes160 = System::Int8(0x14);
-static constexpr System::Int8 cBytes192 = System::Int8(0x18);
-static constexpr System::Int8 cBytes256 = System::Int8(0x20);
-static constexpr System::Int8 cBytes512 = System::Int8(0x40);
-static constexpr System::Int8 cBytes768 = System::Int8(0x60);
-static constexpr System::Byte cBytes1024 = System::Byte(0x80);
-static constexpr System::Int8 cDefIterations = System::Int8(0x14);
-static constexpr System::Int8 ASN1_TYPE_SEQUENCE = System::Int8(0x10);
-static constexpr System::Int8 ASN1_TYPE_Integer = System::Int8(0x2);
-static constexpr System::Int8 ASN1_TAG_NUM_MASK = System::Int8(0x1f);
-static constexpr System::Int8 ASN1_TYPE_HIGH_TAG_NUMBER = System::Int8(0x1f);
-static constexpr System::Byte HIGH_BIT_MASK = System::Byte(0x80);
-static constexpr System::Int8 BIT_MASK_7F = System::Int8(0x7f);
+static const System::Int8 cBytes128 = System::Int8(0x10);
+static const System::Int8 cBytes160 = System::Int8(0x14);
+static const System::Int8 cBytes192 = System::Int8(0x18);
+static const System::Int8 cBytes256 = System::Int8(0x20);
+static const System::Int8 cBytes512 = System::Int8(0x40);
+static const System::Int8 cBytes768 = System::Int8(0x60);
+static const System::Byte cBytes1024 = System::Byte(0x80);
+static const System::Int8 cDefIterations = System::Int8(0x14);
+static const System::Int8 ASN1_TYPE_SEQUENCE = System::Int8(0x10);
+static const System::Int8 ASN1_TYPE_Integer = System::Int8(0x2);
+static const System::Int8 ASN1_TAG_NUM_MASK = System::Int8(0x1f);
+static const System::Int8 ASN1_TYPE_HIGH_TAG_NUMBER = System::Int8(0x1f);
+static const System::Byte HIGH_BIT_MASK = System::Byte(0x80);
+static const System::Int8 BIT_MASK_7F = System::Int8(0x7f);
 extern DELPHI_PACKAGE System::ResourceString _sLbVersion;
 #define Lbconst_sLbVersion System::LoadResourceString(&Lbconst::_sLbVersion)
 extern DELPHI_PACKAGE System::ResourceString _sBIBufferUnderflow;
