@@ -49,8 +49,7 @@ package LockBoxDR;
 {$IMAGEBASE $400000}
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'TurboPower LockBox 2.08 Run-time package - RTL200'}
-{$LIBSUFFIX '20'}
+{$DESCRIPTION 'TurboPower LockBox Delphi runtime package'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 
