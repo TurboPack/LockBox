@@ -64,19 +64,23 @@ var
   i, C  : Integer;
   Str   : string;
   Count : Integer;
+  cChar: Char;
 begin
   Result := False;
   Str := '';
-  for i := 1 to Length(Hex) do
-    if UpCase(Hex[i]).IsInArray(['0','1','2','3','4','5','6','7','8','9', 'A','B','C','D','E','F']) then
-      Str := Str + Hex[i];
+  for cChar in Hex do
+  begin
+    if cChar.ToUpper.IsInArray(['0','1','2','3','4','5','6','7','8','9', 'A','B','C','D','E','F']) then
+      Str := Str + cChar;
+  end;
 
   FillChar(Buf, BufSize, #0);
   Count := Min(Length(Hex), BufSize);
 
-  for i := 0 to Count - 1 do begin
-    Val('$' + Copy(Str, (i shl 1) + 1, 2), TByteArray(Buf)[i], C);   {!!.01}
-    if (C <> 0) then
+  for i := 0 to Count - 1 do
+  begin
+    Val('$' + Str.Substring(i shl 1, 2), TByteArray(Buf)[i], C);   {!!.01}
+    if C <> 0 then
       Exit;
   end;
 
