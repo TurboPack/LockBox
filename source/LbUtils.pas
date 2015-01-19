@@ -52,7 +52,7 @@ uses
 { -------------------------------------------------------------------------- }
 function BufferToHex(const Buf; BufSize : Cardinal) : string;
 var
-  I     : LongInt;
+  I     : Integer;
 begin
   Result := '';
   for I := 0 to BufSize - 1 do

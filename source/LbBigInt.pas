@@ -1293,8 +1293,8 @@ var
   factor : byte;
   c : Integer;
   tmp : Integer;
-  sigDivd : longint;
-  lclQT : longint;
+  sigDivd : Integer;
+  lclQT : Integer;
   Carry : WORD;
   plc : integer;                                                          {!!03}  
   lclDVD : LbInteger;
@@ -1416,12 +1416,12 @@ var
   tmpByte : byte;
   tmpInt : integer;
   sigDigit : byte;
-  lclQT : longint;
+  lclQT : Integer;
   lclDVD : LbInteger;
   lclDSR : LbInteger;
   tmpDR : LbInteger;
   tmpBN : LbInteger;
-  sigDivd : longint;
+  sigDivd : Integer;
 begin
   LbBiInit(lclDVD, N1.dwUsed);
   LbBiInit(lclDSR, N1.dwUsed);

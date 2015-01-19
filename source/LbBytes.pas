@@ -60,10 +60,10 @@ type
 
   TRDLBytes = class(TRDLEncrypt)
   public
-    class procedure RDLEncryptBytes(const InBytes: TBytes; var OutBytes: TBytes; const Key; KeySize: Longint; Encrypt: Boolean); static;
-    class procedure RDLEncryptBytesCBC(const InBytes: TBytes; var OutBytes: TBytes; const Key; KeySize: Longint; Encrypt: Boolean); static;
-    class function RDLEncryptBytesCBCEx(const InBytes: TBytes; const Key; KeySize: Longint; Encrypt: Boolean): TBytes; static;
-    class function RDLEncryptBytesEx(const InBytes: TBytes; const Key; KeySize: Longint; Encrypt: Boolean): TBytes; static;
+    class procedure RDLEncryptBytes(const InBytes: TBytes; var OutBytes: TBytes; const Key; KeySize: Integer; Encrypt: Boolean); static;
+    class procedure RDLEncryptBytesCBC(const InBytes: TBytes; var OutBytes: TBytes; const Key; KeySize: Integer; Encrypt: Boolean); static;
+    class function RDLEncryptBytesCBCEx(const InBytes: TBytes; const Key; KeySize: Integer; Encrypt: Boolean): TBytes; static;
+    class function RDLEncryptBytesEx(const InBytes: TBytes; const Key; KeySize: Integer; Encrypt: Boolean): TBytes; static;
   end;
 
   TLbBase64 = record
@@ -305,17 +305,17 @@ end;
 
 { TRDLBytes }
 
-class procedure TRDLBytes.RDLEncryptBytes(const InBytes: TBytes; var OutBytes: TBytes; const Key; KeySize: Longint; Encrypt: Boolean);
+class procedure TRDLBytes.RDLEncryptBytes(const InBytes: TBytes; var OutBytes: TBytes; const Key; KeySize: Integer; Encrypt: Boolean);
 begin
   OutBytes := RDLEncryptBytesEx(InBytes, Key, KeySize, Encrypt);
 end;
 
-class procedure TRDLBytes.RDLEncryptBytesCBC(const InBytes: TBytes; var OutBytes: TBytes; const Key; KeySize: Longint; Encrypt: Boolean);
+class procedure TRDLBytes.RDLEncryptBytesCBC(const InBytes: TBytes; var OutBytes: TBytes; const Key; KeySize: Integer; Encrypt: Boolean);
 begin
   OutBytes := RDLEncryptBytesCBCEx(InBytes, Key, KeySize, Encrypt);
 end;
 
-class function TRDLBytes.RDLEncryptBytesCBCEx(const InBytes: TBytes; const Key; KeySize: Longint; Encrypt: Boolean): TBytes;
+class function TRDLBytes.RDLEncryptBytesCBCEx(const InBytes: TBytes; const Key; KeySize: Integer; Encrypt: Boolean): TBytes;
 var
   InStream  : TMemoryStream;
   OutStream : TMemoryStream;
@@ -345,7 +345,7 @@ begin
   WorkStream.Free;
 end;
 
-class function TRDLBytes.RDLEncryptBytesEx(const InBytes: TBytes; const Key; KeySize: Longint; Encrypt: Boolean): TBytes;
+class function TRDLBytes.RDLEncryptBytesEx(const InBytes: TBytes; const Key; KeySize: Integer; Encrypt: Boolean): TBytes;
 var
   InStream  : TMemoryStream;
   OutStream : TMemoryStream;

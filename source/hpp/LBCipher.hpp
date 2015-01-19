@@ -35,12 +35,12 @@ public:
 };
 
 
-typedef System::StaticArray<int, 512000000> TLongIntArray;
+typedef System::StaticArray<int, 512000000> TIntegerArray;
 
-typedef TLongIntArray *pLongIntArray;
+typedef TIntegerArray *pIntegerArray;
 
 #pragma pack(push,1)
-struct DECLSPEC_DRECORD TLongIntRec
+struct DECLSPEC_DRECORD TIntegerRec
 {
 	union
 	{

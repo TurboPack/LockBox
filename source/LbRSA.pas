@@ -186,20 +186,20 @@ type
     class procedure RSAEncryptBigInt(biBlock : TLbBigInt; Key : TLbRSAKey; BlockType : TRSABlockType; Encrypt : Boolean); static;
     class procedure RSAFormatBlock(biBlock : TLbBigInt; BlockType : TRSABlockType); static;
   public
-    class function DecryptRSA(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock; var OutBlock : TRSAPlainBlock): Longint; static;
-    class function DecryptRSA1024(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock1024; var OutBlock : TRSAPlainBlock1024): Longint; static;
-    class function DecryptRSA128(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock128; var OutBlock : TRSAPlainBlock128): Longint; static;
-    class function DecryptRSA256(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock256; var OutBlock : TRSAPlainBlock256): Longint; static;
-    class function DecryptRSA512(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock512; var OutBlock : TRSAPlainBlock512): Longint; static;
-    class function DecryptRSA768(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock768; var OutBlock : TRSAPlainBlock768): Longint; static;
-    class function DecryptRSAEx(PrivateKey : TLbRSAKey; pInBlock, pOutBlock : PByteArray): Longint; static;
-    class function EncryptRSA(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock; var OutBlock : TRSACipherBlock): Longint; static;
-    class function EncryptRSA1024(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock1024; var OutBlock : TRSACipherBlock1024): Longint; static;
-    class function EncryptRSA128(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock128; var OutBlock : TRSACipherBlock128): Longint; static;
-    class function EncryptRSA256(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock256; var OutBlock : TRSACipherBlock256): Longint; static;
-    class function EncryptRSA512(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock512; var OutBlock : TRSACipherBlock512): Longint; static;
-    class function EncryptRSA768(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock768; var OutBlock : TRSACipherBlock768): Longint; static;
-    class function EncryptRSAEx(PublicKey : TLbRSAKey; pInBlock, pOutBlock : PByteArray; InDataSize : Integer): Longint; static;
+    class function DecryptRSA(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock; var OutBlock : TRSAPlainBlock): Integer; static;
+    class function DecryptRSA1024(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock1024; var OutBlock : TRSAPlainBlock1024): Integer; static;
+    class function DecryptRSA128(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock128; var OutBlock : TRSAPlainBlock128): Integer; static;
+    class function DecryptRSA256(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock256; var OutBlock : TRSAPlainBlock256): Integer; static;
+    class function DecryptRSA512(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock512; var OutBlock : TRSAPlainBlock512): Integer; static;
+    class function DecryptRSA768(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock768; var OutBlock : TRSAPlainBlock768): Integer; static;
+    class function DecryptRSAEx(PrivateKey : TLbRSAKey; pInBlock, pOutBlock : PByteArray): Integer; static;
+    class function EncryptRSA(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock; var OutBlock : TRSACipherBlock): Integer; static;
+    class function EncryptRSA1024(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock1024; var OutBlock : TRSACipherBlock1024): Integer; static;
+    class function EncryptRSA128(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock128; var OutBlock : TRSACipherBlock128): Integer; static;
+    class function EncryptRSA256(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock256; var OutBlock : TRSACipherBlock256): Integer; static;
+    class function EncryptRSA512(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock512; var OutBlock : TRSACipherBlock512): Integer; static;
+    class function EncryptRSA768(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock768; var OutBlock : TRSACipherBlock768): Integer; static;
+    class function EncryptRSAEx(PublicKey : TLbRSAKey; pInBlock, pOutBlock : PByteArray; InDataSize : Integer): Integer; static;
     class procedure GenerateRSAKeys(var PrivateKey, PublicKey : TLbRSAKey); static;
     class procedure GenerateRSAKeysEx(var PrivateKey, PublicKey : TLbRSAKey; KeySize : TLbAsymKeySize; PrimeTestIterations : Byte; Callback : TLbRSACallback); static;
     class procedure RSAEncryptFile(const InFile, OutFile : string; Key : TLbRSAKey; Encrypt : Boolean); static;
@@ -717,7 +717,7 @@ begin
 end;
 
 
-class function TRSA.DecryptRSA(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock; var OutBlock : TRSAPlainBlock): Longint;
+class function TRSA.DecryptRSA(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock; var OutBlock : TRSAPlainBlock): Integer;
   { decrypt ciphertext block with 512-bit RSA private key }
 begin
   Result := DecryptRSA512(PrivateKey, InBlock, OutBlock);            {!!.02}
@@ -725,7 +725,7 @@ end;
 
 
 {!!.02}
-class function TRSA.DecryptRSA1024(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock1024; var OutBlock : TRSAPlainBlock1024): Longint;
+class function TRSA.DecryptRSA1024(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock1024; var OutBlock : TRSAPlainBlock1024): Integer;
   { decrypt ciphertext block with 1024-bit RSA private key }
 begin
   if (PrivateKey.KeySize <> aks1024) then
@@ -735,7 +735,7 @@ end;
 
 
 {!!.02}
-class function TRSA.DecryptRSA128(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock128; var OutBlock : TRSAPlainBlock128): Longint;
+class function TRSA.DecryptRSA128(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock128; var OutBlock : TRSAPlainBlock128): Integer;
   { decrypt ciphertext block with 128-bit RSA private key }
 begin
   if (PrivateKey.KeySize <> aks128) then
@@ -745,7 +745,7 @@ end;
 
 
 {!!.02}
-class function TRSA.DecryptRSA256(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock256; var OutBlock : TRSAPlainBlock256): Longint;
+class function TRSA.DecryptRSA256(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock256; var OutBlock : TRSAPlainBlock256): Integer;
   { decrypt ciphertext block with 256-bit RSA private key }
 begin
   if (PrivateKey.KeySize <> aks256) then
@@ -755,7 +755,7 @@ end;
 
 
 {!!.02}
-class function TRSA.DecryptRSA512(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock512; var OutBlock : TRSAPlainBlock512): Longint;
+class function TRSA.DecryptRSA512(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock512; var OutBlock : TRSAPlainBlock512): Integer;
   { decrypt ciphertext block with 512-bit RSA private key }
 begin
   if (PrivateKey.KeySize <> aks512) then
@@ -765,7 +765,7 @@ end;
 
 
 {!!.02}
-class function TRSA.DecryptRSA768(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock768; var OutBlock : TRSAPlainBlock768): Longint;
+class function TRSA.DecryptRSA768(PrivateKey : TLbRSAKey; const InBlock : TRSACipherBlock768; var OutBlock : TRSAPlainBlock768): Integer;
   { decrypt ciphertext block with 768-bit RSA private key }
 begin
   if (PrivateKey.KeySize <> aks768) then
@@ -775,7 +775,7 @@ end;
 
 
 {!!.02}
-class function TRSA.DecryptRSAEx(PrivateKey : TLbRSAKey; pInBlock, pOutBlock : PByteArray): Longint;
+class function TRSA.DecryptRSAEx(PrivateKey : TLbRSAKey; pInBlock, pOutBlock : PByteArray): Integer;
   { IMPORTANT: verify block sizes before calling this routine }
 var
   biBlock : TLbBigInt;
@@ -798,7 +798,7 @@ begin
 end;
 
 
-class function TRSA.EncryptRSA(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock; var OutBlock : TRSACipherBlock): Longint;
+class function TRSA.EncryptRSA(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock; var OutBlock : TRSACipherBlock): Integer;
   { encrypt plaintext block with 512-bit RSA public key }
 begin
   Result := EncryptRSA512(PublicKey, InBlock, OutBlock);             {!!.02}
@@ -806,7 +806,7 @@ end;
 
 
 {!!.02}
-class function TRSA.EncryptRSA1024(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock1024; var OutBlock : TRSACipherBlock1024): Longint;
+class function TRSA.EncryptRSA1024(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock1024; var OutBlock : TRSACipherBlock1024): Integer;
   { encrypt plaintext block with 1024-bit RSA public key }
 begin
   if (PublicKey.KeySize <> aks1024) then
@@ -816,7 +816,7 @@ end;
 
 
 {!!.02}
-class function TRSA.EncryptRSA128(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock128; var OutBlock : TRSACipherBlock128): Longint;
+class function TRSA.EncryptRSA128(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock128; var OutBlock : TRSACipherBlock128): Integer;
   { encrypt plaintext block with 128-bit RSA public key }
 begin
   if (PublicKey.KeySize <> aks128) then
@@ -826,7 +826,7 @@ end;
 
 
 {!!.02}
-class function TRSA.EncryptRSA256(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock256; var OutBlock : TRSACipherBlock256): Longint;
+class function TRSA.EncryptRSA256(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock256; var OutBlock : TRSACipherBlock256): Integer;
   { encrypt plaintext block with 256-bit RSA public key }
 begin
   if (PublicKey.KeySize <> aks256) then
@@ -836,7 +836,7 @@ end;
 
 
 {!!.02}
-class function TRSA.EncryptRSA512(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock512; var OutBlock : TRSACipherBlock512): Longint;
+class function TRSA.EncryptRSA512(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock512; var OutBlock : TRSACipherBlock512): Integer;
   { encrypt plaintext block with 512-bit RSA public key }
 begin
   if (PublicKey.KeySize <> aks512) then
@@ -846,7 +846,7 @@ end;
 
 
 {!!.02}
-class function TRSA.EncryptRSA768(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock768; var OutBlock : TRSACipherBlock768): Longint;
+class function TRSA.EncryptRSA768(PublicKey : TLbRSAKey; const InBlock : TRSAPlainBlock768; var OutBlock : TRSACipherBlock768): Integer;
   { encrypt plaintext block with 768-bit RSA public key }
 begin
   if (PublicKey.KeySize <> aks768) then
@@ -856,7 +856,7 @@ end;
 
 
 {!!.02}
-class function TRSA.EncryptRSAEx(PublicKey : TLbRSAKey; pInBlock, pOutBlock : PByteArray; InDataSize : Integer): Longint;
+class function TRSA.EncryptRSAEx(PublicKey : TLbRSAKey; pInBlock, pOutBlock : PByteArray; InDataSize : Integer): Integer;
   { IMPORTANT: verify block sizes before calling this routine }
 var
   biBlock : TLbBigInt;

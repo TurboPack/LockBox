@@ -42,16 +42,16 @@ uses
 type
   ECipherException = class(Exception);
 
-  TProgressProc = TProc<LongInt, LongInt>;                                      {!!.06a}
+  TProgressProc = TProc<Integer, Integer>;                                      {!!.06a}
 
   TLbProgress = record
   strict private class var
     FOnProgress: TProgressProc;
-    FProgressSize: LongInt;
+    FProgressSize: Integer;
   private
     class procedure Init; static;
   public
-    class property ProgressSize: LongInt read FProgressSize write FProgressSize;
+    class property ProgressSize: Integer read FProgressSize write FProgressSize;
     class property OnProgress: TProgressProc read FOnProgress write FOnProgress;
   end;
 
@@ -77,10 +77,10 @@ type
 
   TLBCEncrypt = class(TLBC)
   public
-    class procedure LBCEncryptFile(const InFile, OutFile : string; const Key : TKey128; Rounds : LongInt; Encrypt : Boolean); static;
-    class procedure LBCEncryptFileCBC(const InFile, OutFile : string; const Key : TKey128; Rounds : LongInt; Encrypt : Boolean); static;
-    class procedure LBCEncryptStream(InStream, OutStream : TStream; const Key : TKey128; Rounds : LongInt; Encrypt : Boolean); static;
-    class procedure LBCEncryptStreamCBC(InStream, OutStream : TStream; const Key : TKey128; Rounds : LongInt; Encrypt : Boolean); static;
+    class procedure LBCEncryptFile(const InFile, OutFile : string; const Key : TKey128; Rounds : Integer; Encrypt : Boolean); static;
+    class procedure LBCEncryptFileCBC(const InFile, OutFile : string; const Key : TKey128; Rounds : Integer; Encrypt : Boolean); static;
+    class procedure LBCEncryptStream(InStream, OutStream : TStream; const Key : TKey128; Rounds : Integer; Encrypt : Boolean); static;
+    class procedure LBCEncryptStreamCBC(InStream, OutStream : TStream; const Key : TKey128; Rounds : Integer; Encrypt : Boolean); static;
     class procedure LQCEncryptFile(const InFile, OutFile : string; const Key : TKey128; Encrypt : Boolean); static;
     class procedure LQCEncryptFileCBC(const InFile, OutFile : string; const Key : TKey128; Encrypt : Boolean); static;
     class procedure LQCEncryptStream(InStream, OutStream : TStream; const Key : TKey128; Encrypt : Boolean); static;
@@ -94,16 +94,16 @@ type
 
   TRNGEncrypt = class(TRNG)
   public
-    class procedure RNG32EncryptFile(const InFile, OutFile : string; Key : LongInt); static;
-    class procedure RNG64EncryptFile(const InFile, OutFile : string; KeyHi, KeyLo : LongInt); static;
+    class procedure RNG32EncryptFile(const InFile, OutFile : string; Key : Integer); static;
+    class procedure RNG64EncryptFile(const InFile, OutFile : string; KeyHi, KeyLo : Integer); static;
   end;
 
   TRDLEncrypt = class(TRDL)
   public
-    class procedure RDLEncryptFile(const InFile, OutFile : string; const Key; KeySize : Longint; Encrypt : Boolean); static;
-    class procedure RDLEncryptFileCBC(const InFile, OutFile : string; const Key; KeySize : Longint; Encrypt : Boolean); static;
-    class procedure RDLEncryptStream(InStream, OutStream : TStream; const Key; KeySize : Longint; Encrypt : Boolean); static;
-    class procedure RDLEncryptStreamCBC(InStream, OutStream : TStream; const Key; KeySize : Longint; Encrypt : Boolean); static;
+    class procedure RDLEncryptFile(const InFile, OutFile : string; const Key; KeySize : Integer; Encrypt : Boolean); static;
+    class procedure RDLEncryptFileCBC(const InFile, OutFile : string; const Key; KeySize : Integer; Encrypt : Boolean); static;
+    class procedure RDLEncryptStream(InStream, OutStream : TStream; const Key; KeySize : Integer; Encrypt : Boolean); static;
+    class procedure RDLEncryptStreamCBC(InStream, OutStream : TStream; const Key; KeySize : Integer; Encrypt : Boolean); static;
   end;
 
   TMD5Encrypt = class(TMD5)
@@ -161,10 +161,10 @@ end;
 
 class procedure TBlowfishEncrypt.BFEncryptStream(InStream, OutStream : TStream; const Key : TKey128; Encrypt : Boolean);
 var
-  I          : LongInt;
+  I          : Integer;
   Block      : TBFBlock;
   Context    : TBFContext;
-  BlockCount : LongInt;
+  BlockCount : Integer;
 begin
   InitEncryptBF(Key, Context);
 
@@ -220,12 +220,12 @@ end;
 
 class procedure TBlowfishEncrypt.BFEncryptStreamCBC(InStream, OutStream : TStream; const Key : TKey128; Encrypt : Boolean);
 var
-  I : LongInt;
+  I : Integer;
   Block : TBFBlock;
   IV : TBFBlock;
   Work : TBFBlock;
   Context : TBFContext;
-  BlockCount : LongInt;
+  BlockCount : Integer;
 begin
   InitEncryptBF(Key, Context);
 
@@ -340,10 +340,10 @@ end;
 
 class procedure TDESEncrypt.DESEncryptStream(InStream, OutStream : TStream; const Key : TKey64; Encrypt : Boolean);
 var
-  I          : LongInt;
+  I          : Integer;
   Block      : TDESBlock;
   Context    : TDESContext;
-  BlockCount : LongInt;
+  BlockCount : Integer;
 begin
   InitEncryptDES(Key, Context, Encrypt);
 
@@ -399,12 +399,12 @@ end;
 
 class procedure TDESEncrypt.DESEncryptStreamCBC(InStream, OutStream : TStream; const Key : TKey64; Encrypt : Boolean);
 var
-  I          : LongInt;
+  I          : Integer;
   Block      : TDESBlock;
   IV         : TDESBlock;
   Work       : TDESBlock;
   Context    : TDESContext;
-  BlockCount : LongInt;
+  BlockCount : Integer;
 begin
   InitEncryptDES(Key, Context, Encrypt);
 
@@ -519,10 +519,10 @@ end;
 
 class procedure TDESEncrypt.TripleDESEncryptStream(InStream, OutStream : TStream; const Key : TKey128; Encrypt : Boolean);
 var
-  I          : LongInt;
+  I          : Integer;
   Block      : TDESBlock;
   Context    : TTripleDESContext;
-  BlockCount : LongInt;
+  BlockCount : Integer;
 begin
   InitEncryptTripleDES(Key, Context, Encrypt);
 
@@ -578,12 +578,12 @@ end;
 
 class procedure TDESEncrypt.TripleDESEncryptStreamCBC(InStream, OutStream : TStream; const Key : TKey128; Encrypt : Boolean);
 var
-  I          : LongInt;
+  I          : Integer;
   Block      : TDESBlock;
   IV         : TDESBlock;
   Work       : TDESBlock;
   Context    : TTripleDESContext;
-  BlockCount : LongInt;
+  BlockCount : Integer;
 begin
   InitEncryptTripleDES(Key, Context, Encrypt);
 
@@ -664,7 +664,7 @@ end;
 
 { TLBCEncrypt }
 
-class procedure TLBCEncrypt.LBCEncryptFile(const InFile, OutFile : string; const Key : TKey128; Rounds : LongInt; Encrypt : Boolean);
+class procedure TLBCEncrypt.LBCEncryptFile(const InFile, OutFile : string; const Key : TKey128; Rounds : Integer; Encrypt : Boolean);
 var
   InStream, OutStream : TStream;
 begin
@@ -681,7 +681,7 @@ begin
   end;
 end;
 
-class procedure TLBCEncrypt.LBCEncryptFileCBC(const InFile, OutFile : string; const Key : TKey128; Rounds : LongInt; Encrypt : Boolean);
+class procedure TLBCEncrypt.LBCEncryptFileCBC(const InFile, OutFile : string; const Key : TKey128; Rounds : Integer; Encrypt : Boolean);
 var
   InStream, OutStream : TStream;
 begin
@@ -698,12 +698,12 @@ begin
   end;
 end;
 
-class procedure TLBCEncrypt.LBCEncryptStream(InStream, OutStream : TStream; const Key : TKey128; Rounds : LongInt; Encrypt : Boolean);
+class procedure TLBCEncrypt.LBCEncryptStream(InStream, OutStream : TStream; const Key : TKey128; Rounds : Integer; Encrypt : Boolean);
 var
-  I          : LongInt;
+  I          : Integer;
   Block      : TLBCBlock;
   Context    : TLBCContext;
-  BlockCount : LongInt;
+  BlockCount : Integer;
 begin
   InitEncryptLBC(Key, Context, Rounds, Encrypt);
 
@@ -757,14 +757,14 @@ begin
     TLbProgress.OnProgress(InStream.Position, InStream.Size);                            {!!.06a}
 end;
 
-class procedure TLBCEncrypt.LBCEncryptStreamCBC(InStream, OutStream : TStream; const Key : TKey128; Rounds : LongInt; Encrypt : Boolean);
+class procedure TLBCEncrypt.LBCEncryptStreamCBC(InStream, OutStream : TStream; const Key : TKey128; Rounds : Integer; Encrypt : Boolean);
 var
-  I          : LongInt;
+  I          : Integer;
   Block      : TLBCBlock;
   IV         : TLBCBlock;
   Work       : TLBCBlock;
   Context    : TLBCContext;
-  BlockCount : LongInt;
+  BlockCount : Integer;
 begin
   InitEncryptLBC(Key, Context, Rounds, Encrypt);
 
@@ -879,9 +879,9 @@ end;
 
 class procedure TLBCEncrypt.LQCEncryptStream(InStream, OutStream : TStream; const Key : TKey128; Encrypt : Boolean);
 var
-  I          : LongInt;
+  I          : Integer;
   Block      : TLQCBlock;
-  BlockCount : LongInt;
+  BlockCount : Integer;
 begin
   {get the number of blocks in the file}
   BlockCount := (InStream.Size div SizeOf(Block));
@@ -935,11 +935,11 @@ end;
 
 class procedure TLBCEncrypt.LQCEncryptStreamCBC(InStream, OutStream : TStream; const Key : TKey128; Encrypt : Boolean);
 var
-  I          : LongInt;
+  I          : Integer;
   Block      : TLQCBlock;
   IV         : TLQCBlock;
   Work       : TLQCBlock;
-  BlockCount : LongInt;
+  BlockCount : Integer;
 begin
   {get the number of blocks in the file}
   BlockCount := (InStream.Size div SizeOf(Block));
@@ -1021,7 +1021,7 @@ var
   Context   : TLSCContext;
   InStream  : TStream;
   OutStream : TStream;
-  BytesRead : LongInt;
+  BytesRead : Integer;
   Buf       : array[1..2048] of Byte;
 begin
   InitEncryptLSC(Key, KeySize, Context);
@@ -1052,12 +1052,12 @@ end;
 
 { TRNGEncrypt }
 
-class procedure TRNGEncrypt.RNG32EncryptFile(const InFile, OutFile : string; Key : LongInt);
+class procedure TRNGEncrypt.RNG32EncryptFile(const InFile, OutFile : string; Key : Integer);
 var
   Context   : TRNG32Context;
   InStream  : TStream;
   OutStream : TStream;
-  BytesRead : LongInt;
+  BytesRead : Integer;
   Buf       : array[1..2048] of Byte;
 begin
   InitEncryptRNG32(Key, Context);
@@ -1086,12 +1086,12 @@ begin
   end;
 end;
 
-class procedure TRNGEncrypt.RNG64EncryptFile(const InFile, OutFile : string; KeyHi, KeyLo : LongInt);
+class procedure TRNGEncrypt.RNG64EncryptFile(const InFile, OutFile : string; KeyHi, KeyLo : Integer);
 var
   Context   : TRNG64Context;
   InStream  : TStream;
   OutStream : TStream;
-  BytesRead : LongInt;
+  BytesRead : Integer;
   Buf       : array[1..2048] of Byte;
 begin
   InitEncryptRNG64(KeyHi, KeyLo, Context);
@@ -1122,7 +1122,7 @@ end;
 
 { TRDLEncrypt }
 
-class procedure TRDLEncrypt.RDLEncryptFile(const InFile, OutFile : string; const Key; KeySize : Longint; Encrypt : Boolean);
+class procedure TRDLEncrypt.RDLEncryptFile(const InFile, OutFile : string; const Key; KeySize : Integer; Encrypt : Boolean);
 var
   InStream, OutStream : TStream;
 begin
@@ -1139,7 +1139,7 @@ begin
   end;
 end;
 
-class procedure TRDLEncrypt.RDLEncryptFileCBC(const InFile, OutFile : string; const Key; KeySize : Longint; Encrypt : Boolean);
+class procedure TRDLEncrypt.RDLEncryptFileCBC(const InFile, OutFile : string; const Key; KeySize : Integer; Encrypt : Boolean);
 var
   InStream, OutStream : TStream;
 begin
@@ -1156,12 +1156,12 @@ begin
   end;
 end;
 
-class procedure TRDLEncrypt.RDLEncryptStream(InStream, OutStream : TStream; const Key; KeySize : Longint; Encrypt : Boolean);
+class procedure TRDLEncrypt.RDLEncryptStream(InStream, OutStream : TStream; const Key; KeySize : Integer; Encrypt : Boolean);
 var
-  I          : LongInt;
+  I          : Integer;
   Block      : TRDLBlock;
   Context    : TRDLContext;
-  BlockCount : LongInt;
+  BlockCount : Integer;
 begin
   InitEncryptRDL(Key, KeySize, Context, Encrypt);
 
@@ -1215,14 +1215,14 @@ begin
     TLbProgress.OnProgress(InStream.Position, InStream.Size);                            {!!.06a}
 end;
 
-class procedure TRDLEncrypt.RDLEncryptStreamCBC(InStream, OutStream : TStream; const Key; KeySize : Longint; Encrypt : Boolean);
+class procedure TRDLEncrypt.RDLEncryptStreamCBC(InStream, OutStream : TStream; const Key; KeySize : Integer; Encrypt : Boolean);
 var
-  I          : LongInt;
+  I          : Integer;
   Block      : TRDLBlock;
   IV         : TRDLBlock;
   Work       : TRDLBlock;
   Context    : TRDLContext;
-  BlockCount : LongInt;
+  BlockCount : Integer;
 begin
   InitEncryptRDL(Key, KeySize, Context, Encrypt);
 

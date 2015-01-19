@@ -230,8 +230,8 @@ type
     constructor Create(const Key; KeySize : Integer);
     procedure Reinitialize(const Key; KeySize : Integer); virtual;
     procedure ChangeKey(const Key; KeySize : Integer); virtual;
-    function Read(var Buffer; Count : Longint) : Longint; override;
-    function Write(const Buffer; Count : Longint) : Longint; override;
+    function Read(var Buffer; Count : Integer) : Integer; override;
+    function Write(const Buffer; Count : Integer) : Integer; override;
   end;
 
   TLbSCFileStream = class(TFileStream)
@@ -241,52 +241,52 @@ type
     constructor Create(const FileName: string; Mode : Word; const Key; KeySize : Integer);
     procedure Reinitialize(const Key; KeySize : Integer); virtual;
     procedure ChangeKey(const Key; KeySize : Integer); virtual;
-    function Read(var Buffer; Count : Longint) : Longint; override;
-    function Write(const Buffer; Count : Longint) : Longint; override;
+    function Read(var Buffer; Count : Integer) : Integer; override;
+    function Write(const Buffer; Count : Integer) : Integer; override;
   end;
 
   TLbRNG32Stream = class(TMemoryStream)
   strict private
     FContext : TRNG32Context;
   public
-    constructor Create(const Key : LongInt);
-    procedure Reinitialize(const Key : LongInt); virtual;
-    procedure ChangeKey(const Key : LongInt); virtual;
-    function Read(var Buffer; Count : LongInt) : LongInt; override;
-    function Write(const Buffer; Count : LongInt) : LongInt; override;
+    constructor Create(const Key : Integer);
+    procedure Reinitialize(const Key : Integer); virtual;
+    procedure ChangeKey(const Key : Integer); virtual;
+    function Read(var Buffer; Count : Integer) : Integer; override;
+    function Write(const Buffer; Count : Integer) : Integer; override;
   end;
 
   TLbRNG32FileStream = class(TFileStream)
   strict private
     FContext : TRNG32Context;
   public
-    constructor Create(const FileName: string; Mode : Word; const Key : LongInt);
-    procedure Reinitialize(const Key : LongInt); virtual;
-    procedure ChangeKey(const Key : LongInt); virtual;
-    function Read(var Buffer; Count : LongInt) : LongInt; override;
-    function Write(const Buffer; Count : LongInt) : LongInt; override;
+    constructor Create(const FileName: string; Mode : Word; const Key : Integer);
+    procedure Reinitialize(const Key : Integer); virtual;
+    procedure ChangeKey(const Key : Integer); virtual;
+    function Read(var Buffer; Count : Integer) : Integer; override;
+    function Write(const Buffer; Count : Integer) : Integer; override;
   end;
 
   TLbRNG64Stream = class(TMemoryStream)
   strict private
     FContext : TRNG64Context;
   public
-    constructor Create(const KeyHi, KeyLo : LongInt);
-    procedure Reinitialize(const KeyHi, KeyLo : LongInt); virtual;
-    procedure ChangeKey(const KeyHi, KeyLo : LongInt); virtual;
-    function Read(var Buffer; Count : LongInt) : LongInt; override;
-    function Write(const Buffer; Count : LongInt) : LongInt; override;
+    constructor Create(const KeyHi, KeyLo : Integer);
+    procedure Reinitialize(const KeyHi, KeyLo : Integer); virtual;
+    procedure ChangeKey(const KeyHi, KeyLo : Integer); virtual;
+    function Read(var Buffer; Count : Integer) : Integer; override;
+    function Write(const Buffer; Count : Integer) : Integer; override;
   end;
 
   TLbRNG64FileStream = class(TFileStream)
   strict private
     FContext : TRNG64Context;
   public
-    constructor Create(const FileName: string; Mode : Word; const KeyHi, KeyLo : LongInt);
-    procedure Reinitialize(const KeyHi, KeyLo : LongInt); virtual;
-    procedure ChangeKey(const KeyHi, KeyLo : LongInt); virtual;
-    function Read(var Buffer; Count : LongInt) : LongInt; override;
-    function Write(const Buffer; Count : LongInt) : LongInt; override;
+    constructor Create(const FileName: string; Mode : Word; const KeyHi, KeyLo : Integer);
+    procedure Reinitialize(const KeyHi, KeyLo : Integer); virtual;
+    procedure ChangeKey(const KeyHi, KeyLo : Integer); virtual;
+    function Read(var Buffer; Count : Integer) : Integer; override;
+    function Write(const Buffer; Count : Integer) : Integer; override;
   end;
 
 implementation
@@ -796,14 +796,14 @@ begin
   TLSCEncrypt.InitEncryptLSC(Key, KeySize, FContext);
 end;
 
-function TLbSCStream.Read(var Buffer; Count : LongInt) : LongInt;
+function TLbSCStream.Read(var Buffer; Count : Integer) : Integer;
   {-read Count bytes into Buffer, return bytes read}
 begin
   Result := inherited Read(Buffer, Count);
   TLSCEncrypt.EncryptLSC(FContext, Buffer, Count);
 end;
 
-function TLbSCStream.Write(const Buffer; Count : LongInt) : LongInt;
+function TLbSCStream.Write(const Buffer; Count : Integer) : Integer;
   {-write Count bytes to Buffer, return bytes written}
 var
   Buf : Pointer;
@@ -840,14 +840,14 @@ begin
   TLSCEncrypt.InitEncryptLSC(Key, KeySize, FContext);
 end;
 
-function TLbSCFileStream.Read(var Buffer; Count : LongInt) : LongInt;
+function TLbSCFileStream.Read(var Buffer; Count : Integer) : Integer;
   {-read Count bytes into Buffer, return bytes read}
 begin
   Result := inherited Read(Buffer, Count);
   TLSCEncrypt.EncryptLSC(FContext, Buffer, Count);
 end;
 
-function TLbSCFileStream.Write(const Buffer; Count : LongInt) : LongInt;
+function TLbSCFileStream.Write(const Buffer; Count : Integer) : Integer;
   {-write Count bytes to Buffer, return bytes written}
 var
   Buf : Pointer;
@@ -864,34 +864,34 @@ end;
 
 { TLbRNG32Stream }
 
-constructor TLbRNG32Stream.Create(const Key : LongInt);
+constructor TLbRNG32Stream.Create(const Key : Integer);
   {-create the stream and initialize context}
 begin
   inherited Create;
   Reinitialize(Key);
 end;
 
-procedure TLbRNG32Stream.Reinitialize(const Key : LongInt);
+procedure TLbRNG32Stream.Reinitialize(const Key : Integer);
   {-reinitialize context and reposition to beginning of stream}
 begin
   ChangeKey(Key);
   Position := 0;
 end;
 
-procedure TLbRNG32Stream.ChangeKey(const Key : LongInt);
+procedure TLbRNG32Stream.ChangeKey(const Key : Integer);
   {-reinitialize using a new key}
 begin
   TRNGEncrypt.InitEncryptRNG32(Key, FContext);
 end;
 
-function TLbRNG32Stream.Read(var Buffer; Count : LongInt) : LongInt;
+function TLbRNG32Stream.Read(var Buffer; Count : Integer) : Integer;
   {-read Count bytes into Buffer, return bytes read}
 begin
   Result := inherited Read(Buffer, Count);
   TRNGEncrypt.EncryptRNG32(FContext, Buffer, Count);
 end;
 
-function TLbRNG32Stream.Write(const Buffer; Count : LongInt) : LongInt;
+function TLbRNG32Stream.Write(const Buffer; Count : Integer) : Integer;
   {-write Count bytes to Buffer, return bytes written}
 var
   Buf : Pointer;
@@ -908,34 +908,34 @@ end;
 
 { TLbRNG32FileStream }
 
-constructor TLbRNG32FileStream.Create(const FileName: string; Mode : Word; const Key : LongInt);
+constructor TLbRNG32FileStream.Create(const FileName: string; Mode : Word; const Key : Integer);
   {-create the stream and initialize context}
 begin
   inherited Create(FileName, Mode);
   Reinitialize(Key);
 end;
 
-procedure TLbRNG32FileStream.Reinitialize(const Key : LongInt);
+procedure TLbRNG32FileStream.Reinitialize(const Key : Integer);
   {-reinitialize context and reposition to beginning of stream}
 begin
   ChangeKey(Key);
   Position := 0;
 end;
 
-procedure TLbRNG32FileStream.ChangeKey(const Key : LongInt);
+procedure TLbRNG32FileStream.ChangeKey(const Key : Integer);
   {-reinitialize using a new key}
 begin
   TRNGEncrypt.InitEncryptRNG32(Key, FContext);
 end;
 
-function TLbRNG32FileStream.Read(var Buffer; Count : LongInt) : LongInt;
+function TLbRNG32FileStream.Read(var Buffer; Count : Integer) : Integer;
   {-read Count bytes into Buffer, return bytes read}
 begin
   Result := inherited Read(Buffer, Count);
   TRNGEncrypt.EncryptRNG32(FContext, Buffer, Count);
 end;
 
-function TLbRNG32FileStream.Write(const Buffer; Count : LongInt) : LongInt;
+function TLbRNG32FileStream.Write(const Buffer; Count : Integer) : Integer;
   {-write Count bytes to Buffer, return bytes written}
 var
   Buf : Pointer;
@@ -952,34 +952,34 @@ end;
 
 { TLbRNG64Stream }
 
-constructor TLbRNG64Stream.Create(const KeyHi, KeyLo : LongInt);
+constructor TLbRNG64Stream.Create(const KeyHi, KeyLo : Integer);
   {-create the stream and initialize context}
 begin
   inherited Create;
   Reinitialize(KeyHi, KeyLo);
 end;
 
-procedure TLbRNG64Stream.Reinitialize(const KeyHi, KeyLo : LongInt);
+procedure TLbRNG64Stream.Reinitialize(const KeyHi, KeyLo : Integer);
   {-reinitialize context and reposition to beginning of stream}
 begin
   ChangeKey(KeyHi, KeyLo);
   Position := 0;
 end;
 
-procedure TLbRNG64Stream.ChangeKey(const KeyHi, KeyLo : LongInt);
+procedure TLbRNG64Stream.ChangeKey(const KeyHi, KeyLo : Integer);
   {-reinitialize using a new key}
 begin
   TRNGEncrypt.InitEncryptRNG64(KeyHi, KeyLo, FContext);
 end;
 
-function TLbRNG64Stream.Read(var Buffer; Count : LongInt) : LongInt;
+function TLbRNG64Stream.Read(var Buffer; Count : Integer) : Integer;
   {-read Count bytes into Buffer, return bytes read}
 begin
   Result := inherited Read(Buffer, Count);
   TRNGEncrypt.EncryptRNG64(FContext, Buffer, Count);
 end;
 
-function TLbRNG64Stream.Write(const Buffer; Count : LongInt) : LongInt;
+function TLbRNG64Stream.Write(const Buffer; Count : Integer) : Integer;
   {-write Count bytes to Buffer, return bytes written}
 var
   Buf : Pointer;
@@ -996,34 +996,34 @@ end;
 
 { TLbRNG64FileStream }
 
-constructor TLbRNG64FileStream.Create(const FileName: string; Mode : Word; const KeyHi, KeyLo : LongInt);
+constructor TLbRNG64FileStream.Create(const FileName: string; Mode : Word; const KeyHi, KeyLo : Integer);
   {-create the stream and initialize context}
 begin
   inherited Create(FileName, Mode);
   Reinitialize(KeyHi, KeyLo);
 end;
 
-procedure TLbRNG64FileStream.Reinitialize(const KeyHi, KeyLo : LongInt);
+procedure TLbRNG64FileStream.Reinitialize(const KeyHi, KeyLo : Integer);
   {-reinitialize context and reposition to beginning of stream}
 begin
   ChangeKey(KeyHi, KeyLo);
   Position := 0;
 end;
 
-procedure TLbRNG64FileStream.ChangeKey(const KeyHi, KeyLo : LongInt);
+procedure TLbRNG64FileStream.ChangeKey(const KeyHi, KeyLo : Integer);
   {-reinitialize using a new key}
 begin
   TRNGEncrypt.InitEncryptRNG64(KeyHi, KeyLo, FContext);
 end;
 
-function TLbRNG64FileStream.Read(var Buffer; Count : LongInt) : LongInt;
+function TLbRNG64FileStream.Read(var Buffer; Count : Integer) : Integer;
   {-read Count bytes into Buffer, return bytes read}
 begin
   Result := inherited Read(Buffer, Count);
   TRNGEncrypt.EncryptRNG64(FContext, Buffer, Count);
 end;
 
-function TLbRNG64FileStream.Write(const Buffer; Count : LongInt) : LongInt;
+function TLbRNG64FileStream.Write(const Buffer; Count : Integer) : Integer;
   {-write Count bytes to Buffer, return bytes written}
 var
   Buf : Pointer;
