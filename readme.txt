@@ -13,7 +13,7 @@ Table of contents
 1. Introduction
 
 
-LockBox 3 is a Delphi library for cryptography. Currently supported Delphi XE6. 
+LockBox is a Delphi library for cryptography.  
 It provides support for AES, DES, 3DES, Blowfish, Twofish, SHA, MD5, a variety 
 of chaining modes, RSA digital signature and verific...
 
