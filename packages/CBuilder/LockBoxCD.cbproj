@@ -51,7 +51,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <ILINK_Description>TurboPower LockBox CBuilder designtime package</ILINK_Description>
+        <ILINK_Description>TurboPack LockBox CBuilder designtime package</ILINK_Description>
         <DCC_HppOutput>..\..\source\hpp</DCC_HppOutput>
         <SanitizedProjectName>LockBoxCD</SanitizedProjectName>
         <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>

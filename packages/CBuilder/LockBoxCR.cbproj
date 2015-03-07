@@ -91,7 +91,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <ILINK_Description>TurboPower LockBox CBuilder runtime package</ILINK_Description>
+        <ILINK_Description>TurboPack LockBox CBuilder runtime package</ILINK_Description>
         <DCC_HppOutput>..\..\source\hpp</DCC_HppOutput>
         <SanitizedProjectName>LockBoxCR</SanitizedProjectName>
         <DCC_UnitSearchPath>$(BDS)\lib;$(BDS)\lib\$(Platform);$(BDS)\lib\$(Platform)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>

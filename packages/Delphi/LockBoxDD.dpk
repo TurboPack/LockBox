@@ -50,7 +50,7 @@ package LockBoxDD;
 {$IMAGEBASE $400000}
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'TurboPower LockBox Delphi designtime package'}
+{$DESCRIPTION 'TurboPack LockBox Delphi designtime package'}
 {$DESIGNONLY}
 {$IMPLICITBUILD OFF}
 
