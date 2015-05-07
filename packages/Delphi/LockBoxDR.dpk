@@ -33,7 +33,7 @@ package LockBoxDR;
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
-{$LOCALSYMBOLS OFF}
+{$LOCALSYMBOLS ON}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
 {$OPTIMIZATION ON}
@@ -57,16 +57,16 @@ requires
   rtl;
 
 contains
-  LbUtils in '..\..\source\LbUtils.pas',
-  LbBigInt in '..\..\source\LbBigInt.pas',
-  LBCipher in '..\..\source\LBCipher.pas',
-  LbConst in '..\..\source\LbConst.pas',
-  LbRandom in '..\..\source\LbRandom.pas',
   LbAsym in '..\..\source\LbAsym.pas',
-  LbClass in '..\..\source\LbClass.pas',
-  LbDSA in '..\..\source\LbDSA.pas',
-  LbRSA in '..\..\source\LbRSA.pas',
+  LbBigInt in '..\..\source\LbBigInt.pas',
   LbBytes in '..\..\source\LbBytes.pas',
-  LBPROC in '..\..\source\LBPROC.pas';
+  LbCipher in '..\..\source\LbCipher.pas',
+  LbClass in '..\..\source\LbClass.pas',
+  LbConst in '..\..\source\LbConst.pas',
+  LbDSA in '..\..\source\LbDSA.pas',
+  LbProc in '..\..\source\LbProc.pas',
+  LbRandom in '..\..\source\LbRandom.pas',
+  LbRSA in '..\..\source\LbRSA.pas',
+  LbUtils in '..\..\source\LbUtils.pas';
 
 end.

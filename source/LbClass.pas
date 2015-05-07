@@ -61,8 +61,8 @@ type
 
   TLbCipher = class(TLbBaseComponent)
   public
-    function DecryptBuffer(const InBuf; InBufSize : Cardinal; var OutBuf) : Cardinal;
-    function EncryptBuffer(const InBuf; InBufSize : Cardinal; var OutBuf) : Cardinal;
+    function DecryptBuffer(const InBuf; InBufSize : Longint; var OutBuf) : Cardinal;
+    function EncryptBuffer(const InBuf; InBufSize : Longint; var OutBuf) : Cardinal;
 
     procedure DecryptFile(const InFile, OutFile: string); virtual; abstract;
     procedure DecryptStream(InStream , OutStream: TStream); virtual; abstract;
@@ -230,8 +230,8 @@ type
     constructor Create(const Key; KeySize : Integer);
     procedure Reinitialize(const Key; KeySize : Integer); virtual;
     procedure ChangeKey(const Key; KeySize : Integer); virtual;
-    function Read(var Buffer; Count : Integer) : Integer; override;
-    function Write(const Buffer; Count : Integer) : Integer; override;
+    function Read(var Buffer; Count : Longint) : Longint; override;
+    function Write(const Buffer; Count : Longint) : Longint; override;
   end;
 
   TLbSCFileStream = class(TFileStream)
@@ -241,8 +241,8 @@ type
     constructor Create(const FileName: string; Mode : Word; const Key; KeySize : Integer);
     procedure Reinitialize(const Key; KeySize : Integer); virtual;
     procedure ChangeKey(const Key; KeySize : Integer); virtual;
-    function Read(var Buffer; Count : Integer) : Integer; override;
-    function Write(const Buffer; Count : Integer) : Integer; override;
+    function Read(var Buffer; Count : Longint) : Longint; override;
+    function Write(const Buffer; Count : Longint) : Longint; override;
   end;
 
   TLbRNG32Stream = class(TMemoryStream)
@@ -252,8 +252,8 @@ type
     constructor Create(const Key : Integer);
     procedure Reinitialize(const Key : Integer); virtual;
     procedure ChangeKey(const Key : Integer); virtual;
-    function Read(var Buffer; Count : Integer) : Integer; override;
-    function Write(const Buffer; Count : Integer) : Integer; override;
+    function Read(var Buffer; Count : Longint) : Longint; override;
+    function Write(const Buffer; Count : Longint) : Longint; override;
   end;
 
   TLbRNG32FileStream = class(TFileStream)
@@ -263,8 +263,8 @@ type
     constructor Create(const FileName: string; Mode : Word; const Key : Integer);
     procedure Reinitialize(const Key : Integer); virtual;
     procedure ChangeKey(const Key : Integer); virtual;
-    function Read(var Buffer; Count : Integer) : Integer; override;
-    function Write(const Buffer; Count : Integer) : Integer; override;
+    function Read(var Buffer; Count : Longint) : Longint; override;
+    function Write(const Buffer; Count : Longint) : Longint; override;
   end;
 
   TLbRNG64Stream = class(TMemoryStream)
@@ -274,8 +274,8 @@ type
     constructor Create(const KeyHi, KeyLo : Integer);
     procedure Reinitialize(const KeyHi, KeyLo : Integer); virtual;
     procedure ChangeKey(const KeyHi, KeyLo : Integer); virtual;
-    function Read(var Buffer; Count : Integer) : Integer; override;
-    function Write(const Buffer; Count : Integer) : Integer; override;
+    function Read(var Buffer; Count : Longint) : Longint; override;
+    function Write(const Buffer; Count : Longint) : Longint; override;
   end;
 
   TLbRNG64FileStream = class(TFileStream)
@@ -285,8 +285,8 @@ type
     constructor Create(const FileName: string; Mode : Word; const KeyHi, KeyLo : Integer);
     procedure Reinitialize(const KeyHi, KeyLo : Integer); virtual;
     procedure ChangeKey(const KeyHi, KeyLo : Integer); virtual;
-    function Read(var Buffer; Count : Integer) : Integer; override;
-    function Write(const Buffer; Count : Integer) : Integer; override;
+    function Read(var Buffer; Count : Longint) : Longint; override;
+    function Write(const Buffer; Count : Longint) : Longint; override;
   end;
 
 implementation
@@ -323,7 +323,7 @@ end;
 
 { TLbCipher }
 
-function TLbCipher.DecryptBuffer(const InBuf; InBufSize : Cardinal; var OutBuf) : Cardinal;
+function TLbCipher.DecryptBuffer(const InBuf; InBufSize : Longint; var OutBuf) : Cardinal;
 var
   InS, OutS : TMemoryStream;
 begin
@@ -343,7 +343,7 @@ begin
   end;
 end;
 
-function TLbCipher.EncryptBuffer(const InBuf; InBufSize : Cardinal; var OutBuf) : Cardinal;
+function TLbCipher.EncryptBuffer(const InBuf; InBufSize : Longint; var OutBuf) : Cardinal;
 var
   InS, OutS : TMemoryStream;
 begin
@@ -796,14 +796,14 @@ begin
   TLSCEncrypt.InitEncryptLSC(Key, KeySize, FContext);
 end;
 
-function TLbSCStream.Read(var Buffer; Count : Integer) : Integer;
+function TLbSCStream.Read(var Buffer; Count : Longint) : Longint;
   {-read Count bytes into Buffer, return bytes read}
 begin
   Result := inherited Read(Buffer, Count);
   TLSCEncrypt.EncryptLSC(FContext, Buffer, Count);
 end;
 
-function TLbSCStream.Write(const Buffer; Count : Integer) : Integer;
+function TLbSCStream.Write(const Buffer; Count : Longint) : Longint;
   {-write Count bytes to Buffer, return bytes written}
 var
   Buf : Pointer;
@@ -840,14 +840,14 @@ begin
   TLSCEncrypt.InitEncryptLSC(Key, KeySize, FContext);
 end;
 
-function TLbSCFileStream.Read(var Buffer; Count : Integer) : Integer;
+function TLbSCFileStream.Read(var Buffer; Count : Longint) : Longint;
   {-read Count bytes into Buffer, return bytes read}
 begin
   Result := inherited Read(Buffer, Count);
   TLSCEncrypt.EncryptLSC(FContext, Buffer, Count);
 end;
 
-function TLbSCFileStream.Write(const Buffer; Count : Integer) : Integer;
+function TLbSCFileStream.Write(const Buffer; Count : Longint) : Longint;
   {-write Count bytes to Buffer, return bytes written}
 var
   Buf : Pointer;
@@ -884,14 +884,14 @@ begin
   TRNGEncrypt.InitEncryptRNG32(Key, FContext);
 end;
 
-function TLbRNG32Stream.Read(var Buffer; Count : Integer) : Integer;
+function TLbRNG32Stream.Read(var Buffer; Count : Longint) : Longint;
   {-read Count bytes into Buffer, return bytes read}
 begin
   Result := inherited Read(Buffer, Count);
   TRNGEncrypt.EncryptRNG32(FContext, Buffer, Count);
 end;
 
-function TLbRNG32Stream.Write(const Buffer; Count : Integer) : Integer;
+function TLbRNG32Stream.Write(const Buffer; Count : Longint) : Longint;
   {-write Count bytes to Buffer, return bytes written}
 var
   Buf : Pointer;
@@ -928,14 +928,14 @@ begin
   TRNGEncrypt.InitEncryptRNG32(Key, FContext);
 end;
 
-function TLbRNG32FileStream.Read(var Buffer; Count : Integer) : Integer;
+function TLbRNG32FileStream.Read(var Buffer; Count : Longint) : Longint;
   {-read Count bytes into Buffer, return bytes read}
 begin
   Result := inherited Read(Buffer, Count);
   TRNGEncrypt.EncryptRNG32(FContext, Buffer, Count);
 end;
 
-function TLbRNG32FileStream.Write(const Buffer; Count : Integer) : Integer;
+function TLbRNG32FileStream.Write(const Buffer; Count : Longint) : Longint;
   {-write Count bytes to Buffer, return bytes written}
 var
   Buf : Pointer;
@@ -972,14 +972,14 @@ begin
   TRNGEncrypt.InitEncryptRNG64(KeyHi, KeyLo, FContext);
 end;
 
-function TLbRNG64Stream.Read(var Buffer; Count : Integer) : Integer;
+function TLbRNG64Stream.Read(var Buffer; Count : Longint) : Longint;
   {-read Count bytes into Buffer, return bytes read}
 begin
   Result := inherited Read(Buffer, Count);
   TRNGEncrypt.EncryptRNG64(FContext, Buffer, Count);
 end;
 
-function TLbRNG64Stream.Write(const Buffer; Count : Integer) : Integer;
+function TLbRNG64Stream.Write(const Buffer; Count : Longint) : Longint;
   {-write Count bytes to Buffer, return bytes written}
 var
   Buf : Pointer;
@@ -1016,14 +1016,14 @@ begin
   TRNGEncrypt.InitEncryptRNG64(KeyHi, KeyLo, FContext);
 end;
 
-function TLbRNG64FileStream.Read(var Buffer; Count : Integer) : Integer;
+function TLbRNG64FileStream.Read(var Buffer; Count : Longint) : Longint;
   {-read Count bytes into Buffer, return bytes read}
 begin
   Result := inherited Read(Buffer, Count);
   TRNGEncrypt.EncryptRNG64(FContext, Buffer, Count);
 end;
 
-function TLbRNG64FileStream.Write(const Buffer; Count : Integer) : Integer;
+function TLbRNG64FileStream.Write(const Buffer; Count : Longint) : Longint;
   {-write Count bytes to Buffer, return bytes written}
 var
   Buf : Pointer;
