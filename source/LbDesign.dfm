@@ -76,13 +76,13 @@ object LbAboutForm: TLbAboutForm
   object lblWeb: TLabel
     Left = 201
     Top = 86
-    Width = 239
+    Width = 231
     Height = 16
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
     Margins.Bottom = 4
-    Caption = 'http://sourceforge.net/projects/tplockbox'
+    Caption = 'https://github.com/TurboPack/LockBox'
     Color = clBtnFace
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlue
@@ -1339,13 +1339,13 @@ object LbAboutForm: TLbAboutForm
     object lblNews: TLabel
       Left = 14
       Top = 31
-      Width = 332
+      Width = 231
       Height = 16
       Margins.Left = 4
       Margins.Top = 4
       Margins.Right = 4
       Margins.Bottom = 4
-      Caption = 'http://sourceforge.net/forum/forum.php?forum_id=241889'
+      Caption = 'https://github.com/TurboPack/LockBox'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlue
       Font.Height = -14

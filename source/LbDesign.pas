@@ -168,14 +168,14 @@ end;
 { -------------------------------------------------------------------------- }
 procedure TLbAboutForm.lblWebClick(Sender: TObject);
 begin
-  if ShellExecute(Handle, nil, 'http://sourceforge.net/projects/tplockbox', '', '', SW_SHOWNORMAL) <= 32 then
+  if ShellExecute(Handle, nil, 'https://github.com/TurboPack/LockBox', '', '', SW_SHOWNORMAL) <= 32 then
     ShowMessage(SNoStart);
   lblWeb.Font.Color := clBlue;
 end;
 { -------------------------------------------------------------------------- }
 procedure TLbAboutForm.lblNewsClick(Sender: TObject);
 begin
-  if ShellExecute(Handle, nil, 'http://sourceforge.net/forum/forum.php?forum_id=241889', '', '', SW_SHOWNORMAL) <= 32 then
+  if ShellExecute(Handle, nil, 'https://github.com/TurboPack/LockBox', '', '', SW_SHOWNORMAL) <= 32 then
     ShowMessage(SNoStart);
   lblNews.Font.Color := clBlue;
 end;
