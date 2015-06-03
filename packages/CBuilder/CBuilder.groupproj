@@ -6,7 +6,10 @@
         <Projects Include="LockBoxCR.cbproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="LockBoxCD.cbproj">
+        <Projects Include="LockBoxVCLCD.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="LockBoxFMXCD.cbproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -26,23 +29,32 @@
     <Target Name="LockBoxCR:Make">
         <MSBuild Projects="LockBoxCR.cbproj" Targets="Make"/>
     </Target>
-    <Target Name="LockBoxCD">
-        <MSBuild Projects="LockBoxCD.cbproj"/>
+    <Target Name="LockBoxVCLCD">
+        <MSBuild Projects="LockBoxVCLCD.cbproj"/>
     </Target>
-    <Target Name="LockBoxCD:Clean">
-        <MSBuild Projects="LockBoxCD.cbproj" Targets="Clean"/>
+    <Target Name="LockBoxVCLCD:Clean">
+        <MSBuild Projects="LockBoxVCLCD.cbproj" Targets="Clean"/>
     </Target>
-    <Target Name="LockBoxCD:Make">
-        <MSBuild Projects="LockBoxCD.cbproj" Targets="Make"/>
+    <Target Name="LockBoxVCLCD:Make">
+        <MSBuild Projects="LockBoxVCLCD.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="LockBoxFMXCD">
+        <MSBuild Projects="LockBoxFMXCD.cbproj"/>
+    </Target>
+    <Target Name="LockBoxFMXCD:Clean">
+        <MSBuild Projects="LockBoxFMXCD.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="LockBoxFMXCD:Make">
+        <MSBuild Projects="LockBoxFMXCD.cbproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="LockBoxCR;LockBoxCD"/>
+        <CallTarget Targets="LockBoxCR;LockBoxVCLCD;LockBoxFMXCD"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="LockBoxCR:Clean;LockBoxCD:Clean"/>
+        <CallTarget Targets="LockBoxCR:Clean;LockBoxVCLCD:Clean;LockBoxFMXCD:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="LockBoxCR:Make;LockBoxCD:Make"/>
+        <CallTarget Targets="LockBoxCR:Make;LockBoxVCLCD:Make;LockBoxFMXCD:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
