@@ -29,9 +29,8 @@
 {*                       VCL                             *}
 {*********************************************************}
 {$I LockBox.inc}
-{$UNDEF UsingCLX}
 
-unit LbDesign;
+unit Vcl.LbDesign;
 
   {-LockBox About Box and component registration}
 
@@ -106,7 +105,7 @@ implementation
 {$R *.dfm}
 
 uses
-  LbClass, LbAsym, LbRSA, LbDSA, LbKeyEd1, LbKeyEd2,
+  LbClass, LbAsym, LbRSA, LbDSA, Vcl.LbKeyEd1, Vcl.LbKeyEd2,
   LbConst;
 
 

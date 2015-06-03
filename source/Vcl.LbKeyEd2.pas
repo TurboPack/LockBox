@@ -29,9 +29,8 @@
 {*********************************************************}
 
 {$I LockBox.inc}
-{$UNDEF UsingCLX}
-unit LbKeyEd2;
-{$R *.dfm}
+
+unit Vcl.LbKeyEd2;
 
 interface
 
@@ -90,6 +89,8 @@ type
   end;
 
 implementation
+
+{$R *.dfm}
 
 uses
   LbRSA, LbAsym, LbCipher, LbUtils;

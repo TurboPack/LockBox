@@ -29,13 +29,10 @@
 {*                     VCL header                        *}
 {*********************************************************}
 
-{$UNDEF UsingClx}
 {$I LockBox.inc}
 
-unit LbKeyEd1;
+unit Vcl.LbKeyEd1;
   {-TKey128 generation dialog}
-
-{$R *.dfm}
 
 interface
 
@@ -87,6 +84,8 @@ type
   end;
 
 implementation
+
+{$R *.dfm}
 
 uses
   LbUtils, LbCipher;

@@ -61,8 +61,8 @@ requires
   LockBoxDR;
 
 contains
-  LbDesign in '..\..\source\LbDesign.pas',
-  LbKeyEd1 in '..\..\source\LbKeyEd1.pas' {frmSymmetricKey},
-  LbKeyEd2 in '..\..\source\LbKeyEd2.pas' {frmRSAKeys};
+  Vcl.LbDesign in '..\..\source\Vcl.LbDesign.pas' {LbAboutForm},
+  Vcl.LbKeyEd1 in '..\..\source\Vcl.LbKeyEd1.pas' {frmSymmetricKey},
+  Vcl.LbKeyEd2 in '..\..\source\Vcl.LbKeyEd2.pas' {frmRSAKeys};
 
 end.
