@@ -52,7 +52,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
         <ILINK_Description>TurboPack LockBox CBuilder VCL designtime package</ILINK_Description>
-        <DCC_HppOutput>..\..\source\hpp</DCC_HppOutput>
+        <DCC_HppOutput>..\..\source\hpp\$(Platform)\$(Config)</DCC_HppOutput>
         <SanitizedProjectName>LockBoxCD</SanitizedProjectName>
         <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
         <DCC_UnitSearchPath>..\..\source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
@@ -144,6 +144,9 @@
         <PackageImport Include="vclactnband.bpi">
             <BuildOrder>9</BuildOrder>
         </PackageImport>
+        <PackageImport Include="vclimg.bpi">
+            <BuildOrder>12</BuildOrder>
+        </PackageImport>
         <PackageImport Include="vclx.bpi">
             <BuildOrder>10</BuildOrder>
         </PackageImport>
@@ -168,12 +171,9 @@
             <FormType>dfm</FormType>
             <BuildOrder>11</BuildOrder>
         </DelphiCompile>
-        <PackageImport Include="vclimg.bpi">
-            <BuildOrder>12</BuildOrder>
-        </PackageImport>
         <FormResources Include="..\..\source\Vcl.LbDesign.dfm"/>
-        <FormResources Include="..\..\source\Vcl.LbKeyEd1.dfm"/>
         <FormResources Include="..\..\source\Vcl.LbKeyEd2.dfm"/>
+        <FormResources Include="..\..\source\Vcl.LbKeyEd1.dfm"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -649,13 +649,13 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
