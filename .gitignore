@@ -12,3 +12,4 @@ OSX32
 Debug
 Release
 *.stat
+*.res
