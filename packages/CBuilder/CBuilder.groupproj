@@ -7,10 +7,10 @@
             <Dependencies/>
         </Projects>
         <Projects Include="LockBoxVCLCD.cbproj">
-            <Dependencies/>
+            <Dependencies>LockBoxCR.cbproj</Dependencies>
         </Projects>
         <Projects Include="LockBoxFMXCD.cbproj">
-            <Dependencies/>
+            <Dependencies>LockBoxCR.cbproj</Dependencies>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -29,22 +29,22 @@
     <Target Name="LockBoxCR:Make">
         <MSBuild Projects="LockBoxCR.cbproj" Targets="Make"/>
     </Target>
-    <Target Name="LockBoxVCLCD">
+    <Target Name="LockBoxVCLCD" DependsOnTargets="LockBoxCR">
         <MSBuild Projects="LockBoxVCLCD.cbproj"/>
     </Target>
-    <Target Name="LockBoxVCLCD:Clean">
+    <Target Name="LockBoxVCLCD:Clean" DependsOnTargets="LockBoxCR:Clean">
         <MSBuild Projects="LockBoxVCLCD.cbproj" Targets="Clean"/>
     </Target>
-    <Target Name="LockBoxVCLCD:Make">
+    <Target Name="LockBoxVCLCD:Make" DependsOnTargets="LockBoxCR:Make">
         <MSBuild Projects="LockBoxVCLCD.cbproj" Targets="Make"/>
     </Target>
-    <Target Name="LockBoxFMXCD">
+    <Target Name="LockBoxFMXCD" DependsOnTargets="LockBoxCR">
         <MSBuild Projects="LockBoxFMXCD.cbproj"/>
     </Target>
-    <Target Name="LockBoxFMXCD:Clean">
+    <Target Name="LockBoxFMXCD:Clean" DependsOnTargets="LockBoxCR:Clean">
         <MSBuild Projects="LockBoxFMXCD.cbproj" Targets="Clean"/>
     </Target>
-    <Target Name="LockBoxFMXCD:Make">
+    <Target Name="LockBoxFMXCD:Make" DependsOnTargets="LockBoxCR:Make">
         <MSBuild Projects="LockBoxFMXCD.cbproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
