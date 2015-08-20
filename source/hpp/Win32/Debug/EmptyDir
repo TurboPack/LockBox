@@ -1,0 +1,6 @@
+This file exists to force creation of this directory when checking out the
+repository because RAD Studio XE8 cannot automatically create it during
+its build process.  See bug:
+
+https://quality.embarcadero.com/browse/RSP-11657
+"Delphi compiler fails to create output directory for HPP files"
