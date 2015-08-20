@@ -112,7 +112,7 @@
         <ILINK_Description>TurboPack LockBox CBuilder runtime package</ILINK_Description>
         <DCC_HppOutput>..\..\source\hpp\$(Platform)\$(Config)</DCC_HppOutput>
         <SanitizedProjectName>LockBoxCR</SanitizedProjectName>
-        <DCC_UnitSearchPath>$(BDS)\lib;$(BDS)\lib\$(Platform);$(BDS)\lib\$(Platform)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>$(BDS)\lib;$(BDS)\lib\$(Platform);$(BDS)\lib\$(Platform)\$(Config);..\..\source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
         <VerInfo_Locale>4108</VerInfo_Locale>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;$(DCC_Namespace)</DCC_Namespace>
