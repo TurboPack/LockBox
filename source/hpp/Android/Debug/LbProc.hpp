@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2015 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbProc.pas' rev: 29.00 (Android)
+// (DO NOT EDIT: machine generated header) 'LbProc.pas' rev: 30.00 (Android)
 
 #ifndef LbprocHPP
 #define LbprocHPP
@@ -68,6 +68,10 @@ private:
 public:
 	/* static */ __property int ProgressSize = {read=FProgressSize, write=FProgressSize};
 	/* static */ __property System::DelphiInterface<System::Sysutils::TProc__2<int,int> > OnProgress = {read=FOnProgress, write=FOnProgress};
+	
+private:
+	// __classmethod void __fastcall Create_();
+	// __classmethod void __fastcall Destroy_();
 };
 
 

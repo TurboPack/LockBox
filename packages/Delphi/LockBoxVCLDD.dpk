@@ -51,7 +51,7 @@ package LockBoxVCLDD;
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'TurboPack LockBox Delphi Vcl designtime package'}
-{$LIBSUFFIX '220'}
+{$LIBSUFFIX '230'}
 {$DESIGNONLY}
 {$IMPLICITBUILD OFF}
 

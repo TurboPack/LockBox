@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2015 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbCipher.pas' rev: 29.00 (Android)
+// (DO NOT EDIT: machine generated header) 'LbCipher.pas' rev: 30.00 (Android)
 
 #ifndef LbcipherHPP
 #define LbcipherHPP
@@ -65,6 +65,8 @@ typedef TIntegerArray *pIntegerArray;
 #pragma pack(push,1)
 struct DECLSPEC_DRECORD TIntegerRec
 {
+	
+public:
 	union
 	{
 		struct 
@@ -88,6 +90,8 @@ struct DECLSPEC_DRECORD TIntegerRec
 #pragma pack(push,1)
 struct DECLSPEC_DRECORD TInt64
 {
+	
+public:
 	union
 	{
 		struct 
@@ -121,6 +125,8 @@ struct DECLSPEC_DRECORD TInt64
 
 struct DECLSPEC_DRECORD TRDLVector
 {
+	
+public:
 	union
 	{
 		struct 
@@ -166,6 +172,8 @@ typedef System::StaticArray<System::Byte, 16> TRDLBlock;
 
 struct DECLSPEC_DRECORD TDesConverter
 {
+	
+public:
 	union
 	{
 		struct 
@@ -212,6 +220,8 @@ public:
 	bool Encrypt;
 	System::StaticArray<System::Byte, 3> Dummy;
 	int Rounds;
+	
+public:
 	union
 	{
 		struct 
@@ -235,6 +245,8 @@ public:
 	bool Encrypt;
 	System::StaticArray<System::Byte, 3> Dummy;
 	unsigned Rounds;
+	
+public:
 	union
 	{
 		struct 
