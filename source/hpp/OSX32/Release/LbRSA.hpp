@@ -21,7 +21,6 @@
 #include <LbAsym.hpp>
 #include <LbCipher.hpp>
 #include <LbConst.hpp>
-#include <LbClass.hpp>
 
 //-- user supplied -----------------------------------------------------------
 

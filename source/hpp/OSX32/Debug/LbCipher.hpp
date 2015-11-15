@@ -253,7 +253,7 @@ public:
 		};
 		struct 
 		{
-			System::StaticArray<TRDLVector, 57> W;
+			System::StaticArray<TRDLVector, 61> W;
 		};
 		
 	};
