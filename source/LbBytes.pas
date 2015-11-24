@@ -34,6 +34,8 @@ unit LbBytes;
 
 interface
 
+{$I LockBox.inc}
+
 uses
   Classes, SysUtils, LbCipher, LbProc;
 
