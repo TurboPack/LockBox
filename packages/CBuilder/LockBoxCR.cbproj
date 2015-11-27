@@ -126,6 +126,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
         <IntermediateOutputDir>.\$(Platform)\$(Config)</IntermediateOutputDir>
         <IncludePath>..\..\source\;.\$(Platform)\$(Config);$(IncludePath)</IncludePath>
         <DllSuffix>230</DllSuffix>
@@ -139,7 +140,6 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <BCC_InstructionSet>6</BCC_InstructionSet>
-        <DesignOnlyPackage>true</DesignOnlyPackage>
         <OutputExt>bpl</OutputExt>
         <ProjectType>CppPackage</ProjectType>
         <ILINK_GenerateImportLibrary>true</ILINK_GenerateImportLibrary>
