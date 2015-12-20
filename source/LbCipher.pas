@@ -158,7 +158,7 @@ type
     Dummy   : array[0..2] of Byte; {filler}
     Rounds  : DWord;
     case Byte of
-      0 : (W  : array[0..(MaxRDLRounds * 4)] of TRDLVector);
+      0 : (W  : array[0..((MaxRDLRounds + 1) * 4)] of TRDLVector);
       1 : (Rk : array[0..MaxRDLRounds] of TRDLBlock);
     end;
 
