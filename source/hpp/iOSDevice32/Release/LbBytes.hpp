@@ -1,8 +1,8 @@
 ﻿// CodeGear C++Builder
-// Copyright (c) 1995, 2015 by Embarcadero Technologies, Inc.
+// Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbBytes.pas' rev: 30.00 (iOS)
+// (DO NOT EDIT: machine generated header) 'LbBytes.pas' rev: 31.00 (iOS)
 
 #ifndef LbbytesHPP
 #define LbbytesHPP
@@ -87,7 +87,6 @@ public:
 
 #pragma pack(pop)
 
-#pragma pack(push,4)
 struct DECLSPEC_DRECORD TLbBase64
 {
 private:
@@ -98,7 +97,6 @@ public:
 	static void __fastcall LbDecodeBase64(System::Classes::TStream* InStream, System::Classes::TStream* OutStream);
 	static void __fastcall LbEncodeBase64(System::Classes::TStream* InStream, System::Classes::TStream* OutStream);
 };
-#pragma pack(pop)
 
 
 //-- var, const, procedure ---------------------------------------------------

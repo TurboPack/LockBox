@@ -1,8 +1,8 @@
 ﻿// CodeGear C++Builder
-// Copyright (c) 1995, 2015 by Embarcadero Technologies, Inc.
+// Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbCipher.pas' rev: 30.00 (Android)
+// (DO NOT EDIT: machine generated header) 'LbCipher.pas' rev: 31.00 (Android)
 
 #ifndef LbcipherHPP
 #define LbcipherHPP
@@ -487,7 +487,7 @@ private:
 	static int __fastcall Random64(TInt64 &Seed);
 	
 private:
-	static void __fastcall Transform(unsigned *Buffer, const int Buffer_High, unsigned const *InBuf, const int InBuf_High);
+	static void __fastcall Transform(unsigned *Buffer, const int Buffer_High, const unsigned *InBuf, const int InBuf_High);
 	static void __fastcall XorMemPrim(void *Mem1, const void *Mem2, unsigned Count);
 	
 public:
