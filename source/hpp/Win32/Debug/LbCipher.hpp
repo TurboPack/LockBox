@@ -1,8 +1,8 @@
 ﻿// CodeGear C++Builder
-// Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
+// Copyright (c) 1995, 2017 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbCipher.pas' rev: 32.00 (Windows)
+// (DO NOT EDIT: machine generated header) 'LbCipher.pas' rev: 33.00 (Windows)
 
 #ifndef LbcipherHPP
 #define LbcipherHPP
@@ -51,7 +51,7 @@ class PASCALIMPLEMENTATION TLBBase : public System::Classes::TComponent
 	
 public:
 	/* TComponent.Create */ inline __fastcall virtual TLBBase(System::Classes::TComponent* AOwner) : System::Classes::TComponent(AOwner) { }
-	/* TComponent.Destroy */ inline __fastcall virtual ~TLBBase(void) { }
+	/* TComponent.Destroy */ inline __fastcall virtual ~TLBBase() { }
 	
 };
 
@@ -307,8 +307,8 @@ public:
 	static void __fastcall EncryptBFCBC(const TBFContext &Context, const TBFBlock &Prev, TBFBlock &Block, bool Encrypt);
 	static void __fastcall InitEncryptBF(const TKey128 &Key, TBFContext &Context);
 public:
-	/* TObject.Create */ inline __fastcall TBlowfish(void) : System::TObject() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TBlowfish(void) { }
+	/* TObject.Create */ inline __fastcall TBlowfish() : System::TObject() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TBlowfish() { }
 	
 };
 
@@ -335,8 +335,8 @@ public:
 	static void __fastcall InitEncryptTripleDES3Key(const TKey64 &Key1, const TKey64 &Key2, const TKey64 &Key3, TTripleDESContext3Key &Context, bool Encrypt);
 	static void __fastcall ShrinkDESKey(TKey64 &Key);
 public:
-	/* TObject.Create */ inline __fastcall TDES(void) : System::TObject() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TDES(void) { }
+	/* TObject.Create */ inline __fastcall TDES() : System::TObject() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TDES() { }
 	
 };
 
@@ -360,8 +360,8 @@ public:
 	static void __fastcall StringHashSHA1(TSHA1Digest &Digest, const System::DynamicArray<System::Byte> ABytes);
 	static void __fastcall UpdateSHA1(TSHA1Context &Context, const void *Buf, int BufSize);
 public:
-	/* TObject.Create */ inline __fastcall TSHA1(void) : System::TObject() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TSHA1(void) { }
+	/* TObject.Create */ inline __fastcall TSHA1() : System::TObject() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TSHA1() { }
 	
 };
 
@@ -379,8 +379,8 @@ public:
 	static void __fastcall EncryptLQCCBC(const TKey128 &Key, const TLQCBlock &Prev, TLQCBlock &Block, bool Encrypt);
 	static void __fastcall InitEncryptLBC(const TKey128 &Key, TLBCContext &Context, int Rounds, bool Encrypt);
 public:
-	/* TObject.Create */ inline __fastcall TLBC(void) : System::TObject() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TLBC(void) { }
+	/* TObject.Create */ inline __fastcall TLBC() : System::TObject() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TLBC() { }
 	
 };
 
@@ -399,8 +399,8 @@ public:
 	static void __fastcall StringHashMD5(TMD5Digest &Digest, const System::DynamicArray<System::Byte> ABytes);
 	static void __fastcall UpdateMD5(TMD5Context &Context, const void *Buf, int BufSize);
 public:
-	/* TObject.Create */ inline __fastcall TMD5(void) : System::TObject() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TMD5(void) { }
+	/* TObject.Create */ inline __fastcall TMD5() : System::TObject() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TMD5() { }
 	
 };
 
@@ -422,8 +422,8 @@ public:
 	static void __fastcall EncryptRDLCBC(const TRDLContext &Context, const TRDLBlock &Prev, TRDLBlock &Block);
 	static void __fastcall InitEncryptRDL(const void *Key, int KeySize, TRDLContext &Context, bool Encrypt);
 public:
-	/* TObject.Create */ inline __fastcall TRDL(void) : System::TObject() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TRDL(void) { }
+	/* TObject.Create */ inline __fastcall TRDL() : System::TObject() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TRDL() { }
 	
 };
 
@@ -452,8 +452,8 @@ public:
 	static void __fastcall InitEncryptRNG32(int Key, TRNG32Context &Context);
 	static void __fastcall InitEncryptRNG64(int KeyHi, int KeyLo, TRNG64Context &Context);
 public:
-	/* TObject.Create */ inline __fastcall TRNG(void) : System::TObject() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TRNG(void) { }
+	/* TObject.Create */ inline __fastcall TRNG() : System::TObject() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TRNG() { }
 	
 };
 
@@ -468,8 +468,8 @@ public:
 	static void __fastcall EncryptLSC(TLSCContext &Context, void *Buf, int BufSize);
 	static void __fastcall InitEncryptLSC(const void *Key, int KeySize, TLSCContext &Context);
 public:
-	/* TObject.Create */ inline __fastcall TLSC(void) : System::TObject() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TLSC(void) { }
+	/* TObject.Create */ inline __fastcall TLSC() : System::TObject() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TLSC() { }
 	
 };
 

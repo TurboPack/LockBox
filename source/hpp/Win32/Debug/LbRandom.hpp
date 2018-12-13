@@ -1,8 +1,8 @@
 ﻿// CodeGear C++Builder
-// Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
+// Copyright (c) 1995, 2017 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbRandom.pas' rev: 32.00 (Windows)
+// (DO NOT EDIT: machine generated header) 'LbRandom.pas' rev: 33.00 (Windows)
 
 #ifndef LbrandomHPP
 #define LbrandomHPP
@@ -36,11 +36,11 @@ class PASCALIMPLEMENTATION TLbRandomGenerator : public System::TObject
 private:
 	int RandCount;
 	Lbcipher::TMD5Digest Seed;
-	void __fastcall ChurnSeed(void);
+	void __fastcall ChurnSeed();
 	
 public:
-	__fastcall TLbRandomGenerator(void);
-	__fastcall virtual ~TLbRandomGenerator(void);
+	__fastcall TLbRandomGenerator();
+	__fastcall virtual ~TLbRandomGenerator();
 	void __fastcall RandomBytes(void *buff, unsigned len);
 };
 
@@ -53,14 +53,14 @@ class PASCALIMPLEMENTATION TLbRanLFS : public System::TObject
 	
 private:
 	unsigned ShiftRegister;
-	void __fastcall SetSeed(void);
-	System::Byte __fastcall LFS(void);
+	void __fastcall SetSeed();
+	System::Byte __fastcall LFS();
 	
 public:
-	__fastcall TLbRanLFS(void);
+	__fastcall TLbRanLFS();
 	void __fastcall FillBuf(void *buff, unsigned len);
 public:
-	/* TObject.Destroy */ inline __fastcall virtual ~TLbRanLFS(void) { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TLbRanLFS() { }
 	
 };
 

@@ -1,8 +1,8 @@
 ﻿// CodeGear C++Builder
-// Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
+// Copyright (c) 1995, 2017 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbProc.pas' rev: 32.00 (Windows)
+// (DO NOT EDIT: machine generated header) 'LbProc.pas' rev: 33.00 (Windows)
 
 #ifndef LbprocHPP
 #define LbprocHPP
@@ -52,7 +52,7 @@ public:
 	/* Exception.CreateResHelp */ inline __fastcall ECipherException(System::PResStringRec ResStringRec, int AHelpContext)/* overload */ : System::Sysutils::Exception(ResStringRec, AHelpContext) { }
 	/* Exception.CreateResFmtHelp */ inline __fastcall ECipherException(System::PResStringRec ResStringRec, const System::TVarRec *Args, const int Args_High, int AHelpContext)/* overload */ : System::Sysutils::Exception(ResStringRec, Args, Args_High, AHelpContext) { }
 	/* Exception.CreateResFmtHelp */ inline __fastcall ECipherException(NativeUInt Ident, const System::TVarRec *Args, const int Args_High, int AHelpContext)/* overload */ : System::Sysutils::Exception(Ident, Args, Args_High, AHelpContext) { }
-	/* Exception.Destroy */ inline __fastcall virtual ~ECipherException(void) { }
+	/* Exception.Destroy */ inline __fastcall virtual ~ECipherException() { }
 	
 };
 
@@ -90,8 +90,8 @@ public:
 	static void __fastcall BFEncryptStream(System::Classes::TStream* InStream, System::Classes::TStream* OutStream, const Lbcipher::TKey128 &Key, bool Encrypt);
 	static void __fastcall BFEncryptStreamCBC(System::Classes::TStream* InStream, System::Classes::TStream* OutStream, const Lbcipher::TKey128 &Key, bool Encrypt);
 public:
-	/* TObject.Create */ inline __fastcall TBlowfishEncrypt(void) : Lbcipher::TBlowfish() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TBlowfishEncrypt(void) { }
+	/* TObject.Create */ inline __fastcall TBlowfishEncrypt() : Lbcipher::TBlowfish() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TBlowfishEncrypt() { }
 	
 };
 
@@ -112,8 +112,8 @@ public:
 	static void __fastcall TripleDESEncryptStream(System::Classes::TStream* InStream, System::Classes::TStream* OutStream, const Lbcipher::TKey128 &Key, bool Encrypt);
 	static void __fastcall TripleDESEncryptStreamCBC(System::Classes::TStream* InStream, System::Classes::TStream* OutStream, const Lbcipher::TKey128 &Key, bool Encrypt);
 public:
-	/* TObject.Create */ inline __fastcall TDESEncrypt(void) : Lbcipher::TDES() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TDESEncrypt(void) { }
+	/* TObject.Create */ inline __fastcall TDESEncrypt() : Lbcipher::TDES() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TDESEncrypt() { }
 	
 };
 
@@ -134,8 +134,8 @@ public:
 	static void __fastcall LQCEncryptStream(System::Classes::TStream* InStream, System::Classes::TStream* OutStream, const Lbcipher::TKey128 &Key, bool Encrypt);
 	static void __fastcall LQCEncryptStreamCBC(System::Classes::TStream* InStream, System::Classes::TStream* OutStream, const Lbcipher::TKey128 &Key, bool Encrypt);
 public:
-	/* TObject.Create */ inline __fastcall TLBCEncrypt(void) : Lbcipher::TLBC() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TLBCEncrypt(void) { }
+	/* TObject.Create */ inline __fastcall TLBCEncrypt() : Lbcipher::TLBC() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TLBCEncrypt() { }
 	
 };
 
@@ -149,8 +149,8 @@ class PASCALIMPLEMENTATION TLSCEncrypt : public Lbcipher::TLSC
 public:
 	static void __fastcall LSCEncryptFile(const System::UnicodeString InFile, const System::UnicodeString OutFile, const void *Key, int KeySize);
 public:
-	/* TObject.Create */ inline __fastcall TLSCEncrypt(void) : Lbcipher::TLSC() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TLSCEncrypt(void) { }
+	/* TObject.Create */ inline __fastcall TLSCEncrypt() : Lbcipher::TLSC() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TLSCEncrypt() { }
 	
 };
 
@@ -165,8 +165,8 @@ public:
 	static void __fastcall RNG32EncryptFile(const System::UnicodeString InFile, const System::UnicodeString OutFile, int Key);
 	static void __fastcall RNG64EncryptFile(const System::UnicodeString InFile, const System::UnicodeString OutFile, int KeyHi, int KeyLo);
 public:
-	/* TObject.Create */ inline __fastcall TRNGEncrypt(void) : Lbcipher::TRNG() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TRNGEncrypt(void) { }
+	/* TObject.Create */ inline __fastcall TRNGEncrypt() : Lbcipher::TRNG() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TRNGEncrypt() { }
 	
 };
 
@@ -183,8 +183,8 @@ public:
 	static void __fastcall RDLEncryptStream(System::Classes::TStream* InStream, System::Classes::TStream* OutStream, const void *Key, int KeySize, bool Encrypt);
 	static void __fastcall RDLEncryptStreamCBC(System::Classes::TStream* InStream, System::Classes::TStream* OutStream, const void *Key, int KeySize, bool Encrypt);
 public:
-	/* TObject.Create */ inline __fastcall TRDLEncrypt(void) : Lbcipher::TRDL() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TRDLEncrypt(void) { }
+	/* TObject.Create */ inline __fastcall TRDLEncrypt() : Lbcipher::TRDL() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TRDLEncrypt() { }
 	
 };
 
@@ -199,8 +199,8 @@ public:
 	static void __fastcall FileHashMD5(Lbcipher::TMD5Digest &Digest, const System::UnicodeString AFileName);
 	static void __fastcall StreamHashMD5(Lbcipher::TMD5Digest &Digest, System::Classes::TStream* AStream);
 public:
-	/* TObject.Create */ inline __fastcall TMD5Encrypt(void) : Lbcipher::TMD5() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TMD5Encrypt(void) { }
+	/* TObject.Create */ inline __fastcall TMD5Encrypt() : Lbcipher::TMD5() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TMD5Encrypt() { }
 	
 };
 
@@ -215,8 +215,8 @@ public:
 	static void __fastcall FileHashSHA1(Lbcipher::TSHA1Digest &Digest, const System::UnicodeString AFileName);
 	static void __fastcall StreamHashSHA1(Lbcipher::TSHA1Digest &Digest, System::Classes::TStream* AStream);
 public:
-	/* TObject.Create */ inline __fastcall TSHA1Encrypt(void) : Lbcipher::TSHA1() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TSHA1Encrypt(void) { }
+	/* TObject.Create */ inline __fastcall TSHA1Encrypt() : Lbcipher::TSHA1() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TSHA1Encrypt() { }
 	
 };
 

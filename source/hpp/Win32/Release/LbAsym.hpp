@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2017 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbAsym.pas' rev: 32.00 (Windows)
+// (DO NOT EDIT: machine generated header) 'LbAsym.pas' rev: 33.00 (Windows)
 
 #ifndef LbasymHPP
 #define LbasymHPP
@@ -69,7 +69,7 @@ public:
 	__property TLbAsymKeySize KeySize = {read=FKeySize, write=SetKeySize, nodefault};
 	__property System::UnicodeString Passphrase = {read=FPassphrase, write=FPassphrase};
 public:
-	/* TObject.Destroy */ inline __fastcall virtual ~TLbAsymmetricKey(void) { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TLbAsymmetricKey() { }
 	
 };
 
@@ -88,11 +88,11 @@ protected:
 	
 public:
 	__fastcall virtual TLbAsymmetricCipher(System::Classes::TComponent* AOwner);
-	virtual void __fastcall GenerateKeyPair(void) = 0 ;
+	virtual void __fastcall GenerateKeyPair() = 0 ;
 	__property TLbAsymKeySize KeySize = {read=FKeySize, write=SetKeySize, nodefault};
 	__property TLbProgressEvent OnProgress = {read=FOnProgress, write=FOnProgress};
 public:
-	/* TComponent.Destroy */ inline __fastcall virtual ~TLbAsymmetricCipher(void) { }
+	/* TComponent.Destroy */ inline __fastcall virtual ~TLbAsymmetricCipher() { }
 	
 };
 
@@ -108,7 +108,7 @@ protected:
 	
 public:
 	__fastcall virtual TLbSignature(System::Classes::TComponent* AOwner);
-	virtual void __fastcall GenerateKeyPair(void) = 0 ;
+	virtual void __fastcall GenerateKeyPair() = 0 ;
 	virtual void __fastcall SignBuffer(const void *Buf, unsigned BufLen) = 0 ;
 	virtual void __fastcall SignFile(const System::UnicodeString AFileName) = 0 ;
 	virtual void __fastcall SignStream(System::Classes::TStream* AStream) = 0 ;
@@ -120,7 +120,7 @@ public:
 	__property TLbAsymKeySize KeySize = {read=FKeySize, write=SetKeySize, nodefault};
 	__property TLbProgressEvent OnProgress = {read=FOnProgress, write=FOnProgress};
 public:
-	/* TComponent.Destroy */ inline __fastcall virtual ~TLbSignature(void) { }
+	/* TComponent.Destroy */ inline __fastcall virtual ~TLbSignature() { }
 	
 };
 

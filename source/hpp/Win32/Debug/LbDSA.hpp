@@ -1,8 +1,8 @@
 ﻿// CodeGear C++Builder
-// Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
+// Copyright (c) 1995, 2017 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbDSA.pas' rev: 32.00 (Windows)
+// (DO NOT EDIT: machine generated header) 'LbDSA.pas' rev: 33.00 (Windows)
 
 #ifndef LbdsaHPP
 #define LbdsaHPP
@@ -48,12 +48,12 @@ private:
 	TLbDSACallback FCallback;
 	Lbbigint::TLbBigInt* FMostLeast;
 	System::Byte FPrimeTestIterations;
-	bool __fastcall GenerateG(void);
+	bool __fastcall GenerateG();
 	bool __fastcall GenerateP(const TLbDSABlock &ASeed);
 	bool __fastcall GenerateQ(const TLbDSABlock &ASeed);
-	System::UnicodeString __fastcall GetGAsString(void);
-	System::UnicodeString __fastcall GetPAsString(void);
-	System::UnicodeString __fastcall GetQAsString(void);
+	System::UnicodeString __fastcall GetGAsString();
+	System::UnicodeString __fastcall GetPAsString();
+	System::UnicodeString __fastcall GetQAsString();
 	void __fastcall SetGAsString(const System::UnicodeString Value);
 	void __fastcall SetPAsString(const System::UnicodeString Value);
 	void __fastcall SetQAsString(const System::UnicodeString Value);
@@ -66,8 +66,8 @@ protected:
 	
 public:
 	__fastcall virtual TLbDSAParameters(Lbasym::TLbAsymKeySize aKeySize);
-	__fastcall virtual ~TLbDSAParameters(void);
-	virtual void __fastcall Clear(void);
+	__fastcall virtual ~TLbDSAParameters();
+	virtual void __fastcall Clear();
 	void __fastcall CopyDSAParameters(TLbDSAParameters* AKey);
 	bool __fastcall GenerateDSAParameters(const TLbDSABlock &ASeed);
 	__property Lbbigint::TLbBigInt* G = {read=FG};
@@ -88,7 +88,7 @@ class PASCALIMPLEMENTATION TLbDSAPrivateKey : public TLbDSAParameters
 private:
 	Lbbigint::TLbBigInt* FX;
 	TLbDSABlock FXKey;
-	System::UnicodeString __fastcall GetXAsString(void);
+	System::UnicodeString __fastcall GetXAsString();
 	void __fastcall SetXAsString(const System::UnicodeString Value);
 	
 protected:
@@ -97,8 +97,8 @@ protected:
 	
 public:
 	__fastcall virtual TLbDSAPrivateKey(Lbasym::TLbAsymKeySize aKeySize);
-	__fastcall virtual ~TLbDSAPrivateKey(void);
-	virtual void __fastcall Clear(void);
+	__fastcall virtual ~TLbDSAPrivateKey();
+	virtual void __fastcall Clear();
 	void __fastcall GenerateX(const TLbDSABlock &AXKey);
 	__property Lbbigint::TLbBigInt* X = {read=FX};
 	__property System::UnicodeString XAsString = {read=GetXAsString, write=SetXAsString};
@@ -111,7 +111,7 @@ class PASCALIMPLEMENTATION TLbDSAPublicKey : public TLbDSAParameters
 	
 private:
 	Lbbigint::TLbBigInt* FY;
-	System::UnicodeString __fastcall GetYAsString(void);
+	System::UnicodeString __fastcall GetYAsString();
 	void __fastcall SetYAsString(const System::UnicodeString Value);
 	
 protected:
@@ -120,8 +120,8 @@ protected:
 	
 public:
 	__fastcall virtual TLbDSAPublicKey(Lbasym::TLbAsymKeySize aKeySize);
-	__fastcall virtual ~TLbDSAPublicKey(void);
-	virtual void __fastcall Clear(void);
+	__fastcall virtual ~TLbDSAPublicKey();
+	virtual void __fastcall Clear();
 	void __fastcall GenerateY(Lbbigint::TLbBigInt* aX);
 	__property Lbbigint::TLbBigInt* Y = {read=FY};
 	__property System::UnicodeString YAsString = {read=GetYAsString, write=SetYAsString};
@@ -147,8 +147,8 @@ private:
 	void __fastcall SignHash(const Lbcipher::TSHA1Digest &ADigest);
 	bool __fastcall VerifyHash(const Lbcipher::TSHA1Digest &ADigest);
 	void __fastcall RandomBlock(TLbDSABlock &ABlock);
-	void __fastcall DoGetR(void);
-	void __fastcall DoGetS(void);
+	void __fastcall DoGetR();
+	void __fastcall DoGetS();
 	void __fastcall DoGetSeed(TLbDSABlock &ASeed);
 	void __fastcall DoGetXKey(TLbDSABlock &AXKey);
 	void __fastcall DoGetKKey(TLbDSABlock &AKKey);
@@ -161,8 +161,8 @@ protected:
 	
 public:
 	__fastcall virtual TLbDSA(System::Classes::TComponent* AOwner);
-	__fastcall virtual ~TLbDSA(void);
-	virtual void __fastcall GenerateKeyPair(void);
+	__fastcall virtual ~TLbDSA();
+	virtual void __fastcall GenerateKeyPair();
 	virtual void __fastcall SignBuffer(const void *Buf, unsigned BufLen);
 	virtual void __fastcall SignFile(const System::UnicodeString AFileName);
 	virtual void __fastcall SignStream(System::Classes::TStream* AStream);
@@ -171,9 +171,9 @@ public:
 	virtual bool __fastcall VerifyFile(const System::UnicodeString AFileName);
 	virtual bool __fastcall VerifyStream(System::Classes::TStream* AStream);
 	virtual bool __fastcall VerifyString(const System::UnicodeString AStr);
-	void __fastcall Clear(void);
-	bool __fastcall GeneratePQG(void);
-	void __fastcall GenerateXY(void);
+	void __fastcall Clear();
+	bool __fastcall GeneratePQG();
+	void __fastcall GenerateXY();
 	__property TLbDSAPrivateKey* PrivateKey = {read=FPrivateKey};
 	__property TLbDSAPublicKey* PublicKey = {read=FPublicKey};
 	__property Lbbigint::TLbBigInt* SignatureR = {read=FSignatureR};

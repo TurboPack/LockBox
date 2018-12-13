@@ -1,8 +1,8 @@
 ﻿// CodeGear C++Builder
-// Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
+// Copyright (c) 1995, 2017 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbClass.pas' rev: 32.00 (Windows)
+// (DO NOT EDIT: machine generated header) 'LbClass.pas' rev: 33.00 (Windows)
 
 #ifndef LbclassHPP
 #define LbclassHPP
@@ -46,7 +46,7 @@ class PASCALIMPLEMENTATION TLBBaseComponent : public Lbcipher::TLBBase
 	
 private:
 	System::Sysutils::TEncoding* FEncoding;
-	System::UnicodeString __fastcall GetVersion(void);
+	System::UnicodeString __fastcall GetVersion();
 	void __fastcall SetVersion(const System::UnicodeString Value);
 	
 protected:
@@ -60,7 +60,7 @@ public:
 __published:
 	__property System::UnicodeString Version = {read=GetVersion, write=SetVersion, stored=false};
 public:
-	/* TComponent.Destroy */ inline __fastcall virtual ~TLBBaseComponent(void) { }
+	/* TComponent.Destroy */ inline __fastcall virtual ~TLBBaseComponent() { }
 	
 };
 
@@ -85,7 +85,7 @@ public:
 	/* TLBBaseComponent.Create */ inline __fastcall virtual TLbCipher(System::Classes::TComponent* AOwner) : TLBBaseComponent(AOwner) { }
 	
 public:
-	/* TComponent.Destroy */ inline __fastcall virtual ~TLbCipher(void) { }
+	/* TComponent.Destroy */ inline __fastcall virtual ~TLbCipher() { }
 	
 };
 
@@ -99,13 +99,13 @@ private:
 	
 public:
 	virtual void __fastcall GenerateKey(const System::UnicodeString Passphrase) = 0 ;
-	virtual void __fastcall GenerateRandomKey(void) = 0 ;
+	virtual void __fastcall GenerateRandomKey() = 0 ;
 	__property TLbCipherMode CipherMode = {read=FCipherMode, write=FCipherMode, nodefault};
 public:
 	/* TLBBaseComponent.Create */ inline __fastcall virtual TLbSymmetricCipher(System::Classes::TComponent* AOwner) : TLbCipher(AOwner) { }
 	
 public:
-	/* TComponent.Destroy */ inline __fastcall virtual ~TLbSymmetricCipher(void) { }
+	/* TComponent.Destroy */ inline __fastcall virtual ~TLbSymmetricCipher() { }
 	
 };
 
@@ -125,7 +125,7 @@ public:
 	virtual void __fastcall EncryptStream(System::Classes::TStream* InStream, System::Classes::TStream* OutStream);
 	virtual System::UnicodeString __fastcall EncryptString(const System::UnicodeString InString);
 	virtual void __fastcall GenerateKey(const System::UnicodeString Passphrase);
-	virtual void __fastcall GenerateRandomKey(void);
+	virtual void __fastcall GenerateRandomKey();
 	void __fastcall GetKey(Lbcipher::TKey128 &Key);
 	void __fastcall SetKey(const Lbcipher::TKey128 &Key);
 	virtual unsigned __fastcall OutBufSizeNeeded(unsigned InBufSize);
@@ -136,7 +136,7 @@ public:
 	/* TLBBaseComponent.Create */ inline __fastcall virtual TLbBlowfish(System::Classes::TComponent* AOwner) : TLbSymmetricCipher(AOwner) { }
 	
 public:
-	/* TComponent.Destroy */ inline __fastcall virtual ~TLbBlowfish(void) { }
+	/* TComponent.Destroy */ inline __fastcall virtual ~TLbBlowfish() { }
 	
 };
 
@@ -156,7 +156,7 @@ public:
 	virtual void __fastcall EncryptStream(System::Classes::TStream* InStream, System::Classes::TStream* OutStream);
 	virtual System::UnicodeString __fastcall EncryptString(const System::UnicodeString InString);
 	virtual void __fastcall GenerateKey(const System::UnicodeString Passphrase);
-	virtual void __fastcall GenerateRandomKey(void);
+	virtual void __fastcall GenerateRandomKey();
 	void __fastcall GetKey(Lbcipher::TKey64 &Key);
 	void __fastcall SetKey(const Lbcipher::TKey64 &Key);
 	virtual unsigned __fastcall OutBufSizeNeeded(unsigned InBufSize);
@@ -167,7 +167,7 @@ public:
 	/* TLBBaseComponent.Create */ inline __fastcall virtual TLbDES(System::Classes::TComponent* AOwner) : TLbSymmetricCipher(AOwner) { }
 	
 public:
-	/* TComponent.Destroy */ inline __fastcall virtual ~TLbDES(void) { }
+	/* TComponent.Destroy */ inline __fastcall virtual ~TLbDES() { }
 	
 };
 
@@ -187,7 +187,7 @@ public:
 	virtual void __fastcall EncryptStream(System::Classes::TStream* InStream, System::Classes::TStream* OutStream);
 	virtual System::UnicodeString __fastcall EncryptString(const System::UnicodeString InString);
 	virtual void __fastcall GenerateKey(const System::UnicodeString Passphrase);
-	virtual void __fastcall GenerateRandomKey(void);
+	virtual void __fastcall GenerateRandomKey();
 	void __fastcall GetKey(Lbcipher::TKey128 &Key);
 	void __fastcall SetKey(const Lbcipher::TKey128 &Key);
 	virtual unsigned __fastcall OutBufSizeNeeded(unsigned InBufSize);
@@ -198,7 +198,7 @@ public:
 	/* TLBBaseComponent.Create */ inline __fastcall virtual TLb3DES(System::Classes::TComponent* AOwner) : TLbSymmetricCipher(AOwner) { }
 	
 public:
-	/* TComponent.Destroy */ inline __fastcall virtual ~TLb3DES(void) { }
+	/* TComponent.Destroy */ inline __fastcall virtual ~TLb3DES() { }
 	
 };
 
@@ -217,7 +217,7 @@ private:
 	void __fastcall SetKeySize(TLbKeySizeRDL Value);
 	
 public:
-	__fastcall virtual ~TLbRijndael(void);
+	__fastcall virtual ~TLbRijndael();
 	virtual void __fastcall DecryptFile(const System::UnicodeString InFile, const System::UnicodeString OutFile);
 	virtual void __fastcall DecryptStream(System::Classes::TStream* InStream, System::Classes::TStream* OutStream);
 	virtual System::UnicodeString __fastcall DecryptString(const System::UnicodeString InString);
@@ -225,7 +225,7 @@ public:
 	virtual void __fastcall EncryptStream(System::Classes::TStream* InStream, System::Classes::TStream* OutStream);
 	virtual System::UnicodeString __fastcall EncryptString(const System::UnicodeString InString);
 	virtual void __fastcall GenerateKey(const System::UnicodeString Passphrase);
-	virtual void __fastcall GenerateRandomKey(void);
+	virtual void __fastcall GenerateRandomKey();
 	void __fastcall GetKey(void *Key);
 	void __fastcall SetKey(const void *Key);
 	virtual unsigned __fastcall OutBufSizeNeeded(unsigned InBufSize);
@@ -255,7 +255,7 @@ public:
 	/* TLBBaseComponent.Create */ inline __fastcall virtual TLbHash(System::Classes::TComponent* AOwner) : TLBBaseComponent(AOwner) { }
 	
 public:
-	/* TComponent.Destroy */ inline __fastcall virtual ~TLbHash(void) { }
+	/* TComponent.Destroy */ inline __fastcall virtual ~TLbHash() { }
 	
 };
 
@@ -277,7 +277,7 @@ public:
 	/* TLBBaseComponent.Create */ inline __fastcall virtual TLbMD5(System::Classes::TComponent* AOwner) : TLbHash(AOwner) { }
 	
 public:
-	/* TComponent.Destroy */ inline __fastcall virtual ~TLbMD5(void) { }
+	/* TComponent.Destroy */ inline __fastcall virtual ~TLbMD5() { }
 	
 };
 
@@ -299,7 +299,7 @@ public:
 	/* TLBBaseComponent.Create */ inline __fastcall virtual TLbSHA1(System::Classes::TComponent* AOwner) : TLbHash(AOwner) { }
 	
 public:
-	/* TComponent.Destroy */ inline __fastcall virtual ~TLbSHA1(void) { }
+	/* TComponent.Destroy */ inline __fastcall virtual ~TLbSHA1() { }
 	
 };
 
@@ -319,7 +319,7 @@ public:
 	virtual int __fastcall Read(void *Buffer, int Count)/* overload */;
 	virtual int __fastcall Write(const void *Buffer, int Count)/* overload */;
 public:
-	/* TMemoryStream.Destroy */ inline __fastcall virtual ~TLbSCStream(void) { }
+	/* TMemoryStream.Destroy */ inline __fastcall virtual ~TLbSCStream() { }
 	
 	/* Hoisted overloads: */
 	
@@ -348,7 +348,7 @@ public:
 	virtual int __fastcall Read(void *Buffer, int Count)/* overload */;
 	virtual int __fastcall Write(const void *Buffer, int Count)/* overload */;
 public:
-	/* TFileStream.Destroy */ inline __fastcall virtual ~TLbSCFileStream(void) { }
+	/* TFileStream.Destroy */ inline __fastcall virtual ~TLbSCFileStream() { }
 	
 	/* Hoisted overloads: */
 	
@@ -377,7 +377,7 @@ public:
 	virtual int __fastcall Read(void *Buffer, int Count)/* overload */;
 	virtual int __fastcall Write(const void *Buffer, int Count)/* overload */;
 public:
-	/* TMemoryStream.Destroy */ inline __fastcall virtual ~TLbRNG32Stream(void) { }
+	/* TMemoryStream.Destroy */ inline __fastcall virtual ~TLbRNG32Stream() { }
 	
 	/* Hoisted overloads: */
 	
@@ -406,7 +406,7 @@ public:
 	virtual int __fastcall Read(void *Buffer, int Count)/* overload */;
 	virtual int __fastcall Write(const void *Buffer, int Count)/* overload */;
 public:
-	/* TFileStream.Destroy */ inline __fastcall virtual ~TLbRNG32FileStream(void) { }
+	/* TFileStream.Destroy */ inline __fastcall virtual ~TLbRNG32FileStream() { }
 	
 	/* Hoisted overloads: */
 	
@@ -435,7 +435,7 @@ public:
 	virtual int __fastcall Read(void *Buffer, int Count)/* overload */;
 	virtual int __fastcall Write(const void *Buffer, int Count)/* overload */;
 public:
-	/* TMemoryStream.Destroy */ inline __fastcall virtual ~TLbRNG64Stream(void) { }
+	/* TMemoryStream.Destroy */ inline __fastcall virtual ~TLbRNG64Stream() { }
 	
 	/* Hoisted overloads: */
 	
@@ -464,7 +464,7 @@ public:
 	virtual int __fastcall Read(void *Buffer, int Count)/* overload */;
 	virtual int __fastcall Write(const void *Buffer, int Count)/* overload */;
 public:
-	/* TFileStream.Destroy */ inline __fastcall virtual ~TLbRNG64FileStream(void) { }
+	/* TFileStream.Destroy */ inline __fastcall virtual ~TLbRNG64FileStream() { }
 	
 	/* Hoisted overloads: */
 	

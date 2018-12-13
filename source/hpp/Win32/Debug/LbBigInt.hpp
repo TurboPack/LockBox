@@ -1,8 +1,8 @@
 ﻿// CodeGear C++Builder
-// Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
+// Copyright (c) 1995, 2017 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbBigInt.pas' rev: 32.00 (Windows)
+// (DO NOT EDIT: machine generated header) 'LbBigInt.pas' rev: 33.00 (Windows)
 
 #ifndef LbbigintHPP
 #define LbbigintHPP
@@ -56,14 +56,14 @@ class PASCALIMPLEMENTATION TLbBigInt : public System::TObject
 protected:
 	LbInteger FI;
 	void __fastcall setSign(bool value);
-	bool __fastcall getSign(void);
-	int __fastcall GetSize(void);
-	System::UnicodeString __fastcall GetIntStr(void);
-	System::PByte __fastcall GetIntBuf(void);
+	bool __fastcall getSign();
+	int __fastcall GetSize();
+	System::UnicodeString __fastcall GetIntStr();
+	System::PByte __fastcall GetIntBuf();
 	
 public:
 	__fastcall TLbBigInt(int ALen);
-	__fastcall virtual ~TLbBigInt(void);
+	__fastcall virtual ~TLbBigInt();
 	void __fastcall Add(TLbBigInt* I2);
 	void __fastcall Subtract(TLbBigInt* I2);
 	void __fastcall Multiply(TLbBigInt* I2);
@@ -76,17 +76,17 @@ public:
 	void __fastcall MultiplyByte(System::Byte b);
 	void __fastcall DivideByte(System::Byte b);
 	void __fastcall ModByte(System::Byte b);
-	void __fastcall Clear(void);
-	void __fastcall Trim(void);
+	void __fastcall Clear();
+	void __fastcall Trim();
 	System::Int8 __fastcall Compare(TLbBigInt* I2);
-	bool __fastcall IsZero(void);
-	bool __fastcall IsOne(void);
-	bool __fastcall IsOdd(void);
-	bool __fastcall IsEven(void);
+	bool __fastcall IsZero();
+	bool __fastcall IsOne();
+	bool __fastcall IsOdd();
+	bool __fastcall IsEven();
 	bool __fastcall IsComposite(unsigned Iterations);
 	System::Int8 __fastcall Abs(TLbBigInt* I2);
-	void __fastcall ReverseBits(void);
-	void __fastcall ReverseBytes(void);
+	void __fastcall ReverseBits();
+	void __fastcall ReverseBytes();
 	bool __fastcall GetBit(int bit);
 	void __fastcall Shr_(int _shr);
 	void __fastcall Shl_(int _shl);
@@ -94,7 +94,7 @@ public:
 	void __fastcall XOR_(TLbBigInt* I2);
 	void __fastcall RandomBytes(unsigned Count);
 	void __fastcall RandomPrime(System::Byte Iterations);
-	void __fastcall RandomSimplePrime(void);
+	void __fastcall RandomSimplePrime();
 	void __fastcall Copy(TLbBigInt* I2);
 	void __fastcall CopyLen(TLbBigInt* I2, int Len);
 	void __fastcall CopyByte(System::Byte b);

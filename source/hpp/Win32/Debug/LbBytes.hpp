@@ -1,8 +1,8 @@
 ﻿// CodeGear C++Builder
-// Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
+// Copyright (c) 1995, 2017 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbBytes.pas' rev: 32.00 (Windows)
+// (DO NOT EDIT: machine generated header) 'LbBytes.pas' rev: 33.00 (Windows)
 
 #ifndef LbbytesHPP
 #define LbbytesHPP
@@ -40,8 +40,8 @@ public:
 	static System::DynamicArray<System::Byte> __fastcall BFEncryptBytesCBCEx(const System::DynamicArray<System::Byte> InBytes, const Lbcipher::TKey128 &Key, bool Encrypt);
 	static System::DynamicArray<System::Byte> __fastcall BFEncryptBytesEx(const System::DynamicArray<System::Byte> InBytes, const Lbcipher::TKey128 &Key, bool Encrypt);
 public:
-	/* TObject.Create */ inline __fastcall TBlowfishBytes(void) : Lbproc::TBlowfishEncrypt() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TBlowfishBytes(void) { }
+	/* TObject.Create */ inline __fastcall TBlowfishBytes() : Lbproc::TBlowfishEncrypt() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TBlowfishBytes() { }
 	
 };
 
@@ -62,8 +62,8 @@ public:
 	static System::DynamicArray<System::Byte> __fastcall TripleDESEncryptBytesCBCEx(const System::DynamicArray<System::Byte> InBytes, const Lbcipher::TKey128 &Key, bool Encrypt);
 	static System::DynamicArray<System::Byte> __fastcall TripleDESEncryptBytesEx(const System::DynamicArray<System::Byte> InBytes, const Lbcipher::TKey128 &Key, bool Encrypt);
 public:
-	/* TObject.Create */ inline __fastcall TDESBytes(void) : Lbproc::TDESEncrypt() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TDESBytes(void) { }
+	/* TObject.Create */ inline __fastcall TDESBytes() : Lbproc::TDESEncrypt() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TDESBytes() { }
 	
 };
 
@@ -80,8 +80,8 @@ public:
 	static System::DynamicArray<System::Byte> __fastcall RDLEncryptBytesCBCEx(const System::DynamicArray<System::Byte> InBytes, const void *Key, int KeySize, bool Encrypt);
 	static System::DynamicArray<System::Byte> __fastcall RDLEncryptBytesEx(const System::DynamicArray<System::Byte> InBytes, const void *Key, int KeySize, bool Encrypt);
 public:
-	/* TObject.Create */ inline __fastcall TRDLBytes(void) : Lbproc::TRDLEncrypt() { }
-	/* TObject.Destroy */ inline __fastcall virtual ~TRDLBytes(void) { }
+	/* TObject.Create */ inline __fastcall TRDLBytes() : Lbproc::TRDLEncrypt() { }
+	/* TObject.Destroy */ inline __fastcall virtual ~TRDLBytes() { }
 	
 };
 

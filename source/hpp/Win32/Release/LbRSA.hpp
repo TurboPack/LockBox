@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2017 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbRSA.pas' rev: 32.00 (Windows)
+// (DO NOT EDIT: machine generated header) 'LbRSA.pas' rev: 33.00 (Windows)
 
 #ifndef LbrsaHPP
 #define LbrsaHPP
@@ -94,9 +94,9 @@ class PASCALIMPLEMENTATION TLbRSAKey : public Lbasym::TLbAsymmetricKey
 private:
 	Lbbigint::TLbBigInt* FModulus;
 	Lbbigint::TLbBigInt* FExponent;
-	System::UnicodeString __fastcall GetModulusAsString(void);
+	System::UnicodeString __fastcall GetModulusAsString();
 	void __fastcall SetModulusAsString(System::UnicodeString Value);
-	System::UnicodeString __fastcall GetExponentAsString(void);
+	System::UnicodeString __fastcall GetExponentAsString();
 	void __fastcall SetExponentAsString(System::UnicodeString Value);
 	
 protected:
@@ -105,9 +105,9 @@ protected:
 	
 public:
 	__fastcall virtual TLbRSAKey(Lbasym::TLbAsymKeySize aKeySize);
-	__fastcall virtual ~TLbRSAKey(void);
+	__fastcall virtual ~TLbRSAKey();
 	virtual void __fastcall Assign(Lbasym::TLbAsymmetricKey* aKey);
-	void __fastcall Clear(void);
+	void __fastcall Clear();
 	__property Lbbigint::TLbBigInt* Modulus = {read=FModulus};
 	__property System::UnicodeString ModulusAsString = {read=GetModulusAsString, write=SetModulusAsString};
 	__property Lbbigint::TLbBigInt* Exponent = {read=FExponent};
@@ -130,14 +130,14 @@ protected:
 	
 public:
 	__fastcall virtual TLbRSA(System::Classes::TComponent* AOwner);
-	__fastcall virtual ~TLbRSA(void);
+	__fastcall virtual ~TLbRSA();
 	virtual void __fastcall DecryptFile(const System::UnicodeString InFile, const System::UnicodeString OutFile);
 	virtual void __fastcall DecryptStream(System::Classes::TStream* InStream, System::Classes::TStream* OutStream);
 	virtual System::UnicodeString __fastcall DecryptString(const System::UnicodeString InString);
 	virtual void __fastcall EncryptFile(const System::UnicodeString InFile, const System::UnicodeString OutFile);
 	virtual void __fastcall EncryptStream(System::Classes::TStream* InStream, System::Classes::TStream* OutStream);
 	virtual System::UnicodeString __fastcall EncryptString(const System::UnicodeString InString);
-	virtual void __fastcall GenerateKeyPair(void);
+	virtual void __fastcall GenerateKeyPair();
 	virtual unsigned __fastcall OutBufSizeNeeded(unsigned InBufSize);
 	void __fastcall RSACallback(bool &Abort);
 	__property TLbRSAKey* PrivateKey = {read=FPrivateKey};
@@ -161,7 +161,7 @@ private:
 	System::Byte FPrimeTestIterations;
 	Lbbigint::TLbBigInt* FSignature;
 	TLbRSAGetSignatureEvent FOnGetSignature;
-	void __fastcall DoGetSignature(void);
+	void __fastcall DoGetSignature();
 	void __fastcall EncryptHash(const void *HashDigest, unsigned DigestLen);
 	void __fastcall DecryptHash(void *HashDigest, unsigned DigestLen);
 	void __fastcall RSACallback(bool &Abort);
@@ -171,8 +171,8 @@ protected:
 	
 public:
 	__fastcall virtual TLbRSASSA(System::Classes::TComponent* AOwner);
-	__fastcall virtual ~TLbRSASSA(void);
-	virtual void __fastcall GenerateKeyPair(void);
+	__fastcall virtual ~TLbRSASSA();
+	virtual void __fastcall GenerateKeyPair();
 	virtual void __fastcall SignBuffer(const void *Buf, unsigned BufLen);
 	virtual void __fastcall SignFile(const System::UnicodeString AFileName);
 	virtual void __fastcall SignStream(System::Classes::TStream* AStream);
