@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbCipher.pas' rev: 31.00 (Windows)
+// (DO NOT EDIT: machine generated header) 'LbCipher.pas' rev: 32.00 (Windows)
 
 #ifndef LbcipherHPP
 #define LbcipherHPP
@@ -121,6 +121,7 @@ public:
 #pragma pack(pop)
 
 
+#pragma pack(push,1)
 struct DECLSPEC_DRECORD TRDLVector
 {
 	
@@ -138,6 +139,7 @@ public:
 		
 	};
 };
+#pragma pack(pop)
 
 
 typedef System::StaticArray<System::Byte, 8> TKey64;

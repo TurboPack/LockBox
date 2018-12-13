@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LockBoxDR.dpk' rev: 31.00 (iOSSIM)
+// (DO NOT EDIT: machine generated header) 'LockBoxDR.dpk' rev: 32.00 (iOSSIM)
 
 #ifndef LockboxdrHPP
 #define LockboxdrHPP
@@ -25,6 +25,12 @@
 #include <LbRandom.hpp>
 #include <LbRSA.hpp>
 #include <LbUtils.hpp>
+// SO_PFX: bpl
+// SO_SFX: 250
+// PRG_EXT: .a
+// BPI_DIR: C:\Users\Public\Documents\Embarcadero\Studio\19.0\Dcp\iOSSimulator
+// OBJ_DIR: C:\Users\Public\Documents\Embarcadero\Studio\19.0\Dcp\iOSSimulator
+// OBJ_EXT: .o
 
 //-- user supplied -----------------------------------------------------------
 

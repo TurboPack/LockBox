@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbBytes.pas' rev: 31.00 (Windows)
+// (DO NOT EDIT: machine generated header) 'LbBytes.pas' rev: 32.00 (Windows)
 
 #ifndef LbbytesHPP
 #define LbbytesHPP

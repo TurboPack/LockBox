@@ -50,7 +50,7 @@ package LockBoxDR;
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'TurboPack LockBox Delphi runtime package'}
-{$LIBSUFFIX '240'}
+{$LIBSUFFIX '250'}
 {$RUNONLY}
 {$IMPLICITBUILD OFF}
 

@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LockBoxDR.dpk' rev: 31.00 (MacOS)
+// (DO NOT EDIT: machine generated header) 'LockBoxDR.dpk' rev: 32.00 (MacOS)
 
 #ifndef LockboxdrHPP
 #define LockboxdrHPP
@@ -74,14 +74,20 @@
 #include <Posix.SysMman.hpp>	// (rtl)
 #include <System.Internal.Unwind.hpp>	// (rtl)
 #include <System.Hash.hpp>	// (rtl)
+#include <System.Math.hpp>	// (rtl)
 #include <System.Rtti.hpp>	// (rtl)
 #include <System.TypInfo.hpp>	// (rtl)
-#include <System.Math.hpp>	// (rtl)
 #include <System.Generics.Defaults.hpp>	// (rtl)
 #include <Posix.StrOpts.hpp>	// (rtl)
 #include <Posix.SysSelect.hpp>	// (rtl)
 #include <Macapi.ObjCRuntime.hpp>	// (rtl)
 #include <System.Classes.hpp>	// (rtl)
+// SO_PFX: bpl
+// SO_SFX: 250
+// PRG_EXT: .dylib
+// BPI_DIR: C:\Users\Public\Documents\Embarcadero\Studio\19.0\Dcp\OSX32
+// OBJ_DIR: C:\Users\Public\Documents\Embarcadero\Studio\19.0\Dcp\OSX32
+// OBJ_EXT: .o
 
 //-- user supplied -----------------------------------------------------------
 

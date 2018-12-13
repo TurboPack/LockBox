@@ -81,7 +81,7 @@ type
           HiHiHi: Byte);
   end;
 
-  TRDLVector = record
+  TRDLVector = packed record
     case Byte of
       0 : (dw : DWord);
       1 : (bt : array[0..3] of Byte);

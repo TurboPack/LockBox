@@ -2,7 +2,7 @@
 // Copyright (c) 1995, 2016 by Embarcadero Technologies, Inc.
 // All rights reserved
 
-// (DO NOT EDIT: machine generated header) 'LbRSA.pas' rev: 31.00 (MacOS)
+// (DO NOT EDIT: machine generated header) 'LbRSA.pas' rev: 32.00 (MacOS)
 
 #ifndef LbrsaHPP
 #define LbrsaHPP
@@ -21,7 +21,6 @@
 #include <LbAsym.hpp>
 #include <LbCipher.hpp>
 #include <LbConst.hpp>
-#include <LbClass.hpp>
 
 //-- user supplied -----------------------------------------------------------
 
