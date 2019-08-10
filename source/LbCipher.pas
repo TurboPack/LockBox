@@ -251,7 +251,7 @@ type
   TMD5 = class(TObject)
   public
     class procedure FinalizeMD5(var Context : TMD5Context; var Digest : TMD5Digest); static;
-    class procedure GenerateMD5Key(var Key : TKey128; const ABytes: TBytes); static;
+    class procedure GenerateMD5Key(var AKey: TKey128; const ABytes: TBytes); static;
     class procedure HashMD5(var Digest : TMD5Digest; const Buf; BufSize : Integer); static;
     class procedure InitMD5(var Context : TMD5Context); static;
     class procedure StringHashMD5(var Digest : TMD5Digest; const ABytes: TBytes); static;
@@ -1333,11 +1333,12 @@ begin
   Move(MD5, Context, SizeOf(Context));                               {!!.01}
 end;
 
-class procedure TMD5.GenerateMD5Key(var Key : TKey128; const ABytes: TBytes);
+class procedure TMD5.GenerateMD5Key(var AKey: TKey128; const ABytes: TBytes);
 var
-  D: TMD5Digest;
+  lDigest: TMD5Digest;
 begin
-  HashMD5(D, ABytes[0], Length(ABytes));
+  HashMD5(lDigest, ABytes[0], Length(ABytes));
+  AKey := TKey128(lDigest);
 end;
 
 class procedure TMD5.HashMD5(var Digest : TMD5Digest; const Buf; BufSize : Integer);
