@@ -131,7 +131,6 @@
         <IncludePath>..\..\source\;.\$(Platform)\$(Config);$(IncludePath)</IncludePath>
         <DllSuffix>260</DllSuffix>
         <ILINK_Description>TurboPack LockBox CBuilder runtime package</ILINK_Description>
-        <DCC_HppOutput>..\..\source\hpp\$(Platform)\$(Config)</DCC_HppOutput>
         <SanitizedProjectName>LockBoxCR</SanitizedProjectName>
         <DCC_UnitSearchPath>$(BDS)\lib;$(BDS)\lib\$(Platform);$(BDS)\lib\$(Platform)\$(Config);..\..\source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>

@@ -69,7 +69,6 @@
         <DesignOnlyPackage>true</DesignOnlyPackage>
         <DllSuffix>260</DllSuffix>
         <DCC_UnitSearchPath>..\..\source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <DCC_HppOutput>..\..\source\hpp\$(Platform)\$(Config)</DCC_HppOutput>
         <IncludePath>..\..\source\;$(IncludePath)</IncludePath>
         <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
         <ProjectType>CppPackage</ProjectType>
