@@ -13,3 +13,4 @@ OSX32
 Debug
 Release
 *.stat
+*.hpp
