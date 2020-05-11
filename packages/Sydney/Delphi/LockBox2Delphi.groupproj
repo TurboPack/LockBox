@@ -1,0 +1,60 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{D86B8D66-4420-49C6-9E8B-3908F17820CA}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="LockBoxDR.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="LockBoxVCLDD.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="LockBoxFMXDD.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="LockBoxDR">
+        <MSBuild Projects="LockBoxDR.dproj"/>
+    </Target>
+    <Target Name="LockBoxDR:Clean">
+        <MSBuild Projects="LockBoxDR.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="LockBoxDR:Make">
+        <MSBuild Projects="LockBoxDR.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="LockBoxVCLDD">
+        <MSBuild Projects="LockBoxVCLDD.dproj"/>
+    </Target>
+    <Target Name="LockBoxVCLDD:Clean">
+        <MSBuild Projects="LockBoxVCLDD.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="LockBoxVCLDD:Make">
+        <MSBuild Projects="LockBoxVCLDD.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="LockBoxFMXDD">
+        <MSBuild Projects="LockBoxFMXDD.dproj"/>
+    </Target>
+    <Target Name="LockBoxFMXDD:Clean">
+        <MSBuild Projects="LockBoxFMXDD.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="LockBoxFMXDD:Make">
+        <MSBuild Projects="LockBoxFMXDD.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="LockBoxDR;LockBoxVCLDD;LockBoxFMXDD"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="LockBoxDR:Clean;LockBoxVCLDD:Clean;LockBoxFMXDD:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="LockBoxDR:Make;LockBoxVCLDD:Make;LockBoxFMXDD:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
