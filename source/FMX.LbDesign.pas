@@ -94,19 +94,6 @@ uses
 { == component registration ================================================ }
 procedure Register;
 begin
-  GroupDescendentsWith(TLbBlowfish, FMX.Controls.TControl);
-  GroupDescendentsWith(TLbDES, FMX.Controls.TControl);
-  GroupDescendentsWith(TLb3DES, FMX.Controls.TControl);
-  GroupDescendentsWith(TLbRijndael, FMX.Controls.TControl);
-  GroupDescendentsWith(TLbRSA, FMX.Controls.TControl);
-  GroupDescendentsWith(TLbMD5, FMX.Controls.TControl);
-  GroupDescendentsWith(TLbSHA1, FMX.Controls.TControl);
-  GroupDescendentsWith(TLbDSA, FMX.Controls.TControl);
-  GroupDescendentsWith(TLbRSASSA, FMX.Controls.TControl);
-
-  RegisterFmxClasses([TLbBlowfish, TLbDES, TLb3DES, TLbRijndael,
-    TLbRSA, TLbMD5, TLbSHA1, TLbDSA, TLbRSASSA]);
-
   RegisterComponentEditor(TLbSymmetricCipher, TLbSymmetricKeyEditor);
   RegisterComponentEditor(TLbRSA, TLbRSAKeyEditor);
   RegisterComponentEditor(TLbRSASSA, TLbRSAKeyEditor);
@@ -115,18 +102,6 @@ begin
 
   RegisterPropertyEditor(TypeInfo(string), TLbBaseComponent, 'Version',
                          TLbVersionProperty);
-
-  RegisterComponents('LockBox FMX',
-                     [TLbBlowfish,
-                      TLbDES,
-                      TLb3DES,
-                      TLbRijndael,
-                      TLbRSA,
-                      TLbMD5,
-                      TLbSHA1,
-                      TLbDSA,
-                      TLbRSASSA]
-                      );
 end;
 
 

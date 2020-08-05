@@ -67,7 +67,7 @@ type
       Button1: TButton;
       Panel2: TPanel;
       lblNews: TLabel;
-    Label2: TLabel;
+      Label2: TLabel;
       procedure Button1Click(Sender: TObject);
       procedure FormCreate(Sender: TObject);
       procedure lblWebClick(Sender: TObject);
@@ -108,8 +108,6 @@ uses
   LbClass, LbAsym, LbRSA, LbDSA, Vcl.LbKeyEd1, Vcl.LbKeyEd2,
   LbConst;
 
-
-
 { == component registration ================================================ }
 procedure Register;
 begin
@@ -121,18 +119,6 @@ begin
 
   RegisterPropertyEditor(TypeInfo(string), TLbBaseComponent, 'Version',
                          TLbVersionProperty);
-
-  RegisterComponents('LockBox',
-                     [TLbBlowfish,
-                      TLbDES,
-                      TLb3DES,
-                      TLbRijndael,
-                      TLbRSA,
-                      TLbMD5,
-                      TLbSHA1,
-                      TLbDSA, 
-                      TLbRSASSA]
-                      );
 end;
 
 

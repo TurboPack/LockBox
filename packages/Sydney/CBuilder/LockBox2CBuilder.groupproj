@@ -6,6 +6,9 @@
         <Projects Include="LockBoxCR.cbproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="LockBoxCD.cbproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="LockBoxVCLCD.cbproj">
             <Dependencies/>
         </Projects>
@@ -29,6 +32,15 @@
     <Target Name="LockBoxCR:Make">
         <MSBuild Projects="LockBoxCR.cbproj" Targets="Make"/>
     </Target>
+    <Target Name="LockBoxCD">
+        <MSBuild Projects="LockBoxCD.cbproj"/>
+    </Target>
+    <Target Name="LockBoxCD:Clean">
+        <MSBuild Projects="LockBoxCD.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="LockBoxCD:Make">
+        <MSBuild Projects="LockBoxCD.cbproj" Targets="Make"/>
+    </Target>
     <Target Name="LockBoxVCLCD">
         <MSBuild Projects="LockBoxVCLCD.cbproj"/>
     </Target>
@@ -48,13 +60,13 @@
         <MSBuild Projects="LockBoxFMXCD.cbproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="LockBoxCR;LockBoxVCLCD;LockBoxFMXCD"/>
+        <CallTarget Targets="LockBoxCR;LockBoxCD;LockBoxVCLCD;LockBoxFMXCD"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="LockBoxCR:Clean;LockBoxVCLCD:Clean;LockBoxFMXCD:Clean"/>
+        <CallTarget Targets="LockBoxCR:Clean;LockBoxCD:Clean;LockBoxVCLCD:Clean;LockBoxFMXCD:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="LockBoxCR:Make;LockBoxVCLCD:Make;LockBoxFMXCD:Make"/>
+        <CallTarget Targets="LockBoxCR:Make;LockBoxCD:Make;LockBoxVCLCD:Make;LockBoxFMXCD:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

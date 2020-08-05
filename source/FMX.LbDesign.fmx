@@ -38,7 +38,7 @@ object LbAboutForm: TLbAboutForm
     Size.Height = 20.000000000000000000
     Size.PlatformDefault = False
     TextSettings.Font.Size = 16.000000000000000000
-    TextSettings.Font.Style = [fsBold]
+    TextSettings.Font.StyleExt = {00070000000000000004000000}
     Text = 'LockBox'
     Left = 190
     Top = 10
@@ -82,7 +82,7 @@ object LbAboutForm: TLbAboutForm
     Size.Width = 231.000000000000000000
     Size.Height = 16.000000000000000000
     Size.PlatformDefault = False
-    TextSettings.Font.Style = [fsUnderline]
+    TextSettings.Font.StyleExt = {04040000000000000004000000}
     TextSettings.FontColor = claBlue
     Text = 'https://github.com/TurboPack/LockBox'
     OnClick = lblWebClick
@@ -1295,7 +1295,7 @@ object LbAboutForm: TLbAboutForm
       Size.Width = 231.000000000000000000
       Size.Height = 16.000000000000000000
       Size.PlatformDefault = False
-      TextSettings.Font.Style = [fsUnderline]
+      TextSettings.Font.StyleExt = {04040000000000000004000000}
       TextSettings.FontColor = claBlue
       Text = 'https://github.com/TurboPack/LockBox'
       OnClick = lblNewsClick
