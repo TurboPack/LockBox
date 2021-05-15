@@ -49,7 +49,9 @@ type
     procedure SetVersion(const Value: string);
   strict protected
     function GetBytes(const AString: string): TBytes;
+    function GetBytesANSI(const AString: string): TBytes;
     function GetString(const ABytes: TBytes): string;
+    function GetStringANSI(const ABytes: TBytes): string;
   public
     constructor Create(AOwner: TComponent); override;
     property Encoding: TEncoding read FEncoding write FEncoding;
@@ -307,9 +309,19 @@ begin
   Result := Encoding.GetBytes(AString);
 end;
 
+function TLBBaseComponent.GetBytesANSI(const AString: string): TBytes;
+begin
+  Result := TEncoding.ANSI.GetBytes(AString);
+end;
+
 function TLBBaseComponent.GetString(const ABytes: TBytes): string;
 begin
   Result := Encoding.GetString(ABytes);
+end;
+
+function TLBBaseComponent.GetStringANSI(const ABytes: TBytes): string;
+begin
+  Result := TEncoding.ANSI.GetString(ABytes);
 end;
 
 function TLBBaseComponent.GetVersion: string;
@@ -463,8 +475,8 @@ end;
 function TLbDES.DecryptString(const InString: string): string;
 begin
   case CipherMode of
-    cmECB : Result := GetString(TDESBytes.DESEncryptBytesEx(GetBytes(InString), FKey, False));
-    cmCBC : Result := GetString(TDESBytes.DESEncryptBytesCBCEx(GetBytes(InString), FKey, False));
+    cmECB : Result := GetString(TDESBytes.DESEncryptBytesEx(GetBytesANSI(InString), FKey, False));
+    cmCBC : Result := GetString(TDESBytes.DESEncryptBytesCBCEx(GetBytesANSI(InString), FKey, False));
   end;
 end;
 
@@ -487,8 +499,8 @@ end;
 function TLbDES.EncryptString(const InString: string): string;
 begin
   case CipherMode of
-    cmECB : Result := GetString(TDESBytes.DESEncryptBytesEx(GetBytes(InString), FKey, True));
-    cmCBC : Result := GetString(TDESBytes.DESEncryptBytesCBCEx(GetBytes(InString), FKey, True));
+    cmECB : Result := GetStringANSI(TDESBytes.DESEncryptBytesEx(GetBytes(InString), FKey, True));
+    cmCBC : Result := GetStringANSI(TDESBytes.DESEncryptBytesCBCEx(GetBytes(InString), FKey, True));
   end;
 end;
 
