@@ -208,7 +208,6 @@ type
   strict private
     class procedure JoinBlock(const L, R : Integer; var Block : TDESBlock); static; register;
     class procedure SplitBlock(const Block : TDESBlock; var L, R : DWord); static; register;
-  private
   public
     class procedure EncryptDES(const Context : TDESContext; var Block : TDESBlock); static;
     class procedure EncryptDESCBC(const Context : TDESContext; const Prev : TDESBlock; var Block : TDESBlock); static;
