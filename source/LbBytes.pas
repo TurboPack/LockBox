@@ -91,8 +91,6 @@ type
 
 implementation
 
-{ TBlowfishBytes }
-
 class procedure TBlowfishBytes.BFEncryptBytes(const InBytes: TBytes; var OutBytes: TBytes; const Key: TKey128; Encrypt: Boolean);
 begin
   OutBytes := BFEncryptBytesEx(InBytes, Key, Encrypt);
@@ -112,25 +110,32 @@ begin
   InStream := TMemoryStream.Create;
   OutStream := TMemoryStream.Create;
   WorkStream := TMemoryStream.Create;
-  InStream.Write(InBytes[0], Length(InBytes));
-  InStream.Position := 0;
+  try
+    InStream.Write(InBytes[0], Length(InBytes));
+    InStream.Position := 0;
 
-  if Encrypt then begin
-    BFEncryptStreamCBC(InStream, WorkStream, Key, True);
-    WorkStream.Position := 0;
-    TLbBase64.LbEncodeBase64(WorkStream, OutStream);
-  end else begin
-    TLbBase64.LbDecodeBase64(InStream, WorkStream);
-    WorkStream.Position := 0;
-    BFEncryptStreamCBC(WorkStream, OutStream, Key, False);
+    if Encrypt then
+    begin
+      BFEncryptStreamCBC(InStream, WorkStream, Key, True);
+      WorkStream.Position := 0;
+      TLbBase64.LbEncodeBase64(WorkStream, OutStream);
+    end
+    else
+    begin
+      TLbBase64.LbDecodeBase64(InStream, WorkStream);
+      WorkStream.Position := 0;
+      BFEncryptStreamCBC(WorkStream, OutStream, Key, False);
+    end;
+
+    OutStream.Position := 0;
+    SetLength(Result, OutStream.Size);
+    OutStream.Read(Result[0], OutStream.Size);
+
+  finally
+    InStream.Free;
+    OutStream.Free;
+    WorkStream.Free;
   end;
-  OutStream.Position := 0;
-  SetLength(Result, OutStream.Size);
-  OutStream.Read(Result[0], OutStream.Size);
-
-  InStream.Free;
-  OutStream.Free;
-  WorkStream.Free;
 end;
 
 class function TBlowfishBytes.BFEncryptBytesEx(const InBytes: TBytes; const Key: TKey128; Encrypt: Boolean): TBytes;
@@ -142,25 +147,32 @@ begin
   InStream := TMemoryStream.Create;
   OutStream := TMemoryStream.Create;
   WorkStream := TMemoryStream.Create;
-  InStream.Write(InBytes[0], Length(InBytes));
-  InStream.Position := 0;
+  try
+    InStream.Write(InBytes[0], Length(InBytes));
+    InStream.Position := 0;
 
-  if Encrypt then begin
-    BFEncryptStream(InStream, WorkStream, Key, True);
-    WorkStream.Position := 0;
-    TLbBase64.LbEncodeBase64(WorkStream, OutStream);
-  end else begin
-    TLbBase64.LbDecodeBase64(InStream, WorkStream);
-    WorkStream.Position := 0;
-    BFEncryptStream(WorkStream, OutStream, Key, False);
+    if Encrypt then
+    begin
+      BFEncryptStream(InStream, WorkStream, Key, True);
+      WorkStream.Position := 0;
+      TLbBase64.LbEncodeBase64(WorkStream, OutStream);
+    end
+    else
+    begin
+      TLbBase64.LbDecodeBase64(InStream, WorkStream);
+      WorkStream.Position := 0;
+      BFEncryptStream(WorkStream, OutStream, Key, False);
+    end;
+
+    OutStream.Position := 0;
+    SetLength(Result, OutStream.Size);
+    OutStream.Read(Result[0], OutStream.Size);
+
+  finally
+    InStream.Free;
+    OutStream.Free;
+    WorkStream.Free;
   end;
-  OutStream.Position := 0;
-  SetLength(Result, OutStream.Size);
-  OutStream.Read(Result[0], OutStream.Size);
-
-  InStream.Free;
-  OutStream.Free;
-  WorkStream.Free;
 end;
 
 class procedure TDESBytes.DESEncryptBytes(const InBytes: TBytes; var OutBytes: TBytes; const Key: TKey64; Encrypt: Boolean);
@@ -173,8 +185,6 @@ begin
   OutBytes := DESEncryptBytesCBCEx(InBytes, Key, Encrypt);
 end;
 
-{ TDESBytes }
-
 class function TDESBytes.DESEncryptBytesCBCEx(const InBytes: TBytes; const Key: TKey64; Encrypt: Boolean): TBytes;
 var
   InStream  : TMemoryStream;
@@ -184,25 +194,32 @@ begin
   InStream := TMemoryStream.Create;
   OutStream := TMemoryStream.Create;
   WorkStream := TMemoryStream.Create;
-  InStream.Write(InBytes[0], Length(InBytes));
-  InStream.Position := 0;
+  try
+    InStream.Write(InBytes[0], Length(InBytes));
+    InStream.Position := 0;
 
-  if Encrypt then begin
-    DESEncryptStreamCBC(InStream, WorkStream, Key, True);
-    WorkStream.Position := 0;
-    TLbBase64.LbEncodeBase64(WorkStream, OutStream);
-  end else begin
-    TLbBase64.LbDecodeBase64(InStream, WorkStream);
-    WorkStream.Position := 0;
-    DESEncryptStreamCBC(WorkStream, OutStream, Key, False);
+    if Encrypt then
+    begin
+      DESEncryptStreamCBC(InStream, WorkStream, Key, True);
+      WorkStream.Position := 0;
+      TLbBase64.LbEncodeBase64(WorkStream, OutStream);
+    end
+    else
+    begin
+      TLbBase64.LbDecodeBase64(InStream, WorkStream);
+      WorkStream.Position := 0;
+      DESEncryptStreamCBC(WorkStream, OutStream, Key, False);
+    end;
+
+    OutStream.Position := 0;
+    SetLength(Result, OutStream.Size);
+    OutStream.Read(Result[0], OutStream.Size);
+
+  finally
+    InStream.Free;
+    OutStream.Free;
+    WorkStream.Free;
   end;
-  OutStream.Position := 0;
-  SetLength(Result, OutStream.Size);
-  OutStream.Read(Result[0], OutStream.Size);
-
-  InStream.Free;
-  OutStream.Free;
-  WorkStream.Free;
 end;
 
 class function TDESBytes.DESEncryptBytesEx(const InBytes: TBytes; const Key: TKey64; Encrypt: Boolean): TBytes;
@@ -214,25 +231,31 @@ begin
   InStream := TMemoryStream.Create;
   OutStream := TMemoryStream.Create;
   WorkStream := TMemoryStream.Create;
-  InStream.Write(InBytes[0], Length(InBytes));
-  InStream.Position := 0;
+  try
+    InStream.Write(InBytes[0], Length(InBytes));
+    InStream.Position := 0;
 
-  if Encrypt then begin
-    DESEncryptStream(InStream, WorkStream, Key, True);
-    WorkStream.Position := 0;
-    TLbBase64.LbEncodeBase64(WorkStream, OutStream);
-  end else begin
-    TLbBase64.LbDecodeBase64(InStream, WorkStream);
-    WorkStream.Position := 0;
-    DESEncryptStream(WorkStream, OutStream, Key, False);
+    if Encrypt then
+    begin
+      DESEncryptStream(InStream, WorkStream, Key, True);
+      WorkStream.Position := 0;
+      TLbBase64.LbEncodeBase64(WorkStream, OutStream);
+    end
+    else
+    begin
+      TLbBase64.LbDecodeBase64(InStream, WorkStream);
+      WorkStream.Position := 0;
+      DESEncryptStream(WorkStream, OutStream, Key, False);
+    end;
+
+    OutStream.Position := 0;
+    SetLength(Result, OutStream.Size);
+    OutStream.Read(Result[0], OutStream.Size);
+  finally
+    InStream.Free;
+    OutStream.Free;
+    WorkStream.Free;
   end;
-  OutStream.Position := 0;
-  SetLength(Result, OutStream.Size);
-  OutStream.Read(Result[0], OutStream.Size);
-
-  InStream.Free;
-  OutStream.Free;
-  WorkStream.Free;
 end;
 
 class procedure TDESBytes.TripleDESEncryptBytes(const InBytes: TBytes; var OutBytes: TBytes; const Key: TKey128; Encrypt: Boolean);
@@ -254,25 +277,31 @@ begin
   InStream := TMemoryStream.Create;
   OutStream := TMemoryStream.Create;
   WorkStream := TMemoryStream.Create;
-  InStream.Write(InBytes[0], Length(InBytes));
-  InStream.Position := 0;
+  try
+    InStream.Write(InBytes[0], Length(InBytes));
+    InStream.Position := 0;
 
-  if Encrypt then begin
-    TripleDESEncryptStreamCBC(InStream, WorkStream, Key, True);
-    WorkStream.Position := 0;
-    TLbBase64.LbEncodeBase64(WorkStream, OutStream);
-  end else begin
-    TLbBase64.LbDecodeBase64(InStream, WorkStream);
-    WorkStream.Position := 0;
-    TripleDESEncryptStreamCBC(WorkStream, OutStream, Key, False);
+    if Encrypt then
+    begin
+      TripleDESEncryptStreamCBC(InStream, WorkStream, Key, True);
+      WorkStream.Position := 0;
+      TLbBase64.LbEncodeBase64(WorkStream, OutStream);
+    end
+    else
+    begin
+      TLbBase64.LbDecodeBase64(InStream, WorkStream);
+      WorkStream.Position := 0;
+      TripleDESEncryptStreamCBC(WorkStream, OutStream, Key, False);
+    end;
+
+    OutStream.Position := 0;
+    SetLength(Result, OutStream.Size);
+    OutStream.Read(Result[0], OutStream.Size);
+  finally
+    InStream.Free;
+    OutStream.Free;
+    WorkStream.Free;
   end;
-  OutStream.Position := 0;
-  SetLength(Result, OutStream.Size);
-  OutStream.Read(Result[0], OutStream.Size);
-
-  InStream.Free;
-  OutStream.Free;
-  WorkStream.Free;
 end;
 
 class function TDESBytes.TripleDESEncryptBytesEx(const InBytes: TBytes; const Key: TKey128; Encrypt: Boolean): TBytes;
@@ -284,25 +313,31 @@ begin
   InStream := TMemoryStream.Create;
   OutStream := TMemoryStream.Create;
   WorkStream := TMemoryStream.Create;
-  InStream.Write(InBytes[0], Length(InBytes));
-  InStream.Position := 0;
+  try
+    InStream.Write(InBytes[0], Length(InBytes));
+    InStream.Position := 0;
 
-  if Encrypt then begin
-    TripleDESEncryptStream(InStream, WorkStream, Key, True);
-    WorkStream.Position := 0;
-    TLbBase64.LbEncodeBase64(WorkStream, OutStream);
-  end else begin
-    TLbBase64.LbDecodeBase64(InStream, WorkStream);
-    WorkStream.Position := 0;
-    TripleDESEncryptStream(WorkStream, OutStream, Key, False);
+    if Encrypt then
+    begin
+      TripleDESEncryptStream(InStream, WorkStream, Key, True);
+      WorkStream.Position := 0;
+      TLbBase64.LbEncodeBase64(WorkStream, OutStream);
+    end
+    else
+    begin
+      TLbBase64.LbDecodeBase64(InStream, WorkStream);
+      WorkStream.Position := 0;
+      TripleDESEncryptStream(WorkStream, OutStream, Key, False);
+    end;
+
+    OutStream.Position := 0;
+    SetLength(Result, OutStream.Size);
+    OutStream.Read(Result[0], OutStream.Size);
+  finally
+    InStream.Free;
+    OutStream.Free;
+    WorkStream.Free;
   end;
-  OutStream.Position := 0;
-  SetLength(Result, OutStream.Size);
-  OutStream.Read(Result[0], OutStream.Size);
-
-  InStream.Free;
-  OutStream.Free;
-  WorkStream.Free;
 end;
 
 { TRDLBytes }
@@ -326,25 +361,32 @@ begin
   InStream := TMemoryStream.Create;
   OutStream := TMemoryStream.Create;
   WorkStream := TMemoryStream.Create;
-  InStream.Write(InBytes[0], Length(InBytes));
-  InStream.Position := 0;
+  try
+    InStream.Write(InBytes[0], Length(InBytes));
+    InStream.Position := 0;
 
-  if Encrypt then begin
-    RDLEncryptStreamCBC(InStream, WorkStream, Key, KeySize, True);
-    WorkStream.Position := 0;
-    TLbBase64.LbEncodeBase64(WorkStream, OutStream);
-  end else begin
-    TLbBase64.LbDecodeBase64(InStream, WorkStream);
-    WorkStream.Position := 0;
-    RDLEncryptStreamCBC(WorkStream, OutStream, Key, KeySize, False);
+    if Encrypt then
+    begin
+      RDLEncryptStreamCBC(InStream, WorkStream, Key, KeySize, True);
+      WorkStream.Position := 0;
+      TLbBase64.LbEncodeBase64(WorkStream, OutStream);
+    end
+    else
+    begin
+      TLbBase64.LbDecodeBase64(InStream, WorkStream);
+      WorkStream.Position := 0;
+      RDLEncryptStreamCBC(WorkStream, OutStream, Key, KeySize, False);
+    end;
+
+    OutStream.Position := 0;
+    SetLength(Result, OutStream.Size);
+    OutStream.Read(Result[0], OutStream.Size);
+
+  finally
+    InStream.Free;
+    OutStream.Free;
+    WorkStream.Free;
   end;
-  OutStream.Position := 0;
-  SetLength(Result, OutStream.Size);
-  OutStream.Read(Result[0], OutStream.Size);
-
-  InStream.Free;
-  OutStream.Free;
-  WorkStream.Free;
 end;
 
 class function TRDLBytes.RDLEncryptBytesEx(const InBytes: TBytes; const Key; KeySize: Integer; Encrypt: Boolean): TBytes;
@@ -356,25 +398,31 @@ begin
   InStream := TMemoryStream.Create;
   OutStream := TMemoryStream.Create;
   WorkStream := TMemoryStream.Create;
-  InStream.Write(InBytes[0], Length(InBytes));
-  InStream.Position := 0;
+  try
+    InStream.Write(InBytes[0], Length(InBytes));
+    InStream.Position := 0;
 
-  if Encrypt then begin
-    RDLEncryptStream(InStream, WorkStream, Key, KeySize, True);
-    WorkStream.Position := 0;
-    TLbBase64.LbEncodeBase64(WorkStream, OutStream);
-  end else begin
-    TLbBase64.LbDecodeBase64(InStream, WorkStream);
-    WorkStream.Position := 0;
-    RDLEncryptStream(WorkStream, OutStream, Key, KeySize, False);
+    if Encrypt then
+    begin
+      RDLEncryptStream(InStream, WorkStream, Key, KeySize, True);
+      WorkStream.Position := 0;
+      TLbBase64.LbEncodeBase64(WorkStream, OutStream);
+    end
+    else
+    begin
+      TLbBase64.LbDecodeBase64(InStream, WorkStream);
+      WorkStream.Position := 0;
+      RDLEncryptStream(WorkStream, OutStream, Key, KeySize, False);
+    end;
+
+    OutStream.Position := 0;
+    SetLength(Result, OutStream.Size);
+    OutStream.Read(Result[0], OutStream.Size);
+  finally
+    InStream.Free;
+    OutStream.Free;
+    WorkStream.Free;
   end;
-  OutStream.Position := 0;
-  SetLength(Result, OutStream.Size);
-  OutStream.Read(Result[0], OutStream.Size);
-
-  InStream.Free;
-  OutStream.Free;
-  WorkStream.Free;
 end;
 
 { TLbBase64 }
