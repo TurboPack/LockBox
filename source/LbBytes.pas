@@ -109,28 +109,32 @@ var
   OutStream : TMemoryStream;
   WorkStream : TMemoryStream;
 begin
+  OutStream := nil;
+  WorkStream := nil;
   InStream := TMemoryStream.Create;
-  OutStream := TMemoryStream.Create;
-  WorkStream := TMemoryStream.Create;
-  InStream.Write(InBytes[0], Length(InBytes));
-  InStream.Position := 0;
+  try
+    OutStream := TMemoryStream.Create;
+    WorkStream := TMemoryStream.Create;
+    InStream.Write(InBytes[0], Length(InBytes));
+    InStream.Position := 0;
 
-  if Encrypt then begin
-    BFEncryptStreamCBC(InStream, WorkStream, Key, True);
-    WorkStream.Position := 0;
-    TLbBase64.LbEncodeBase64(WorkStream, OutStream);
-  end else begin
-    TLbBase64.LbDecodeBase64(InStream, WorkStream);
-    WorkStream.Position := 0;
-    BFEncryptStreamCBC(WorkStream, OutStream, Key, False);
+    if Encrypt then begin
+      BFEncryptStreamCBC(InStream, WorkStream, Key, True);
+      WorkStream.Position := 0;
+      TLbBase64.LbEncodeBase64(WorkStream, OutStream);
+    end else begin
+      TLbBase64.LbDecodeBase64(InStream, WorkStream);
+      WorkStream.Position := 0;
+      BFEncryptStreamCBC(WorkStream, OutStream, Key, False);
+    end;
+    OutStream.Position := 0;
+    SetLength(Result, OutStream.Size);
+    OutStream.Read(Result[0], OutStream.Size);
+  finally
+    InStream.Free;
+    OutStream.Free;
+    WorkStream.Free;
   end;
-  OutStream.Position := 0;
-  SetLength(Result, OutStream.Size);
-  OutStream.Read(Result[0], OutStream.Size);
-
-  InStream.Free;
-  OutStream.Free;
-  WorkStream.Free;
 end;
 
 class function TBlowfishBytes.BFEncryptBytesEx(const InBytes: TBytes; const Key: TKey128; Encrypt: Boolean): TBytes;
